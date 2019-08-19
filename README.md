@@ -4,7 +4,7 @@
 ```
 while true; do netstat -atnp; sleep 1; clear; done
 netstat -rn
-
+curl icanhazip.com
 
 https://www.binarytides.com/linux-commands-monitor-network/
 nload
