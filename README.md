@@ -4,6 +4,20 @@
 ```
 while true; do netstat -atnp; sleep 1; clear; done
 netstat -rn
+
+
+https://www.binarytides.com/linux-commands-monitor-network/
+nload
+iftop
+iptraf
+nethogs
+slurm
+tcptrack
+vnstat
+bwm-ng
+speedometer
+bmon
+ifstat
 ```
 
 .
