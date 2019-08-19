@@ -5,6 +5,8 @@
 while true; do netstat -atnp; sleep 1; clear; done
 netstat -rn
 curl icanhazip.com
+arp -i wlan0
+arp -i eth0
 
 https://www.binarytides.com/linux-commands-monitor-network/
 nload
