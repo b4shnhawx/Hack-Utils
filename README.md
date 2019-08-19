@@ -20,7 +20,18 @@ bwm-ng
 speedometer
 bmon
 ifstat
+
+
+
+
+
+
+printf '\e[1;33m%-24s%-8s%-6s\e[0m\n%-24s%-8s%-6s\n' "1" "2" "3" "asdasasdasd" "qwe" "qweqwe"
 ```
+
+
+
+
 
 .
 .
