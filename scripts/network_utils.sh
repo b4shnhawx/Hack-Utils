@@ -417,7 +417,7 @@ do
 			
 			;;
 		11)
-			echo -e $LIGHTYELLOW"11"$END")" "Firewall rules (iptables)"
+			echo -e $LIGHTYELLOW"11"$END")" "Firewall rules iptables"
 			echo ""
 			
 			;;
