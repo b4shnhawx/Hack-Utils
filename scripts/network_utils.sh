@@ -80,6 +80,7 @@ menu()
 	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Hops to gateway"$TAB$TAB		$TAB$LIGHTYELLOW" 5"$END")" "ARP table"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 6"$END")" "Public IP"$TAB
 	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Bandwith"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Bytes in/out"$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
+	echo -e $TAB$LIGHTYELLOW" 10"$END")" "Ports in use"$TAB$TAB		$TAB$LIGHTYELLOW" 11"$END")" "Firewall rules (iptables)"	$TAB$LIGHTYELLOW" 12"$END")" "Route table"
 	echo ""
 	echo ""
 
@@ -416,10 +417,13 @@ do
 			
 			;;
 		11)
-			echo -e $LIGHTYELLOW"11"$END")" "iptables view"
+			echo -e $LIGHTYELLOW"11"$END")" "Firewall rules (iptables)"
 			echo ""
 			
 			;;
+		12)
+			echo -e $LIGHTYELLOW"12"$END")" "Route table"
+			echo ""
 		ovpn)
 			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
 			echo ""
