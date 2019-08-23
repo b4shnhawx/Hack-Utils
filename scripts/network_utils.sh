@@ -322,9 +322,11 @@ do
 
 			sleep 1
 
+			cd
+			rm -r  Network-Utils/
+
 			git clone https://github.com/davidahid/Network-Utils
 			
-			cd
 			mv Network-Utils/ /tmp/
 			mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
