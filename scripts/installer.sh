@@ -2,6 +2,6 @@
 
 cd
 mkdir /etc/netutils/
-sudo cp $HOME/Deauth-packets-injection/scripts/deauth_wireless_attack.sh /etc//netutils/
-sudo cp $HOME/Deauth-packets-injection/scripts/dwa /bin/
-sudo chmod u+x /bin/dwa
+sudo cp $HOME/Network-Utils/scripts/network_utils.sh /etc/netutils/
+sudo cp $HOME/Network-Utils/scripts/netutils /bin/
+sudo chmod u+x /bin/netutils
