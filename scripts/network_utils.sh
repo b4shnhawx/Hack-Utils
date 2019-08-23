@@ -310,6 +310,8 @@ do
 			echo "Updating netutils ..."
 			echo ""
 			
+			sleep 1
+			
 			git clone https://github.com/davidahid/Network-Utils
 			cd
 			mv $HOME/Network-Utils/ /tmp/
