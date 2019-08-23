@@ -304,6 +304,8 @@ do
 
 			;;
 		up)
+			rm -rf /tmp/Network-Utils/ 2> /dev/null
+		
 			echo -e $LIGHTYELLOW"up"$END")" "Update Network Utils"
 			echo ""
 
