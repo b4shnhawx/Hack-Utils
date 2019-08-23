@@ -324,9 +324,12 @@ do
 
 			git clone https://github.com/davidahid/Network-Utils
 			cd
-			mv $HOME/Network-Utils/ /tmp/
+			cp $HOME/Network-Utils/ /tmp/
 			cp /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
-
+			
+			rm -r $HOME/Network-Utils/
+			rm -r /tmp/Network-Utils
+			
 			clear
 			exit
 
