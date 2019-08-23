@@ -37,6 +37,11 @@ cd Network-Utils/scripts/
 bash installer.sh
 ```
 
+To use netutils you must run it as root.
+```
+sudo netutils
+```
+
 .
 .
 .
