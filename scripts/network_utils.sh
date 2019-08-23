@@ -332,6 +332,8 @@ do
 			mv Network-Utils/* /tmp/Network-Utils/
 			mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
+			rm -r Network-Utils/
+
 			clear
 			exit
 
