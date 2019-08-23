@@ -33,7 +33,7 @@ To install the scrip:
 ```
 cd ~
 git clone https://github.com/davidahid/Network-Utils
-cd Deauth-packets-injection/scripts/
+cd Network-Utils/scripts/
 bash installer.sh
 ```
 
