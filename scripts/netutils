@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bash /etc/netutils/network_utils.sh 2> /dev/null
