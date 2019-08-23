@@ -324,10 +324,11 @@ do
 
 			cd
 			rm -r  Network-Utils/
+			mkdir /tmp/Network-Utils/
 
 			git clone https://github.com/davidahid/Network-Utils
 			
-			mv Network-Utils/ /tmp/
+			mv Network-Utils/* /tmp/Network-Utils/
 			mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
 			clear
