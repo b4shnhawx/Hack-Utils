@@ -30,22 +30,27 @@ TAB="\t"
 #---------------- VARIABLES -------------
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
+#All OVPNS profiles used in the system in one column
+ovpns_extracted=`ls --width=1 /root/.secret/ovpns/ | tr '\n' " "`
 
-#Transforms the string with the interfaces into array
+#Transforms the strings into arrays
 read -a ifaces_array <<< $interfaces_extracted
+read -a ovpns_array <<< $ovpns_extracted
+
+programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer ovpn)
+
 #Saves how many interfaces have the system
 number_of_interfaces=${#ifaces_array[@]}
-
-#########All programs required save it into array
-#declare -a programs_array
-programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer)
+#Saves how many ovpns profiles have the system
+number_of_ovpns=${#ovpns_array[@]}
+#Saves how many programs are used in this script
 number_of_programs=${#programs_array[@]}
 
 #---------------- FUNCTIONS ----------------
 menu()
 {
 	clear
-
+	echo ${ifaces_array[@]}
 	echo -e $TAB$RED"  _   _      _                      _        _   _ _   _ _
 	 | \\ | | ___| |___      _____  _ __| | __   | | | | |_(_) |___
 	 |  \\| |/ _ \\ __\\ \\ /\\ / / _ \\| '__| |/ /   | | | | __| | / __|
@@ -85,6 +90,7 @@ menu()
 
 	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info (nmcli)"
 	echo -e $TAB$LIGHTYELLOW" X"$END")" "Ping (personalized)"$TAB$TAB	$TAB$LIGHTYELLOW" X"$END")" "Traceroute (personalized)"
+	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server"
 	echo ""
 	echo ""
 
@@ -115,11 +121,14 @@ command_for_interfaces()
 	done
 }
 
-interfaces_selector()
+options_selector()
 {
-	for (( interface_number=0; interface_number<$number_of_interfaces; interface_number++ ));
+	number=$1
+	declare -n array=$2
+
+	for (( whatever_number=0; whatever_number<$1; whatever_number++ ));
 	do
-		echo -e " " $LIGHTYELLOW$interface_number$END") "$BLUE${ifaces_array[$interface_number]}$END
+		echo -e " " $LIGHTYELLOW$whatever_number$END") "$BLUE${array[$whatever_number]}$END
 	done
 
 	echo ""
@@ -203,7 +212,7 @@ do
 	invalidoption=false
 
 	clear
-
+]
 	case $option in
 		if)
 			echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
@@ -304,16 +313,14 @@ do
 
 			;;
 		up)
-			rm -rf /tmp/Network-Utils/ 2> /dev/null
-		
 			echo -e $LIGHTYELLOW"up"$END")" "Update Network Utils"
 			echo ""
 
 			echo "Updating netutils ..."
 			echo ""
-			
+
 			sleep 1
-			
+
 			git clone https://github.com/davidahid/Network-Utils
 			cd
 			mv $HOME/Network-Utils/ /tmp/
@@ -333,7 +340,7 @@ do
 
 			echo -e "From which interface you want to throw the ping?"
 
-			interfaces_selector
+			options_selector $number_of_interfaces "ifaces_array"
 
 			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selected_interface ; echo -ne "" $END
 			echo ""
@@ -348,7 +355,7 @@ do
 
 			echo -e "From which interface you want to reach the gateway?"
 
-			interfaces_selector
+			options_selector $number_of_interfaces "ifaces_array"
 
 			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selected_interface ; echo -ne "" $END
 			echo ""
@@ -379,6 +386,21 @@ do
 		7)
 			;;
 		8)
+			;;
+		ovpn)
+			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
+			echo ""
+
+			if [[ $ovpns_extracted == '' ]];
+			then
+				echo "There is no OVPN profiles configured in the system." 
+				echo "You need to export your OVPN profiles from your OVPN Server to the path /root/.secret/ovpn/ of this OVPN client."
+			else
+				:
+			fi
+
+			options_selector $number_of_ovpns "ovpns_array"
+
 			;;
 		0)
 			exit
