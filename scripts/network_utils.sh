@@ -37,7 +37,7 @@ ovpns_extracted=`ls --width=1 /root/.secret/ovpns/ | tr '\n' " "`
 read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 
-programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer ovpn)
+programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer openvpn)
 
 #Saves how many interfaces have the system
 number_of_interfaces=${#ifaces_array[@]}
@@ -278,7 +278,7 @@ do
 				echo ""
 
 				echo -e " " $LIGHTYELLOW"id"$END")" "Install all the dependencies"
-				echo -e " " $LIGHTYELLOW"ud"$END")" "Uninstall all the dependencies"
+				echo -e " " $LIGHTYELLOW"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
 				echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
 				echo ""
 				echo ""
@@ -353,8 +353,11 @@ do
 			echo ""
 
 			echo "Pinging to Google..."
+			echo ""
+
 			echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
-			echo "
+			echo ""
+
 			ping www.google.es
 
 			;;
