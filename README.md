@@ -32,7 +32,7 @@ printf '\e[1;33m%-24s%-8s%-6s\e[0m\n%-24s%-8s%-6s\n' "1" "2" "3" "asdasasdasd" "
 To install the scrip:
 ```
 cd ~
-git clone https://github.com/davidahid/Deauth-packets-injection
+git clone https://github.com/davidahid/Network-Utils
 cd Deauth-packets-injection/scripts/
 bash installer.sh
 ```
