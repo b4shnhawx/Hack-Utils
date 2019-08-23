@@ -349,7 +349,7 @@ do
 
 			;;
 		2)
-			echo -e $LIGHTYELLOW"1"$END")" "Try internet connection"
+			echo -e $LIGHTYELLOW"2"$END")" "Try internet connection"
 			echo ""
 
 			echo "Pinging to Google..."
@@ -364,7 +364,7 @@ do
 		3)
 			;;
 		4)
-			echo -e $LIGHTYELLOW"3"$END")" "Hops to gateway"
+			echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
 			echo ""
 
 			echo -e "From which interface you want to reach the gateway?"
@@ -380,7 +380,7 @@ do
 
 			;;
 		5)
-			echo -e $LIGHTYELLOW"4"$END")" "ARP table"
+			echo -e $LIGHTYELLOW"5"$END")" "ARP table"
 			echo ""
 
 			#Function		First part of the command	Second part of the command
@@ -389,17 +389,36 @@ do
 
 			;;
 		6)
-			echo -e $LIGHTYELLOW"5"$END")" "Public IP"
+			echo -e $LIGHTYELLOW"6"$END")" "Public IP"
 			echo ""
 
 			echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
 
 			;;
 		7)
+			echo -e $LIGHTYELLOW"7"$END")" "Bandwith"
+			echo ""
+			
 			;;
 		8)
+			echo -e $LIGHTYELLOW"8"$END")" "Bytes in/out"
+			echo ""
+			
 			;;
 		9)
+			echo -e $LIGHTYELLOW"9"$END")" "Check remote port status"
+			echo ""
+			
+			;;
+		10)
+			echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
+			echo ""
+			
+			;;
+		11)
+			echo -e $LIGHTYELLOW"11"$END")" "iptables view"
+			echo ""
+			
 			;;
 		ovpn)
 			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
