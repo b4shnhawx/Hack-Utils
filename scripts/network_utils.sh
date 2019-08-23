@@ -50,7 +50,7 @@ number_of_programs=${#programs_array[@]}
 menu()
 {
 	clear
-	echo ${ifaces_array[@]}
+
 	echo -e $TAB$RED"  _   _      _                      _        _   _ _   _ _
 	 | \\ | | ___| |___      _____  _ __| | __   | | | | |_(_) |___
 	 |  \\| |/ _ \\ __\\ \\ /\\ / / _ \\| '__| |/ /   | | | | __| | / __|
@@ -77,9 +77,9 @@ menu()
 	echo ""
 
 	echo -e $TAB$LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"$TAB	$TAB$LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
-	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB                      $TAB$TAB$LIGHTYELLOW" 2"$END")" "Traceroute"$TAB                $TAB$TAB$TAB$LIGHTYELLOW" 3"$END")" "Hops to gateway"
-	echo -e $TAB$LIGHTYELLOW" 4"$END")" "ARP table"$TAB$TAB                 $TAB$TAB$LIGHTYELLOW" 5"$END")" "Public IP"$TAB                 $TAB$TAB$TAB$LIGHTYELLOW" 6"$END")" "Bandwith"
-	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Bytes in/out"$TAB                  $TAB$TAB$LIGHTYELLOW" 8"$END")" "Check remote port status"
+	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB
+	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Hops to gateway"$TAB$TAB		$TAB$LIGHTYELLOW" 5"$END")" "ARP table"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 6"$END")" "Public IP"$TAB
+	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Bandwith"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Bytes in/out"$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
 	echo ""
 	echo ""
 
@@ -346,10 +346,21 @@ do
 			echo ""
 
 			ping -I ${ifaces_array[$selected_interface]} $ping_address
+
 			;;
 		2)
+			echo -e $LIGHTYELLOW"1"$END")" "Try internet connection"
+			echo ""
+
+			echo "Pinging to Google..."
+			echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
+			echo "
+			ping www.google.es
+
 			;;
 		3)
+			;;
+		4)
 			echo -e $LIGHTYELLOW"3"$END")" "Hops to gateway"
 			echo ""
 
@@ -365,7 +376,7 @@ do
 			traceroute --interface=${ifaces_array[$selected_interface]} $gateway_ip
 
 			;;
-		4)
+		5)
 			echo -e $LIGHTYELLOW"4"$END")" "ARP table"
 			echo ""
 
@@ -374,18 +385,18 @@ do
 			command_for_interfaces "arp -i " ""
 
 			;;
-		5)
+		6)
 			echo -e $LIGHTYELLOW"5"$END")" "Public IP"
 			echo ""
 
 			echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
 
 			;;
-		6)
-			;;
 		7)
 			;;
 		8)
+			;;
+		9)
 			;;
 		ovpn)
 			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
@@ -400,6 +411,15 @@ do
 			fi
 
 			options_selector $number_of_ovpns "ovpns_array"
+
+			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selected_ovpn ; echo -ne "" $END
+			echo ""
+
+			echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z. This make the connection work in background."
+			echo -e "NOTE: netutils will close." $END
+			echo ""
+
+			openvpn --config /root/.secret/ovpns/${ovpns_array[$selected_ovpn]}
 
 			;;
 		0)
