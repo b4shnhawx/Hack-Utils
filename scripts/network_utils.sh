@@ -324,6 +324,7 @@ do
 
 			cd
 			rm -r  Network-Utils/
+			rm -r  /tmp/Network-Utils/
 			mkdir /tmp/Network-Utils/
 
 			git clone https://github.com/davidahid/Network-Utils
