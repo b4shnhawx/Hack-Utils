@@ -424,6 +424,8 @@ do
 		12)
 			echo -e $LIGHTYELLOW"12"$END")" "Route table"
 			echo ""
+			
+			;;
 		ovpn)
 			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
 			echo ""
