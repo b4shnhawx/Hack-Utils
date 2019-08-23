@@ -29,9 +29,13 @@ ifstat
 printf '\e[1;33m%-24s%-8s%-6s\e[0m\n%-24s%-8s%-6s\n' "1" "2" "3" "asdasasdasd" "qwe" "qweqwe"
 ```
 
-
-
-
+To install the scrip:
+```
+cd ~
+git clone https://github.com/davidahid/Deauth-packets-injection
+cd Deauth-packets-injection/scripts/
+bash installer.sh
+```
 
 .
 .
