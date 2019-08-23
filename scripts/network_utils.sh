@@ -307,10 +307,16 @@ do
 			echo -e $LIGHTYELLOW"up"$END")" "Update Network Utils"
 			echo ""
 
+			echo "Updating netutils ..."
+			echo ""
+			
 			git clone https://github.com/davidahid/Network-Utils
 			cd
 			mv $HOME/Network-Utils/ /tmp/
 			cp /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
+
+			clear
+			exit
 
 			;;
 		1)
