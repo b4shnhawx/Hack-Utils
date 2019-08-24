@@ -37,7 +37,7 @@ ovpns_extracted=`ls --width=1 /root/.secret/ovpns/ | tr '\n' " "`
 read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 
-programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer openvpn)
+programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer openvpn nmap)
 
 #Saves how many interfaces have the system
 number_of_interfaces=${#ifaces_array[@]}
@@ -89,7 +89,7 @@ menu()
 	echo -e $BLUE"  >>> ADVANCED <<<  "$END
 	echo ""
 
-	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info (nmcli)"
+	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info"
 	echo -e $TAB$LIGHTYELLOW" X"$END")" "Ping (personalized)"$TAB$TAB	$TAB$LIGHTYELLOW" X"$END")" "Traceroute (personalized)"
 	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server"
 	echo ""
@@ -132,6 +132,25 @@ options_selector()
 		echo -e " " $LIGHTYELLOW$whatever_number$END") "$BLUE${array[$whatever_number]}$END
 	done
 
+	echo ""
+}
+
+response_checker()
+{
+	selection=$1
+	number_of_options=$2
+
+	while true;
+	do
+		if [[ $selection < $number_of_options ]];
+		then
+			break
+		else
+			echo -e "Type a valid option:"
+			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+			echo ""
+		fi
+	done
 	echo ""
 }
 
@@ -213,7 +232,7 @@ do
 	invalidoption=false
 
 	clear
-]
+
 	case $option in
 		if)
 			echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
@@ -328,7 +347,7 @@ do
 			mkdir /tmp/Network-Utils/
 
 			git clone https://github.com/davidahid/Network-Utils
-			
+
 			mv Network-Utils/* /tmp/Network-Utils/
 			mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
@@ -350,10 +369,12 @@ do
 
 			options_selector $number_of_interfaces "ifaces_array"
 
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selected_interface ; echo -ne "" $END
+			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 			echo ""
 
-			ping -I ${ifaces_array[$selected_interface]} $ping_address
+			response_checker "$selection" "$number_of_interfaces"
+
+			ping -I ${ifaces_array[$selection]} $ping_address
 
 			;;
 		2)
@@ -370,6 +391,13 @@ do
 
 			;;
 		3)
+			echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
+			echo ""
+
+			echo -e "Which address you want to traceroute?"
+			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read traceroute_address ; echo -ne "" $END
+
+			
 			;;
 		4)
 			echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
@@ -379,12 +407,14 @@ do
 
 			options_selector $number_of_interfaces "ifaces_array"
 
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selected_interface ; echo -ne "" $END
+			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 			echo ""
 
-			gateway_ip=`ip route list | grep $selected_interface | grep default | cut -f 3 -d " " | uniq`
+			response_checker "$selection" "$number_of_interfaces"
 
-			traceroute --interface=${ifaces_array[$selected_interface]} $gateway_ip
+			gateway_ip=`ip route list | grep $selection | grep default | cut -f 3 -d " " | uniq`
+
+			traceroute --interface=${ifaces_array[$selection]} $gateway_ip
 
 			;;
 		5)
@@ -447,10 +477,12 @@ do
 
 			options_selector $number_of_ovpns "ovpns_array"
 
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selected_ovpn ; echo -ne "" $END
+			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 			echo ""
 
-			echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z. This make the connection work in background."
+			response_checker "$selection" "$number_of_ovpns"
+
+			echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z and the type the command bg. This make the connection work in background."
 			echo -e "NOTE: netutils will close." $END
 			echo ""
 
