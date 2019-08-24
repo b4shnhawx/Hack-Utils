@@ -32,10 +32,12 @@ TAB="\t"
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
 #All OVPNS profiles used in the system in one column
 ovpns_extracted=`ls --width=1 /root/.secret/ovpns/ | tr '\n' " "`
+ovpns_active_extracted=`ps aux | grep openvpn | grep /root/.secret/ovpns/ | rev | cut -f1 -d "/" | rev | tr '\n' " "`
 
 #Transforms the strings into arrays
 read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
+read -a ovpns_active_array <<< $ovpns_active_extracted
 
 programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer openvpn nmap)
 
@@ -43,6 +45,8 @@ programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vns
 number_of_interfaces=${#ifaces_array[@]}
 #Saves how many ovpns profiles have the system
 number_of_ovpns=${#ovpns_array[@]}
+#Saves how many ovpns active connections have the system
+number_of_ovpns_active=${#ovpns_active_array[@]}
 #Saves how many programs are used in this script
 number_of_programs=${#programs_array[@]}
 
@@ -127,7 +131,7 @@ options_selector()
 	number=$1
 	declare -n array=$2
 
-	for (( whatever_number=0; whatever_number<$1; whatever_number++ ));
+	for (( whatever_number=1; whatever_number<=$1; whatever_number++ ));
 	do
 		echo -e " " $LIGHTYELLOW$whatever_number$END") "$BLUE${array[$whatever_number]}$END
 	done
@@ -142,7 +146,10 @@ response_checker()
 
 	while true;
 	do
-		if [[ $selection < $number_of_options ]];
+		if [[ $selection == "0" ]];
+		then
+			echo "dep"
+		elif [[ $selection <= $number_of_options ]];
 		then
 			break
 		else
@@ -467,7 +474,14 @@ do
 			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
 			echo ""
 
-			if [[ $ovpns_extracted == '' ]];
+			if [[ $number_of_ovpns_active > "0" ]];
+			then
+				echo "There is alredy active connections. Do you want to finish some?"
+				options_selector $number_of_ovpns_active "ovpns_active_array"
+				
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				
+			elif [[ $ovpns_extracted == '' ]];
 			then
 				echo "There is no OVPN profiles configured in the system." 
 				echo "You need to export your OVPN profiles from your OVPN Server to the path /root/.secret/ovpn/ of this OVPN client."
