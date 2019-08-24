@@ -131,11 +131,13 @@ options_selector()
 	number=$1
 	declare -n array=$2
 
-	for (( whatever_number=1; whatever_number<=$1; whatever_number++ ));
+	for (( whatever_number=1; whatever_number<$1; whatever_number++ ));
 	do
 		echo -e " " $LIGHTYELLOW$whatever_number$END") "$BLUE${array[$whatever_number]}$END
 	done
 
+	echo ""
+	echo -e " " $LIGHTYELLOW"0"$END") "$BLUE"Exit"$END
 	echo ""
 }
 
@@ -143,13 +145,16 @@ response_checker()
 {
 	selection=$1
 	number_of_options=$2
+	number_of_options=$((number_of_options + 1))
 
 	while true;
 	do
-		if [[ $selection == "0" ]];
+		if [ $selection == "0" ];
 		then
-			echo "dep"
-		elif [[ $selection <= $number_of_options ]];
+			exit_selection="break"
+			return
+
+		elif [ $selection -lt $number_of_options ];
 		then
 			break
 		else
@@ -158,6 +163,9 @@ response_checker()
 			echo ""
 		fi
 	done
+
+	exit_selection=false
+
 	echo ""
 }
 
@@ -237,281 +245,289 @@ do
 	menu
 	#When user select an option, sets the parameter for distinguise an invalid option in false
 	invalidoption=false
+	exit_selection=false
 
 	clear
 
-	case $option in
-		if)
-			echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
-			echo ""
+	while [[ $exit_selection == false ]];
+#	while true;
+	do
 
-			#Function		First part of the command	Second part of the command
-			#command_for_interfaces "ifconfig "			""
-			command_for_interfaces "ifconfig " ""
-
-			;;
-		advif)
-			echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
-			echo ""
-
-			#Function               First part of the command       Second part of the command
-			#command_for_interfaces "ifconfig "                     ""
-			command_for_interfaces "nmcli device show " ""
-
-			;;
-		wc)
-			echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
-			echo ""
-
-			nmcli device wifi rescan
-			nmcli device wifi list
-			echo ""
-
-			echo -ne "SSID: "$LIGHTYELLOW ; read ssid ; echo -ne $END
-			echo -ne "Password: "$HIDE ; read psswd ; echo -e $END
-			echo ""
-
-			nmcli device wifi connect $ssid password $psswd
-			echo ""
-
-			sleep 2
-
-			echo "You want to test your internet connection?"
-			while true;
-			do
-				echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read resp ; echo -ne "" $END
-
-				if [ $resp = 'y' ]
-				then
-					ping -c 5 8.8.8.8
-					break
-				elif [ $resp = 'n' ]
-				then
-					break
-				else
-					print "Type yes (y) or no (n)"
-				fi
-			done
-
-			;;
-		chckdep)
-			valid_option=false
-
-			while [[ $valid_option == false ]];
-			do
-				show_programs
-
-				echo ""
+		case $option in
+			if)
+				echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
 				echo ""
 
-				echo -e " " $LIGHTYELLOW"id"$END")" "Install all the dependencies"
-				echo -e " " $LIGHTYELLOW"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
-				echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
+				#Function		First part of the command	Second part of the command
+				#command_for_interfaces "ifconfig "			""
+				command_for_interfaces "ifconfig " ""
+
+				;;
+			advif)
+				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
 				echo ""
+
+				#Function               First part of the command       Second part of the command
+				#command_for_interfaces "ifconfig "                     ""
+				command_for_interfaces "nmcli device show " ""
+
+				;;
+			wc)
+				echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
 				echo ""
 
-				echo "Type an option:"
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
+				nmcli device wifi rescan
+				nmcli device wifi list
 				echo ""
 
-				case $option in
-					id)
-						install_uninstall_programs_array "install" "" "$option"
+				echo -ne "SSID: "$LIGHTYELLOW ; read ssid ; echo -ne $END
+				echo -ne "Password: "$HIDE ; read psswd ; echo -e $END
+				echo ""
 
-						valid_option=true
+				nmcli device wifi connect $ssid password $psswd
+				echo ""
 
-						;;
-					ud)
-						install_uninstall_programs_array "" "purge" "$option"
+				sleep 2
 
-						valid_option=true
+				echo "You want to test your internet connection?"
+				while true;
+				do
+					echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read resp ; echo -ne "" $END
 
-						;;
-					0)
-						valid_option=true
+					if [ $resp = 'y' ]
+					then
+						ping -c 5 8.8.8.8
+						break
+					elif [ $resp = 'n' ]
+					then
+						break
+					else
+						print "Type yes (y) or no (n)"
+					fi
+				done
 
-						;;
-					*)
-						clear
+				;;
+			chckdep)
+				valid_option=false
 
-						;;
-				esac
-			done
+				while [[ $valid_option == false ]];
+				do
+					show_programs
 
-			;;
-		up)
-			echo -e $LIGHTYELLOW"up"$END")" "Update Network Utils"
-			echo ""
+					echo ""
+					echo ""
 
-			echo "Updating netutils ..."
-			echo ""
+					echo -e " " $LIGHTYELLOW"id"$END")" "Install all the dependencies"
+					echo -e " " $LIGHTYELLOW"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
+					echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
+					echo ""
+					echo ""
 
-			sleep 1
+					echo "Type an option:"
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
+					echo ""
 
-			cd
-			rm -r  Network-Utils/
-			rm -r  /tmp/Network-Utils/
-			mkdir /tmp/Network-Utils/
+					case $option in
+						id)
+							install_uninstall_programs_array "install" "" "$option"
 
-			git clone https://github.com/davidahid/Network-Utils
+							valid_option=true
 
-			mv Network-Utils/* /tmp/Network-Utils/
-			mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
+							;;
+						ud)
+							install_uninstall_programs_array "" "purge" "$option"
 
-			rm -r Network-Utils/
+							valid_option=true
 
-			clear
-			exit
+							;;
+						0)
+							valid_option=true
 
-			;;
-		1)
-			echo -e $LIGHTYELLOW"1"$END")" "Ping"
-			echo ""
+							;;
+						*)
+							clear
 
-			echo -e "Which address you want to ping?"
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ping_address ; echo -ne "" $END
-			echo ""
+							;;
+					esac
+				done
 
-			echo -e "From which interface you want to throw the ping?"
+				;;
+			up)
+				echo -e $LIGHTYELLOW"up"$END")" "Update Network Utils"
+				echo ""
 
-			options_selector $number_of_interfaces "ifaces_array"
+				echo "Updating netutils ..."
+				echo ""
 
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-			echo ""
+				sleep 1
 
-			response_checker "$selection" "$number_of_interfaces"
+				cd
+				rm -r  Network-Utils/
+				rm -r  /tmp/Network-Utils/
+				mkdir /tmp/Network-Utils/
 
-			ping -I ${ifaces_array[$selection]} $ping_address
+				git clone https://github.com/davidahid/Network-Utils
 
-			;;
-		2)
-			echo -e $LIGHTYELLOW"2"$END")" "Try internet connection"
-			echo ""
+				mv Network-Utils/* /tmp/Network-Utils/
+				mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
-			echo "Pinging to Google..."
-			echo ""
+				rm -r Network-Utils/
 
-			echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
-			echo ""
+				clear
+				exit
 
-			ping www.google.es
+				;;
+			1)
+				echo -e $LIGHTYELLOW"1"$END")" "Ping"
+				echo ""
 
-			;;
-		3)
-			echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
-			echo ""
+				echo -e "Which address you want to ping?"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ping_address ; echo -ne "" $END
+				echo ""
 
-			echo -e "Which address you want to traceroute?"
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read traceroute_address ; echo -ne "" $END
+				echo -e "From which interface you want to throw the ping?"
 
-			
-			;;
-		4)
-			echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
-			echo ""
+				options_selector $number_of_interfaces "ifaces_array"
 
-			echo -e "From which interface you want to reach the gateway?"
-
-			options_selector $number_of_interfaces "ifaces_array"
-
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-			echo ""
-
-			response_checker "$selection" "$number_of_interfaces"
-
-			gateway_ip=`ip route list | grep $selection | grep default | cut -f 3 -d " " | uniq`
-
-			traceroute --interface=${ifaces_array[$selection]} $gateway_ip
-
-			;;
-		5)
-			echo -e $LIGHTYELLOW"5"$END")" "ARP table"
-			echo ""
-
-			#Function		First part of the command	Second part of the command
-			#command_for_interfaces "arp -i "			""
-			command_for_interfaces "arp -i " ""
-
-			;;
-		6)
-			echo -e $LIGHTYELLOW"6"$END")" "Public IP"
-			echo ""
-
-			echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
-
-			;;
-		7)
-			echo -e $LIGHTYELLOW"7"$END")" "Bandwith"
-			echo ""
-			
-			;;
-		8)
-			echo -e $LIGHTYELLOW"8"$END")" "Bytes in/out"
-			echo ""
-			
-			;;
-		9)
-			echo -e $LIGHTYELLOW"9"$END")" "Check remote port status"
-			echo ""
-			
-			;;
-		10)
-			echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
-			echo ""
-			
-			;;
-		11)
-			echo -e $LIGHTYELLOW"11"$END")" "Firewall rules iptables"
-			echo ""
-			
-			;;
-		12)
-			echo -e $LIGHTYELLOW"12"$END")" "Route table"
-			echo ""
-			
-			;;
-		ovpn)
-			echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
-			echo ""
-
-			if [[ $number_of_ovpns_active > "0" ]];
-			then
-				echo "There is alredy active connections. Do you want to finish some?"
-				options_selector $number_of_ovpns_active "ovpns_active_array"
-				
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-				
-			elif [[ $ovpns_extracted == '' ]];
-			then
-				echo "There is no OVPN profiles configured in the system." 
-				echo "You need to export your OVPN profiles from your OVPN Server to the path /root/.secret/ovpn/ of this OVPN client."
-			else
-				:
-			fi
+				echo ""
 
-			options_selector $number_of_ovpns "ovpns_array"
+				response_checker "$selection" "$number_of_interfaces"
 
-			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-			echo ""
+				ping -I ${ifaces_array[$selection]} $ping_address
 
-			response_checker "$selection" "$number_of_ovpns"
+				;;
+			2)
+				echo -e $LIGHTYELLOW"2"$END")" "Try internet connection"
+				echo ""
 
-			echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z and the type the command bg. This make the connection work in background."
-			echo -e "NOTE: netutils will close." $END
-			echo ""
+				echo "Pinging to Google..."
+				echo ""
 
-			openvpn --config /root/.secret/ovpns/${ovpns_array[$selected_ovpn]}
+				echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
+				echo ""
 
-			;;
-		0)
-			exit
+				ping www.google.es
 
-			;;
-		*)
-			invalidoption=true
+				;;
+			3)
+				echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
+				echo ""
 
-			;;
-	esac
+				echo -e "Which address you want to traceroute?"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read traceroute_address ; echo -ne "" $END
+
+				;;
+			4)
+				echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
+				echo ""
+
+				echo -e "From which interface you want to reach the gateway?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_interfaces"
+				$exit_selection
+#
+				gateway_ip=`ip route list | grep $selection | grep default | cut -f 3 -d " " | uniq`
+
+				traceroute --interface=${ifaces_array[$selection]} $gateway_ip
+
+				;;
+			5)
+				echo -e $LIGHTYELLOW"5"$END")" "ARP table"
+				echo ""
+
+				#Function		First part of the command	Second part of the command
+				#command_for_interfaces "arp -i "			""
+				command_for_interfaces "arp -i " ""
+
+				;;
+			6)
+				echo -e $LIGHTYELLOW"6"$END")" "Public IP"
+				echo ""
+
+				echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
+
+				;;
+			7)
+				echo -e $LIGHTYELLOW"7"$END")" "Bandwith"
+				echo ""
+
+				;;
+			8)
+				echo -e $LIGHTYELLOW"8"$END")" "Bytes in/out"
+				echo ""
+
+				;;
+			9)
+				echo -e $LIGHTYELLOW"9"$END")" "Check remote port status"
+				echo ""
+
+				;;
+			10)
+				echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
+				echo ""
+
+				;;
+			11)
+				echo -e $LIGHTYELLOW"11"$END")" "Firewall rules iptables"
+				echo ""
+
+				;;
+			12)
+				echo -e $LIGHTYELLOW"12"$END")" "Route table"
+				echo ""
+
+				;;
+			ovpn)
+				echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
+				echo ""
+
+				if [[ $number_of_ovpns_active > "0" ]];
+				then
+					echo "There is alredy active connections. Do you want to finish some?"
+
+					options_selector $number_of_ovpns_active "ovpns_active_array"
+
+					echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+					echo ""
+
+				elif [[ $ovpns_extracted == '' ]];
+				then
+					echo "There is no OVPN profiles configured in the system." 
+					echo "You need to export your OVPN profiles from your OVPN Server to the path /root/.secret/ovpn/ of this OVPN client."
+				else
+					:
+				fi
+
+				options_selector $number_of_ovpns "ovpns_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_ovpns"
+
+				echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z and the type the command bg. This make the connection work in background."
+				echo -e "NOTE: netutils will close." $END
+				echo ""
+
+				openvpn --config /root/.secret/ovpns/${ovpns_array[$selected_ovpn]}
+
+				;;
+			0)
+				exit
+
+				;;
+			*)
+				invalidoption=true
+
+				;;
+			esac
+		done
 
 	#If the user type an invalid option...
 	if [[ $invalidoption == true ]];
