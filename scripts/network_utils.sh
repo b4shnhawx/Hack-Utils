@@ -149,12 +149,12 @@ response_checker()
 
 	while true;
 	do
-		if [ $selection == "0" ];
+		if [ $selection == "0" ] || [ $selection == "n" ];
 		then
 			exit_selection="break"
 			return
 
-		elif [ $selection -lt $number_of_options ];
+		elif [ $selection -lt $number_of_options ] || [ $selection == "y" ];
 		then
 			break
 		else
@@ -290,21 +290,13 @@ do
 				sleep 2
 
 				echo "You want to test your internet connection?"
-				while true;
-				do
-					echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read resp ; echo -ne "" $END
+				echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
 
-					if [ $resp = 'y' ]
-					then
-						ping -c 5 8.8.8.8
-						break
-					elif [ $resp = 'n' ]
-					then
-						break
-					else
-						print "Type yes (y) or no (n)"
-					fi
-				done
+				response_checker "$selection" ""
+				$exit_selection
+
+				ping -c 5 8.8.8.8
 
 				;;
 			chckdep)
@@ -350,6 +342,7 @@ do
 
 							;;
 					esac
+					exit_selection=true
 				done
 
 				;;
@@ -376,7 +369,6 @@ do
 
 				clear
 				exit
-
 				;;
 			1)
 				echo -e $LIGHTYELLOW"1"$END")" "Ping"
@@ -392,7 +384,7 @@ do
 
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
-				
+
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
@@ -498,9 +490,13 @@ do
 					echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 					echo ""
 
+					response_checker "$selection" "$number_of_ovpns_active"
+					$exit_selection
+
+
 				elif [[ $ovpns_extracted == '' ]];
 				then
-					echo "There is no OVPN profiles configured in the system." 
+					echo "There is no OVPN profiles configured in the system."
 					echo "You need to export your OVPN profiles from your OVPN Server to the path /root/.secret/ovpn/ of this OVPN client."
 				else
 					:
@@ -511,7 +507,7 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "$selection" "$number_of_interfaces"
+				response_checker "$selection" "$number_of_ovpns"
 				$exit_selection
 
 				echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z and the type the command bg. This make the connection work in background."
@@ -528,8 +524,11 @@ do
 			*)
 				invalidoption=true
 
+
 				;;
 			esac
+
+			exit_selection=true
 		done
 
 	#If the user type an invalid option...
