@@ -319,6 +319,7 @@ do
 
 					echo -e " " $LIGHTYELLOW"id"$END")" "Install all the dependencies"
 					echo -e " " $LIGHTYELLOW"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
+					echo ""
 					echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
 					echo ""
 					echo ""
@@ -391,8 +392,9 @@ do
 
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
-
+				
 				response_checker "$selection" "$number_of_interfaces"
+				$exit_selection
 
 				ping -I ${ifaces_array[$selection]} $ping_address
 
@@ -431,7 +433,7 @@ do
 
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
-#
+
 				gateway_ip=`ip route list | grep $selection | grep default | cut -f 3 -d " " | uniq`
 
 				traceroute --interface=${ifaces_array[$selection]} $gateway_ip
@@ -509,7 +511,8 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "$selection" "$number_of_ovpns"
+				response_checker "$selection" "$number_of_interfaces"
+				$exit_selection
 
 				echo -e $UNDERRED$BLACK"When the connection is established, press Ctrl+Z and the type the command bg. This make the connection work in background."
 				echo -e "NOTE: netutils will close." $END
