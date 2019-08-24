@@ -493,7 +493,20 @@ do
 					response_checker "$selection" "$number_of_ovpns_active"
 					$exit_selection
 
+					clear
+					echo "Which connection you want to finish?"
+					
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+					echo ""
 
+					response_checker "$selection" "$number_of_ovpns_active"
+					$exit_selection
+
+					ping -I ${ifaces_array[$selection]} $ping_address
+
+					
+					${ovpns_active_array[$selection}
+					
 				elif [[ $ovpns_extracted == '' ]];
 				then
 					echo "There is no OVPN profiles configured in the system."
@@ -514,7 +527,7 @@ do
 				echo -e "NOTE: netutils will close." $END
 				echo ""
 
-				openvpn --config /root/.secret/ovpns/${ovpns_array[$selected_ovpn]}
+				openvpn --config /root/.secret/ovpns/${ovpns_array[$selection]}
 
 				;;
 			0)
