@@ -31,7 +31,7 @@ TAB="\t"
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
 #All OVPNS profiles used in the system in one column
-ovpns_extracted=`ls --width=1 /root/.secret/ovpns/ | tr '\n' " "`
+ovpns_extracted=`ls --width=1 $HOME/.secret/ovpns/ | tr '\n' " "`
 ovpns_active_extracted=`ps aux | grep openvpn | grep /root/.secret/ovpns/ | rev | cut -f1 -d "/" | rev | tr '\n' " "`
 
 #Transforms the strings into arrays
@@ -39,7 +39,9 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat network-manager speedometer openvpn nmap)
+programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap)
+bandwith_interface_programs_array=(iftop speedometer tcptrack slurm ifstat vnstat nload iptraf)
+bandwith_programs_array=(vnstat bwm-ng)
 
 #Saves how many interfaces have the system
 number_of_interfaces=${#ifaces_array[@]}
@@ -49,6 +51,9 @@ number_of_ovpns=${#ovpns_array[@]}
 number_of_ovpns_active=${#ovpns_active_array[@]}
 #Saves how many programs are used in this script
 number_of_programs=${#programs_array[@]}
+#Saves how many programs to monitor the traffic are used in this script
+number_of_bandwith_interface_program=${#bandwith_interface_programs_array[@]}
+number_of_bandwith_program=${#bandwith_programs_array[@]}
 
 #---------------- FUNCTIONS ----------------
 menu()
@@ -83,7 +88,7 @@ menu()
 	echo -e $TAB$LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"$TAB	$TAB$LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
 	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Hops to gateway"$TAB$TAB		$TAB$LIGHTYELLOW" 5"$END")" "ARP table"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 6"$END")" "Public IP"$TAB
-	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Bandwith"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Bytes in/out"$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
+	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Traffic"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic by interface" $TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
 	echo -e $TAB$LIGHTYELLOW" 10"$END")" "Ports in use"$TAB			$TAB$TAB$LIGHTYELLOW" 11"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW" 12"$END")" "Route table"
 	echo ""
 	echo ""
@@ -130,15 +135,20 @@ options_selector()
 {
 	number=$1
 	declare -n array=$2
+	array=("Exit" "${array[@]}")
 
-	for (( whatever_number=1; whatever_number<$1; whatever_number++ ));
+	for (( whatever_number=1; whatever_number<=$1; whatever_number++ ));
 	do
 		echo -e " " $LIGHTYELLOW$whatever_number$END") "$BLUE${array[$whatever_number]}$END
 	done
 
 	echo ""
-	echo -e " " $LIGHTYELLOW"0"$END") "$BLUE"Exit"$END
+	echo -e " " $LIGHTYELLOW"0"$END") "$BLUE${array[0]}$END
 	echo ""
+
+	#Reset the array for no add every time the function is executed a element "Exit"
+	unset array[0]
+
 }
 
 response_checker()
@@ -250,7 +260,6 @@ do
 	clear
 
 	while [[ $exit_selection == false ]];
-#	while true;
 	do
 
 		case $option in
@@ -300,7 +309,7 @@ do
 
 				;;
 			chckdep)
-				valid_option=false
+				valid_option=false														####################################
 
 				while [[ $valid_option == false ]];
 				do
@@ -323,6 +332,8 @@ do
 					case $option in
 						id)
 							install_uninstall_programs_array "install" "" "$option"
+
+							echo "If you have some problems installing some programs, enter --> apt-get install --fix-missing"
 
 							valid_option=true
 
@@ -375,20 +386,20 @@ do
 				echo ""
 
 				echo -e "Which address you want to ping?"
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ping_address ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 				echo ""
 
 				echo -e "From which interface you want to throw the ping?"
 
 				options_selector $number_of_interfaces "ifaces_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
-				ping -I ${ifaces_array[$selection]} $ping_address
+				ping -I ${ifaces_array[$interfaces_selection]} $ip_address
 
 				;;
 			2)
@@ -405,11 +416,23 @@ do
 
 				;;
 			3)
-				echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
+				echo -e $LIGHTYELLOW"3"$END")" "Traceroute"
 				echo ""
 
 				echo -e "Which address you want to traceroute?"
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read traceroute_address ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+
+				echo -e "From which interface you want to throw the ping?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_interfaces"
+				$exit_selection
+
+				traceroute -i ${ifaces_array[$interfaces_selection]} $ip_address
 
 				;;
 			4)
@@ -420,7 +443,7 @@ do
 
 				options_selector $number_of_interfaces "ifaces_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
@@ -428,7 +451,12 @@ do
 
 				gateway_ip=`ip route list | grep $selection | grep default | cut -f 3 -d " " | uniq`
 
-				traceroute --interface=${ifaces_array[$selection]} $gateway_ip
+				if [ $gateway_ip == ''];
+				then
+					echo "The interface is not connected to the network."
+				else
+					traceroute --interface=${ifaces_array[$interfaces_selection]} $gateway_ip
+				fi
 
 				;;
 			5)
@@ -448,13 +476,129 @@ do
 
 				;;
 			7)
-				echo -e $LIGHTYELLOW"7"$END")" "Bandwith"
+				echo -e $LIGHTYELLOW"7"$END")" "Traffic"
 				echo ""
+
+				bwm-ng bwm-ng --allif 2
+
+				echo -e "What program you want to use?"
+				echo -e "With vnstat you can monitor in background all traffic and then generate reports of all the traffic. Also you can calculate the traffic."
+				echo -e "With bwm-ng you can monitor all traffic in the interfaces in live."
+
+				options_selector $number_of_bandwith_program "bandwith_interface_programs_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read program_bandwidth_selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$program_bandwidth_selection" "$number_of_bandwith_interface_program"
+				$exit_selection
+
+				if [ ${bandwith_programs_array[$program_bandwidth_selection]} == "bwm-ng" ];
+				then
+					bwm-ng bwm-ng --allif 2
+				elif [ ${bandwith_programs_array[$program_bandwidth_selection]} == "vnstat" ];
+				then
+					echo ""
+					echo ""
+
+					echo -e " " $LIGHTYELLOW"start"$END")" "Start vnstat in background"
+					echo -e " " $LIGHTYELLOW"stop"$END")" "Stop vnstat in background"
+					echo -e " " $LIGHTYELLOW"view"$END")" "View the last report"
+					echo -e " " $LIGHTYELLOW"calc"$END")" "Calculate the traffic"
+					echo ""
+					echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
+					echo ""
+					echo ""
+
+					echo "Type an option:"
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
+					echo ""
+
+					case $option in
+						start)
+							install_uninstall_programs_array "install" "" "$option"
+
+							echo "If you have some problems installing some programs, enter --> apt-get install --fix-missing"
+
+							valid_option=true
+
+							;;
+						stop)
+							install_uninstall_programs_array "" "purge" "$option"
+
+							valid_option=true
+
+							;;
+						view)
+							valid_option=true
+
+							;;
+						calc)
+
+							;;
+						*)
+							clear
+
+							;;
+					esac
+				fi
 
 				;;
 			8)
-				echo -e $LIGHTYELLOW"8"$END")" "Bytes in/out"
+				echo -e $LIGHTYELLOW"8"$END")" "Traffic by interface"
 				echo ""
+
+				echo -e "In which interface you want to monitor the traffic?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$interfaces_selection" "$number_of_interfaces"
+				$exit_selection
+				
+				echo -e "What program you want to use?"
+
+				options_selector $number_of_bandwith_interface_program "bandwith_interface_programs_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read program_bandwidth_interface_selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$program_bandwidth_interface_selection" "$number_of_bandwith_interface_program"
+				$exit_selection
+
+				if [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "iftop" ];
+				then
+					iftop -i ${ifaces_array[$interfaces_selection]}
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "speedometer" ]
+				then
+					speedometer -r ${ifaces_array[$interfaces_selection]} -t ${ifaces_array[$interfaces_selection]}
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "tcptrack" ]
+				then
+					tcptrack -i ${ifaces_array[$interfaces_selection]}
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "slurm" ]
+				then
+					slurm -i ${ifaces_array[$interfaces_selection]}
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "ifstat" ]
+				then
+					ifstat -t -i ${ifaces_array[$interfaces_selection]} 0.5					
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "vnstat" ]
+				then
+					vnstat --live --iface ${ifaces_array[$interfaces_selection]}					
+#				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "nload" ]
+#				then
+#					
+#				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "iptraf" ]
+#				then
+					
+				fi
+				#iftop -i ${ifaces_array[$selection]}
 
 				;;
 			9)
@@ -480,6 +624,9 @@ do
 			ovpn)
 				echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
 				echo ""
+
+				mkdir $HOME/.secret
+				mkdir $HOME/.secret/ovpns
 
 				if [[ $number_of_ovpns_active > "0" ]];
 				then
@@ -510,7 +657,7 @@ do
 				elif [[ $ovpns_extracted == '' ]];
 				then
 					echo "There is no OVPN profiles configured in the system."
-					echo "You need to export your OVPN profiles from your OVPN Server to the path /root/.secret/ovpn/ of this OVPN client."
+					echo "You need to export your OVPN profiles from your OVPN Server to the path $HOME/.secret/ovpns/ of this OVPN client."
 				else
 					:
 				fi
