@@ -40,7 +40,7 @@ read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
 programs_array=(ping nmcli traceroute iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap)
-bandwith_interface_programs_array=(iftop speedometer tcptrack slurm ifstat vnstat nload iptraf)
+bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
 
 #Saves how many interfaces have the system
@@ -89,7 +89,7 @@ menu()
 	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Hops to gateway"$TAB$TAB		$TAB$LIGHTYELLOW" 5"$END")" "ARP table"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 6"$END")" "Public IP"$TAB
 	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Traffic"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic by interface" $TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
-	echo -e $TAB$LIGHTYELLOW" 10"$END")" "Ports in use"$TAB			$TAB$TAB$LIGHTYELLOW" 11"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW" 12"$END")" "Route table"
+	echo -e $TAB$LIGHTYELLOW"10"$END")" "Ports in use"$TAB			$TAB$TAB$LIGHTYELLOW"11"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW"12"$END")" "Route table"
 	echo ""
 	echo ""
 
@@ -145,6 +145,7 @@ options_selector()
 	echo ""
 	echo -e " " $LIGHTYELLOW"0"$END") "$BLUE${array[0]}$END
 	echo ""
+	echo "Type an option:"
 
 	#Reset the array for no add every time the function is executed a element "Exit"
 	unset array[0]
@@ -479,13 +480,11 @@ do
 				echo -e $LIGHTYELLOW"7"$END")" "Traffic"
 				echo ""
 
-				bwm-ng bwm-ng --allif 2
-
-				echo -e "What program you want to use?"
 				echo -e "With vnstat you can monitor in background all traffic and then generate reports of all the traffic. Also you can calculate the traffic."
 				echo -e "With bwm-ng you can monitor all traffic in the interfaces in live."
+				echo -e "What program you want to use?"
 
-				options_selector $number_of_bandwith_program "bandwith_interface_programs_array"
+				options_selector $number_of_bandwith_program "bandwith_programs_array"
 
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read program_bandwidth_selection ; echo -ne "" $END
 				echo ""
@@ -496,17 +495,18 @@ do
 				if [ ${bandwith_programs_array[$program_bandwidth_selection]} == "bwm-ng" ];
 				then
 					bwm-ng bwm-ng --allif 2
+
 				elif [ ${bandwith_programs_array[$program_bandwidth_selection]} == "vnstat" ];
 				then
 					echo ""
-					echo ""
+					echo "Select an option to do:"
 
 					echo -e " " $LIGHTYELLOW"start"$END")" "Start vnstat in background"
-					echo -e " " $LIGHTYELLOW"stop"$END")" "Stop vnstat in background"
-					echo -e " " $LIGHTYELLOW"view"$END")" "View the last report"
-					echo -e " " $LIGHTYELLOW"calc"$END")" "Calculate the traffic"
+					echo -e " " $LIGHTYELLOW" stop"$END")" "Stop vnstat in background"
+					echo -e " " $LIGHTYELLOW" view"$END")" "View the last report"
+					echo -e " " $LIGHTYELLOW" calc"$END")" "Calculate the traffic"
 					echo ""
-					echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
+					echo -e " " $LIGHTYELLOW"    0"$END")" "Cancel"
 					echo ""
 					echo ""
 
@@ -516,24 +516,25 @@ do
 
 					case $option in
 						start)
-							install_uninstall_programs_array "install" "" "$option"
-
-							echo "If you have some problems installing some programs, enter --> apt-get install --fix-missing"
-
-							valid_option=true
+							systemctl start vnstat
 
 							;;
 						stop)
-							install_uninstall_programs_array "" "purge" "$option"
+							systemctl stop vnstat
 
-							valid_option=true
+							vnstat						
 
 							;;
 						view)
-							valid_option=true
+							vnstat
 
 							;;
 						calc)
+							command_for_interfaces "vnstat --traffic --iface " ""
+
+							;;
+						0)
+							valid_option=true
 
 							;;
 						*)
@@ -541,6 +542,10 @@ do
 
 							;;
 					esac
+
+				elif [];
+				then
+					
 				fi
 
 				;;
@@ -582,7 +587,7 @@ do
 
 				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "slurm" ]
 				then
-					slurm -i ${ifaces_array[$interfaces_selection]}
+					slurm -i ${ifaces_array[$interfaces_selection]} -z
 
 				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "ifstat" ]
 				then
