@@ -521,7 +521,8 @@ do
 					case $option in
 						start)
 							systemctl start vnstat
-
+							systemctl status vnstat
+							
 							;;
 						stop)
 							systemctl stop vnstat
