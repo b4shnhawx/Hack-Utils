@@ -64,7 +64,7 @@ menu()
 	 | \\ | | ___| |___      _____  _ __| | __   | | | | |_(_) |___
 	 |  \\| |/ _ \\ __\\ \\ /\\ / / _ \\| '__| |/ /   | | | | __| | / __|
 	 | |\\  |  __/ |_ \\ V  V / (_) | |  |   <    | |_| | |_| | \\__ \\
-	 |_| \\_|\\___|\\__| \\_/\\_/ \\___/|_|  |_|\\_\\    \\___/ \\__|_|_|___/		v 0.3
+	 |_| \\_|\\___|\\__| \\_/\\_/ \\___/|_|  |_|\\_\\    \\___/ \\__|_|_|___/		v 0.4
 -------------------------------------------------------------------------------------
 	-------------------------------------------------------------------------------------
 	"$END
@@ -334,6 +334,7 @@ do
 						id)
 							install_uninstall_programs_array "install" "" "$option"
 
+							echo ""
 							echo "If you have some problems installing some programs, enter --> apt-get install --fix-missing"
 
 							valid_option=true
@@ -394,13 +395,15 @@ do
 
 				options_selector $number_of_interfaces "ifaces_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
-				ping -I ${ifaces_array[$interfaces_selection]} $ip_address
+				echo $response_checker
+
+				ping -I ${ifaces_array[$selection]} $ip_address
 
 				;;
 			2)
@@ -422,18 +425,19 @@ do
 
 				echo -e "Which address you want to traceroute?"
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+				echo ""
 
 				echo -e "From which interface you want to throw the ping?"
 
 				options_selector $number_of_interfaces "ifaces_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
-				traceroute -i ${ifaces_array[$interfaces_selection]} $ip_address
+				traceroute -i ${ifaces_array[$selection]} $ip_address
 
 				;;
 			4)
@@ -444,7 +448,7 @@ do
 
 				options_selector $number_of_interfaces "ifaces_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
@@ -456,7 +460,7 @@ do
 				then
 					echo "The interface is not connected to the network."
 				else
-					traceroute --interface=${ifaces_array[$interfaces_selection]} $gateway_ip
+					traceroute --interface=${ifaces_array[$selection]} $gateway_ip
 				fi
 
 				;;
@@ -486,17 +490,17 @@ do
 
 				options_selector $number_of_bandwith_program "bandwith_programs_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read program_bandwidth_selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "$program_bandwidth_selection" "$number_of_bandwith_interface_program"
+				response_checker "$selection" "$number_of_bandwith_interface_program"
 				$exit_selection
 
-				if [ ${bandwith_programs_array[$program_bandwidth_selection]} == "bwm-ng" ];
+				if [ ${bandwith_programs_array[$selection]} == "bwm-ng" ];
 				then
 					bwm-ng bwm-ng --allif 2
 
-				elif [ ${bandwith_programs_array[$program_bandwidth_selection]} == "vnstat" ];
+				elif [ ${bandwith_programs_array[$selection]} == "vnstat" ];
 				then
 					echo ""
 					echo "Select an option to do:"
@@ -542,10 +546,6 @@ do
 
 							;;
 					esac
-
-				elif [];
-				then
-					
 				fi
 
 				;;
@@ -557,49 +557,54 @@ do
 
 				options_selector $number_of_interfaces "ifaces_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read interfaces_selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "$interfaces_selection" "$number_of_interfaces"
+				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 				
+				interface=$selection
+
 				echo -e "What program you want to use?"
 
 				options_selector $number_of_bandwith_interface_program "bandwith_interface_programs_array"
 
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read program_bandwidth_interface_selection ; echo -ne "" $END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "$program_bandwidth_interface_selection" "$number_of_bandwith_interface_program"
+				response_checker "$selection" "$number_of_bandwith_interface_program"
 				$exit_selection
 
-				if [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "iftop" ];
-				then
-					iftop -i ${ifaces_array[$interfaces_selection]}
+				program_bandwidth_interface=$selection
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "speedometer" ]
+				if [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "iftop" ];
 				then
-					speedometer -r ${ifaces_array[$interfaces_selection]} -t ${ifaces_array[$interfaces_selection]}
+					iftop -i ${ifaces_array[$interface]}
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "tcptrack" ]
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "speedometer" ]
 				then
-					tcptrack -i ${ifaces_array[$interfaces_selection]}
+					speedometer -r ${ifaces_array[$interface]} -t ${ifaces_array[$interface]}
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "slurm" ]
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "tcptrack" ]
 				then
-					slurm -i ${ifaces_array[$interfaces_selection]} -z
+					tcptrack -i ${ifaces_array[$interface]}
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "ifstat" ]
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "slurm" ]
 				then
-					ifstat -t -i ${ifaces_array[$interfaces_selection]} 0.5					
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "vnstat" ]
+					slurm -i ${ifaces_array[$interface]} -z
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "ifstat" ]
 				then
-					vnstat --live --iface ${ifaces_array[$interfaces_selection]}					
-#				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "nload" ]
+					ifstat -t -i ${ifaces_array[$interface]} 0.5					
+
+				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "vnstat" ]
+				then
+					vnstat --live --iface ${ifaces_array[$interface]}					
+#				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "nload" ]
 #				then
 #					
-#				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface_selection]} == "iptraf" ]
+#				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "iptraf" ]
 #				then
 					
 				fi
