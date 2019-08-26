@@ -64,7 +64,7 @@ menu()
 	 | \\ | | ___| |___      _____  _ __| | __   | | | | |_(_) |___
 	 |  \\| |/ _ \\ __\\ \\ /\\ / / _ \\| '__| |/ /   | | | | __| | / __|
 	 | |\\  |  __/ |_ \\ V  V / (_) | |  |   <    | |_| | |_| | \\__ \\
-	 |_| \\_|\\___|\\__| \\_/\\_/ \\___/|_|  |_|\\_\\    \\___/ \\__|_|_|___/		v 0.4
+	 |_| \\_|\\___|\\__| \\_/\\_/ \\___/|_|  |_|\\_\\    \\___/ \\__|_|_|___/		v 0.3
 -------------------------------------------------------------------------------------
 	-------------------------------------------------------------------------------------
 	"$END
@@ -228,6 +228,10 @@ install_uninstall_programs_array()
 			#echo "sudo apt-get --assume-yes $1 ${programs_array[$program]} > /dev/null"
 			sudo apt-get --assume-yes $1 $2 ${programs_array[$program]} > /dev/null
 
+		elif [[ ${programs_array[$program]} == "nmcli" ]];
+		then
+			sudo apt-get --assume-yes install network-manager > /dev/null
+			
 		elif [[ $path_actual_program == "/"* && $option == "ud" && ${programs_array[$program]} == "ping" || ${programs_array[$program]} == "nmcli" || ${programs_array[$program]} == "traceroute" ]];
 		then
 			echo "Omiting ${programs_array[$program]} ..."
@@ -521,8 +525,7 @@ do
 					case $option in
 						start)
 							systemctl start vnstat
-							systemctl status vnstat
-							
+
 							;;
 						stop)
 							systemctl stop vnstat
