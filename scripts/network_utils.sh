@@ -267,53 +267,7 @@ do
 
 	while [[ $exit_selection == false ]];
 	do
-
 		case $option in
-			if)
-				echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
-				echo ""
-
-				#Function		First part of the command	Second part of the command
-				#command_for_interfaces "ifconfig "			""
-				command_for_interfaces "ifconfig " ""
-
-				;;
-			advif)
-				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
-				echo ""
-
-				#Function               First part of the command       Second part of the command
-				#command_for_interfaces "ifconfig "                     ""
-				command_for_interfaces "nmcli device show " ""
-
-				;;
-			wc)
-				echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
-				echo ""
-
-				nmcli device wifi rescan
-				nmcli device wifi list
-				echo ""
-
-				echo -ne "SSID: "$LIGHTYELLOW ; read ssid ; echo -ne $END
-				echo -ne "Password: "$HIDE ; read psswd ; echo -e $END
-				echo ""
-
-				nmcli device wifi connect $ssid password $psswd
-				echo ""
-
-				sleep 2
-
-				echo "You want to test your internet connection?"
-				echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-				echo ""
-
-				response_checker "$selection" ""
-				$exit_selection
-
-				ping -c 5 8.8.8.8
-
-				;;
 			chckdep)
 				valid_option=false														####################################
 
@@ -364,6 +318,52 @@ do
 				done
 
 				;;
+			if)
+				echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
+				echo ""
+
+				#Function		First part of the command	Second part of the command
+				#command_for_interfaces "ifconfig "			""
+				command_for_interfaces "ifconfig " ""
+
+				;;
+			advif)
+				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
+				echo ""
+
+				#Function               First part of the command       Second part of the command
+				#command_for_interfaces "ifconfig "                     ""
+				command_for_interfaces "nmcli device show " ""
+
+				;;
+			wc)
+				echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
+				echo ""
+
+				nmcli device wifi rescan
+				nmcli device wifi list
+				echo ""
+
+				echo -ne "SSID: "$LIGHTYELLOW ; read ssid ; echo -ne $END
+				echo -ne "Password: "$HIDE ; read psswd ; echo -e $END
+				echo ""
+
+				nmcli device wifi connect $ssid password $psswd
+				echo ""
+
+				sleep 2
+
+				echo "You want to test your internet connection?"
+				echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" ""
+				$exit_selection
+
+				ping -c 5 8.8.8.8
+
+				;;
+
 			up)
 				echo -e $LIGHTYELLOW"up"$END")" "Update Network Utils"
 				echo ""
