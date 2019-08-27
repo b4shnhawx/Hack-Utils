@@ -90,6 +90,7 @@ menu()
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Hops to gateway"$TAB$TAB		$TAB$LIGHTYELLOW" 5"$END")" "ARP table"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 6"$END")" "Public IP"$TAB
 	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Traffic"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic by interface" $TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
 	echo -e $TAB$LIGHTYELLOW"10"$END")" "Ports in use"$TAB			$TAB$TAB$LIGHTYELLOW"11"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW"12"$END")" "Route table"
+	echo -e $TAB$LIGHTYELLOW"13"$END")" "Sniff packets"$TAB
 	echo ""
 	echo ""
 
@@ -632,6 +633,11 @@ do
 				;;
 			12)
 				echo -e $LIGHTYELLOW"12"$END")" "Route table"
+				echo ""
+
+				;;
+			13)
+				echo -e $LIGHTYELLOW"12"$END")" "Sniff packets"
 				echo ""
 
 				;;
