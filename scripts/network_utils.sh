@@ -39,7 +39,7 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
 
@@ -161,19 +161,37 @@ response_checker()
 
 	while true;
 	do
-		if [ $selection == "0" ] || [ $selection == "n" ];
+		if [ "$selection" == "0" ] || [ "$selection" == "n" ];
 		then
 			exit_selection="break"
 			return
 
-		elif [ $selection -lt $number_of_options ] || [ $selection == "y" ];
+		elif [ $selection -lt $number_of_options ] || [ "$selection" == "y" ];
 		then
 			break
+
 		else
 			echo -e "Type a valid option:"
 			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 			echo ""
 		fi
+	done
+
+	echo ""
+}
+
+ip_checker()
+{
+	ip_address=$1
+	ip_address_format=`echo $ip_address | egrep "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" `
+
+	while [ "$ip_address" != "$ip_address_format" ];
+	do
+		echo -e "Please, type a valid IP:"
+		echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+		echo ""
+
+		ip_address_format=`echo $ip_address | egrep "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" `
 	done
 
 	exit_selection=false
@@ -278,10 +296,10 @@ do
 					echo ""
 					echo ""
 
-					echo -e " " $LIGHTYELLOW"id"$END")" "Install all the dependencies"
-					echo -e " " $LIGHTYELLOW"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
+					echo -e " " $BLUE"id"$END")" "Install all the dependencies (before install, exit netutils and type apt-get update && apt-get upgrade)"
+					echo -e " " $BLUE"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
 					echo ""
-					echo -e " " $LIGHTYELLOW" 0"$END")" "Cancel"
+					echo -e " " $BLUE" 0"$END")" "Cancel"
 					echo ""
 					echo ""
 
@@ -396,6 +414,8 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 				echo ""
 
+				ip_checker $ip_address
+
 				echo -e "From which interface you want to throw the ping?"
 
 				options_selector $number_of_interfaces "ifaces_array"
@@ -408,6 +428,9 @@ do
 
 				echo $response_checker
 
+				echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
+				echo ""
+
 				ping -I ${ifaces_array[$selection]} $ip_address
 
 				;;
@@ -416,6 +439,8 @@ do
 				echo ""
 
 				echo "Pinging to Google..."
+				echo ""
+				echo ""
 				echo ""
 
 				echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
@@ -432,17 +457,22 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 				echo ""
 
+				ip_checker $ip_address
+
 				echo -e "From which interface you want to throw the ping?"
 
 				options_selector $number_of_interfaces "ifaces_array"
 
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
+				echo ""
+				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
-				traceroute -i ${ifaces_array[$selection]} $ip_address
+
+				traceroute --queries=2 --max-hops=10 --interface=${ifaces_array[$selection]} $ip_address
 
 				;;
 			4)
@@ -455,22 +485,26 @@ do
 
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
+				echo ""
+				echo ""	
 
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
 				gateway_ip=`ip route list | grep $selection | grep default | cut -f 3 -d " " | uniq`
 
-				if [ $gateway_ip == ''];
+				if [ "$gateway_ip" == '' ];
 				then
 					echo "The interface is not connected to the network."
 				else
-					traceroute --interface=${ifaces_array[$selection]} $gateway_ip
+					traceroute --queries=2 --max-hops=10 --interface=${ifaces_array[$selection]} $gateway_ip
 				fi
 
 				;;
 			5)
 				echo -e $LIGHTYELLOW"5"$END")" "ARP table"
+				echo ""
+				echo ""
 				echo ""
 
 				#Function		First part of the command	Second part of the command
@@ -481,6 +515,8 @@ do
 			6)
 				echo -e $LIGHTYELLOW"6"$END")" "Public IP"
 				echo ""
+				echo ""
+				echo ""
 
 				echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
 
@@ -490,7 +526,7 @@ do
 				echo ""
 
 				echo -e "With vnstat you can monitor in background all traffic and then generate reports of all the traffic. Also you can calculate the traffic."
-				echo -e "With bwm-ng you can monitor all traffic in the interfaces in live."
+				echo -e "With bwm-ng you can monitor all traffic in the interfaces in live. Press "$UNDERRED$BLACK"q or Ctrl+C to exit bwm-ng"$END
 				echo -e "What program you want to use?"
 
 				options_selector $number_of_bandwith_program "bandwith_programs_array"
@@ -521,6 +557,8 @@ do
 
 					echo "Type an option:"
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
+					echo ""
+					echo ""
 					echo ""
 
 					case $option in
@@ -577,6 +615,11 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
+				while [ $selection == "m" ];
+				do
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				done
+
 				response_checker "$selection" "$number_of_bandwith_interface_program"
 				$exit_selection
 
@@ -596,7 +639,6 @@ do
 
 				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "slurm" ]
 				then
-
 					slurm -i ${ifaces_array[$interface]} -z
 
 				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "ifstat" ]
@@ -619,6 +661,26 @@ do
 			9)
 				echo -e $LIGHTYELLOW"9"$END")" "Check remote port status"
 				echo ""
+
+				echo -e "From which interface yo want to check de remote port status?"
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_interfaces"
+				$exit_selection
+
+				echo -e "Type the host and the port."
+				echo -ne $BLINK" IP: "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+
+				ip_checker $ip_address
+
+				echo -ne $BLINK" Port: "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+				echo ""
+
+				telnet_output=`telnet $ip_address $port`
+
 
 				;;
 			10)
@@ -732,3 +794,4 @@ do
 	#selected_interface=""
 	#option=""
 done
+
