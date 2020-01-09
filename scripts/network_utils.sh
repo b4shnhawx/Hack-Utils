@@ -674,16 +674,22 @@ do
 				$exit_selection
 
 				echo -e "Type the host and the port."
-				echo -ne $BLINK" IP: "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+				echo -ne $BLINK"   IP: "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 
 				ip_checker $ip_address
 
 				echo -ne $BLINK" Port: "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
 				echo ""
+				
+				telnet_output=`telnet $ip_address $port | grep -o Connected`
 
-				telnet_output=`telnet $ip_address $port`
+				if [ "$telnet_output" == "Connected" ];
+				then
+					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $GREEN "OPEN" $END
 
-
+				else
+					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERRED$BLACK "CLOSED" $END
+				fi
 				;;
 			10)
 				echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
