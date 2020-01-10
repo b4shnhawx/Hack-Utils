@@ -675,11 +675,11 @@ do
 				$exit_selection
 
 				echo -e "Type the host and the port."
-				echo -ne $BLINK"   IP: "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+				echo -ne $BLINK" >   IP: "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 
 				ip_checker $ip_address
 
-				echo -ne $BLINK" Port: "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+				echo -ne $BLINK" > Port: "$END$LIGHTYELLOW ; read port ; echo -ne "\r" $END
 				echo ""
 				
 				telnet_output=`nmap $ip_address -p $port | grep $port | cut -f 2 -d " "`
@@ -695,6 +695,7 @@ do
 				else
 					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERYELLOW$BLACK "$telnet_output" $END
 				fi
+
 				;;
 			10)
 				echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
@@ -807,3 +808,5 @@ do
 	#selected_interface=""
 	#option=""
 done
+
+
