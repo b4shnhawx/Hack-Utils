@@ -688,7 +688,7 @@ do
 				then
 					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERGREEN$BLACK "OPEN" $END
 
-				if [ "$telnet_output" == "closed" ];
+				elif [ "$telnet_output" == "closed" ];
 				then
 					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERRED$WHITE "CLOSED" $END
 				
