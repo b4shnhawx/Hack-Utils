@@ -20,6 +20,7 @@ UNDERRED="\e[41m"
 UNDERGREEN="\e[42m"
 UNDERWHITE="\e[107m"
 UNDERGRAY="\e[47m"
+UNDERYELLOW="\e[103m"
 
 #Obv we need a control sequence that closes the rest control sequences
 END="\e[0m"
@@ -681,14 +682,18 @@ do
 				echo -ne $BLINK" Port: "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
 				echo ""
 				
-				telnet_output=`telnet $ip_address $port | grep -o Connected`
+				telnet_output=`nmap $ip_address -p $port | grep $port | cut -f 2 -d " "`
 
-				if [ "$telnet_output" == "Connected" ];
+				if [ "$telnet_output" == "open" ];
 				then
 					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERGREEN$BLACK "OPEN" $END
 
+				if [ "$telnet_output" == "closed" ];
+				then
+					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERRED$WHITE "CLOSED" $END
+				
 				else
-					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERRED$BLACK "CLOSED" $END
+					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERYELLOW$BLACK "$telnet_output" $END
 				fi
 				;;
 			10)
@@ -802,6 +807,3 @@ do
 	#selected_interface=""
 	#option=""
 done
-
-
-
