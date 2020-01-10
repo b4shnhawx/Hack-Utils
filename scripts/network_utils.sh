@@ -685,7 +685,7 @@ do
 
 				if [ "$telnet_output" == "Connected" ];
 				then
-					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $GREEN "OPEN" $END
+					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERGREEN$BLACK "OPEN" $END
 
 				else
 					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERRED$BLACK "CLOSED" $END
@@ -802,4 +802,6 @@ do
 	#selected_interface=""
 	#option=""
 done
+
+
 
