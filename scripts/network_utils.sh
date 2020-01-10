@@ -701,6 +701,18 @@ do
 				echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
 				echo ""
 
+				echo -e "Enter the port number or press ENTER to view all ports:"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+				echo ""
+
+				if [[ $port == '' ]];
+				then
+					sudo netstat -pant
+				else
+					echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
+					sudo netstat -pant | grep $port
+				fi
+
 				;;
 			11)
 				echo -e $LIGHTYELLOW"11"$END")" "Firewall rules iptables"
@@ -808,5 +820,4 @@ do
 	#selected_interface=""
 	#option=""
 done
-
 
