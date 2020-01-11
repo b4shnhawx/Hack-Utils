@@ -401,7 +401,8 @@ do
 
 				git clone https://github.com/davidahid/Network-Utils
 
-				mv Network-Utils/scripts/* /etc/netutils/
+				mv Network-Utils/scripts/network_utils.sh /etc/netutils/
+				mv Network-Utils/scripts/bl.sh /etc/netutils/
 				#mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
 				rm -r Network-Utils/
