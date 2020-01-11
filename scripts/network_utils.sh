@@ -103,8 +103,8 @@ menu()
 	echo -e $BLUE"  >>> ADVANCED <<<  "$END
 	echo ""
 
-	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info"
-	echo -e $TAB$LIGHTYELLOW" X"$END")" "Ping (personalized)"$TAB$TAB	$TAB$LIGHTYELLOW" X"$END")" "Traceroute (personalized)"
+	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info"$TAB 	$TAB$LIGHTYELLOW" sniff"$END")" "Sniff packets"
+	echo -e $TAB$LIGHTYELLOW" X"$END")" "Ping (personalized)"$TAB$TAB		$TAB$LIGHTYELLOW"     X"$END")" "Traceroute (personalized)"
 	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server"
 	echo ""
 	echo ""
@@ -740,7 +740,7 @@ do
 
 				;;
 			12)
-				echo -e $LIGHTYELLOW"12"$END")" "Firewall rules iptables"
+				echo -e $LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"
 				echo ""
 				echo ""
 				echo ""
@@ -778,11 +778,12 @@ do
 				echo ""
 				echo ""
 				
-				echo "AUTONOMOUS SYSTEM"
+				echo -e $BLUE"AUTONOMOUS SYSTEM"$END
 				whois -h whois.cymru.com -- -v "$ip_address"
+
 				echo ""
-				
-				echo "BLACKLISTS"
+
+				echo -e $BLUE"BLACKLISTS"$END
 				bash /etc/netutils/bl.sh $ip_address
 
 				;;
