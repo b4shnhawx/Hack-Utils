@@ -778,7 +778,7 @@ do
 				echo ""
 				echo ""
 				
-				whois -h whois.cymru.com -- '-v $ip_address'
+				whois -h whois.cymru.com -- -v "$ip_address"
 				
 				bash /etc/netutils/bl.sh $ip_address
 
