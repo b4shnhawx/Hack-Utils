@@ -88,12 +88,13 @@ menu()
 	echo -e $BLUE"  >>> BASICS <<<  "$END
 	echo ""
 
-	echo -e $TAB$LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"$TAB	$TAB$LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
-	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB
-	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Hops to gateway"$TAB$TAB		$TAB$LIGHTYELLOW" 5"$END")" "ARP table"$TAB$TAB			$TAB$TAB$LIGHTYELLOW" 6"$END")" "Public IP"$TAB
-	echo -e $TAB$LIGHTYELLOW" 7"$END")" "Traffic"				$TAB$TAB$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic by interface" $TAB$TAB$LIGHTYELLOW" 9"$END")" "Check remote port status"
-	echo -e $TAB$LIGHTYELLOW"10"$END")" "Ports in use"$TAB			$TAB$TAB$LIGHTYELLOW"11"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW"12"$END")" "Route table"
-	echo -e $TAB$LIGHTYELLOW"13"$END")" "Sniff packets"$TAB
+	echo -e $TAB$LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"$TAB$TAB$LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
+	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB$TAB
+	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Whois"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 5"$END")" "Hops to gateway"$TAB 	 	$TAB$TAB$LIGHTYELLOW" 6"$END")" "ARP table"$TAB$TAB	
+	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"TAB$TABTAB$TAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
+	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB 			$TAB$TAB$LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"	
+	echo -e $TAB$LIGHTYELLOW"13"$END")" "Route table"$TAB$TAB$TAB	$TAB$LIGHTYELLOW"14"$END")" "Sniff packets"$TAB				$TAB$TAB$LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
+	echo -e 
 	echo ""
 	echo ""
 
@@ -479,7 +480,31 @@ do
 
 				;;
 			4)
-				echo -e $LIGHTYELLOW"4"$END")" "Hops to gateway"
+				echo -e $LIGHTYELLOW"4"$END")" "Whois"
+				echo ""
+				echo ""
+				echo ""
+
+				echo -e "Enter the IP address to lookup:"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+				echo ""
+				echo ""
+				echo ""
+
+				ip_checker $ip_address
+                                                                                     
+				echo "    ____  ____  __  ______    _____   __   _       ____  ______  _________"
+				echo "   / __ \/ __ \/  |/  /   |  /  _/ | / /  | |     / / / / / __ \/  _/ ___/"
+				echo "  / / / / / / / /|_/ / /| |  / //  |/ /   | | /| / / /_/ / / / // / \__ \   "
+				echo " / /_/ / /_/ / /  / / ___ |_/ // /|  /    | |/ |/ / __  / /_/ // / ___/ / "
+				echo "/_____/\____/_/  /_/_/  |_/___/_/ |_/     |__/|__/_/ /_/\____/___//____/  "
+                                                                                                                              
+
+				whois $ip_address
+
+				;;
+			5)
+				echo -e $LIGHTYELLOW"5"$END")" "Hops to gateway"
 				echo ""
 
 				echo -e "From which interface you want to reach the gateway?"
@@ -504,8 +529,8 @@ do
 				fi
 
 				;;
-			5)
-				echo -e $LIGHTYELLOW"5"$END")" "ARP table"
+			6)
+				echo -e $LIGHTYELLOW"6"$END")" "ARP table"
 				echo ""
 				echo ""
 				echo ""
@@ -515,8 +540,8 @@ do
 				command_for_interfaces "arp -i " ""
 
 				;;
-			6)
-				echo -e $LIGHTYELLOW"6"$END")" "Public IP"
+			7)
+				echo -e $LIGHTYELLOW"7"$END")" "Public IP"
 				echo ""
 				echo ""
 				echo ""
@@ -524,8 +549,8 @@ do
 				echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
 
 				;;
-			7)
-				echo -e $LIGHTYELLOW"7"$END")" "Traffic"
+			8)
+				echo -e $LIGHTYELLOW"8"$END")" "Traffic"
 				echo ""
 
 				echo -e "With vnstat you can monitor in background all traffic and then generate reports of all the traffic. Also you can calculate the traffic."
@@ -595,8 +620,8 @@ do
 				fi
 
 				;;
-			8)
-				echo -e $LIGHTYELLOW"8"$END")" "Traffic by interface"
+			9)
+				echo -e $LIGHTYELLOW"9"$END")" "Traffic by interface"
 				echo ""
 
 				echo -e "In which interface you want to monitor the traffic?"
@@ -661,8 +686,8 @@ do
 				#iftop -i ${ifaces_array[$selection]}
 
 				;;
-			9)
-				echo -e $LIGHTYELLOW"9"$END")" "Check remote port status"
+			10)
+				echo -e $LIGHTYELLOW"10"$END")" "Check remote port status"
 				echo ""
 
 				echo -e "From which interface yo want to check de remote port status?"
@@ -697,8 +722,8 @@ do
 				fi
 
 				;;
-			10)
-				echo -e $LIGHTYELLOW"10"$END")" "Ports in use"
+			11)
+				echo -e $LIGHTYELLOW"11"$END")" "Ports in use"
 				echo ""
 
 				echo -e "Enter the port number or press ENTER to view all ports:"
@@ -714,19 +739,46 @@ do
 				fi
 
 				;;
-			11)
-				echo -e $LIGHTYELLOW"11"$END")" "Firewall rules iptables"
+			12)
+				echo -e $LIGHTYELLOW"12"$END")" "Firewall rules iptables"
+				echo ""
+				echo ""
 				echo ""
 
-				;;
-			12)
-				echo -e $LIGHTYELLOW"12"$END")" "Route table"
+				iptables -L
+
 				echo ""
+				echo "-----------------------------------"
+				echo ""
+
+				iptables -S
 
 				;;
 			13)
-				echo -e $LIGHTYELLOW"12"$END")" "Sniff packets"
+				echo -e $LIGHTYELLOW"13"$END")" "Route table"
 				echo ""
+				echo ""
+				echo ""
+
+				ip route
+
+				;;
+			14)
+				echo -e $LIGHTYELLOW"14"$END")" "Sniff packets"
+				echo ""
+
+				;;
+			15)
+				echo -e $LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
+				echo ""
+
+				echo -e "Enter the IP address to lookup:"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+				echo ""
+
+				ip_checker $ip_address
+
+				bash /etc/netutils/bl.sh $ip_address
 
 				;;
 			ovpn)
@@ -820,4 +872,3 @@ do
 	#selected_interface=""
 	#option=""
 done
-
