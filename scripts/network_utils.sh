@@ -397,13 +397,12 @@ do
 
 				cd
 				rm -r  Network-Utils/
-				rm -r  /tmp/Network-Utils/
-				mkdir /tmp/Network-Utils/
+				mkdir /etc/netutils/
 
 				git clone https://github.com/davidahid/Network-Utils
 
-				mv Network-Utils/* /tmp/Network-Utils/
-				mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
+				mv Network-Utils/scripts/* /etc/netutils/
+				#mv /tmp/Network-Utils/scripts/network_utils.sh /etc/netutils/network_utils.sh
 
 				rm -r Network-Utils/
 
