@@ -778,8 +778,11 @@ do
 				echo ""
 				echo ""
 				
+				echo "AUTONOMOUS SYSTEM"
 				whois -h whois.cymru.com -- -v "$ip_address"
+				echo ""
 				
+				echo "BLACKLISTS"
 				bash /etc/netutils/bl.sh $ip_address
 
 				;;
