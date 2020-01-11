@@ -776,8 +776,6 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 				echo ""
 
-				ip_checker $ip_address
-
 				bash /etc/netutils/bl.sh $ip_address
 
 				;;
