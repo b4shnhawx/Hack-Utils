@@ -11,6 +11,8 @@
 #### main ####
 main() {
 
+  trap ctrl_c INT
+
   [ $# -ne 1 ] && error "Please specify a FQDN or IP as a parameter."
 
   fqdn=$(echo $1 | grep -P "(?=^.{5,254}$)(^(?:(?!\d+\.)[a-za-z0-9_\-]{1,63}\.?)+(?:[a-za-z]{2,})$)")
@@ -29,6 +31,11 @@ main() {
   fi
 
   loopthroughblacklists $1
+}
+
+#### trap ctrl-c and call ctrl_c() ####
+ctrl_c(){
+  exit
 }
 
 #### reverseit ####
@@ -79,6 +86,7 @@ error() {
 
   echo $0 error: $1 >&2
   exit 2
+  netutils
 }
 
 #### cecho ####
