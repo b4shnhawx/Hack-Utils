@@ -8,104 +8,16 @@
 # description: I was just a bit tired of web interfaces            #
 ####################################################################
 
-#### main ####
-main() {
+#---------------- FORMATING VARIABLES -------------
+LIGHTYELLOW="\e[1;33m"
+BLACK="\e[30m"
 
-  trap ctrl_c INT
+UNDERYELLOW="\e[103m"
 
-  [ $# -ne 1 ] && error "Please specify a FQDN or IP as a parameter."
+END="\e[0m"
 
-  fqdn=$(echo $1 | grep -P "(?=^.{5,254}$)(^(?:(?!\d+\.)[a-za-z0-9_\-]{1,63}\.?)+(?:[a-za-z]{2,})$)")
 
-  if [[ $fqdn ]] ; then
-
-    echo "You entered a domain: $1"
-
-    domain=$(host $1 | head -n1 | awk '{print $4}')
-
-    reverseit $domain "IP not valid or domain could not be resolved."
-  else
-
-    echo "You entered an IP: $1"
-    reverseit $1 "IP not valid."
-  fi
-
-  loopthroughblacklists $1
-}
-
-#### trap ctrl-c and call ctrl_c() ####
-ctrl_c(){
-  echo ""
-  echo "> Blacklist checker stoped <"
-  exit
-}
-
-#### reverseit ####
-reverseit() {
-
-  reverse=$(echo $1 |
-  sed -ne "s~^\([0-9]\{1,3\}\)\.\([0-9]\{1,3\}\)\.\([0-9]\{1,3\}\)\.\([0-9]\{1,3\}\)$~\4.\3.\2.\1~p")
-
-  if [ "x${reverse}" = "x" ] ; then
-
-    error $2 
-    exit 1
-  fi
-}
-
-#### loopthroughblacklists ####
-loopthroughblacklists() {
-
-  reverse_dns=$(dig +short -x $1)
-
-  echo $1 name ${reverse_dns:----}
-
-  for bl in ${blacklists} ; do
-
-      printf $(env tz=utc date "+%y-%m-%d_%h:%m:%s_%z")
-      printf "%-40s" " ${reverse}.${bl}."
-
-      listed="$(dig +short -t a ${reverse}.${bl}.)"
-
-      if [[ $listed ]]; then
-
-        if [[ $listed == *"timed out"* ]]; then
-
-          echo "[timed out]" | cecho YELLOW 
-        else
-        
-          echo "[blacklisted] (${listed})" | cecho LRED
-        fi
-      else
-
-          echo "[not listed]" | cecho LGREEN
-      fi
-  done
-}
-
-#### error ####
-error() {
-
-  echo $0 error: $1 >&2
-  exit 2
-  netutils
-}
-
-#### cecho ####
-cecho(){
-  LGREEN="\033[1;32m"
-  LRED="\033[1;31m"
-  YELLOW="\033[1;33m"
-  NORMAL="\033[m"
- 
-  color=\$${1:-NORMAL}
- 
-  echo -ne "$(eval echo ${color})"
-  cat
- 
-  echo -ne "${NORMAL}"
-}
-
+#---------------- VARIABLES -------------
 #### blacklists - grabbed from https://hetrixtools.com/blacklist-check ####
 blacklists="
 0spam.fusionzero.com
@@ -225,5 +137,105 @@ z.mailspike.net
 zombie.dnsbl.sorbs.net
 "
 
+#---------------- FUNCTIONS ----------------
+#### main ####
+main() {
+
+  trap ctrl_c INT
+
+  [ $# -ne 1 ] && error "Please specify a FQDN or IP as a parameter."
+
+  fqdn=$(echo $1 | grep -P "(?=^.{5,254}$)(^(?:(?!\d+\.)[a-za-z0-9_\-]{1,63}\.?)+(?:[a-za-z]{2,})$)")
+
+  if [[ $fqdn ]] ; then
+
+    domain=$(host $1 | head -n1 | awk '{print $4}')
+
+    reverseit $domain "IP not valid or domain could not be resolved."
+
+  else
+    reverseit $1 "IP not valid."
+
+  fi
+
+  loopthroughblacklists $1
+}
+
+#### trap ctrl-c and call ctrl_c() ####
+ctrl_c(){
+  echo ""
+  echo ""
+  echo "> Blacklist checker stoped <"
+
+  exit
+}
+
+#### reverseit ####
+reverseit() {
+
+  reverse=$(echo $1 |
+  sed -ne "s~^\([0-9]\{1,3\}\)\.\([0-9]\{1,3\}\)\.\([0-9]\{1,3\}\)\.\([0-9]\{1,3\}\)$~\4.\3.\2.\1~p")
+
+  if [ "x${reverse}" = "x" ] ; then
+
+    error $2 
+    exit 1
+  fi
+}
+
+#### loopthroughblacklists ####
+loopthroughblacklists() {
+
+  reverse_dns=$(dig +short -x $1)
+
+  echo -e $1 name $BLACK$UNDERYELLOW ${reverse_dns:----} $END
+
+  for bl in ${blacklists} ; do
+
+      printf $(env tz=utc date "+%y-%m-%d_%h:%m:%s_%z")
+      printf "%-40s" " ${reverse}.${bl}."
+
+      listed="$(dig +short -t a ${reverse}.${bl}.)"
+
+      if [[ $listed ]]; then
+
+        if [[ $listed == *"timed out"* ]]; then
+
+          echo "[timed out]" | cecho YELLOW 
+        else
+        
+          echo "[blacklisted] (${listed})" | cecho LRED
+        fi
+      else
+
+          echo "[not listed]" | cecho LGREEN
+      fi
+  done
+}
+
+#### error ####
+error() {
+
+  echo $0 error: $1 >&2
+  exit 2
+  netutils
+}
+
+#### cecho ####
+cecho(){
+  LGREEN="\033[1;32m"
+  LRED="\033[1;31m"
+  YELLOW="\033[1;33m"
+  NORMAL="\033[m"
+ 
+  color=\$${1:-NORMAL}
+ 
+  echo -ne "$(eval echo ${color})"
+  cat
+ 
+  echo -ne "${NORMAL}"
+}
+
+#---------------- SCRIPT ----------------
 ### initiate script ###
 main $1
