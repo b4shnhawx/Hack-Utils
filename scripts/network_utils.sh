@@ -91,7 +91,7 @@ menu()
 	echo -e $TAB$LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"$TAB$TAB$LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
 	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB$TAB
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Whois"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 5"$END")" "Hops to gateway"$TAB 	 	$TAB$TAB$LIGHTYELLOW" 6"$END")" "ARP table"$TAB$TAB	
-	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"TAB$TABTAB$TAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
+	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"$TAB$TABTAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
 	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB 			$TAB$TAB$LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"	
 	echo -e $TAB$LIGHTYELLOW"13"$END")" "Route table"$TAB$TAB$TAB	$TAB$LIGHTYELLOW"14"$END")" "Sniff packets"$TAB				$TAB$TAB$LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
 	echo -e 
