@@ -775,7 +775,11 @@ do
 				echo -e "Enter the IP address to lookup:"
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 				echo ""
-
+				echo ""
+				echo ""
+				
+				whois -h whois.cymru.com -- '-v $ip_address'
+				
 				bash /etc/netutils/bl.sh $ip_address
 
 				;;
