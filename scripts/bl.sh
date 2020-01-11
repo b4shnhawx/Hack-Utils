@@ -35,6 +35,8 @@ main() {
 
 #### trap ctrl-c and call ctrl_c() ####
 ctrl_c(){
+  echo ""
+  echo "> Blacklist checker stoped <"
   exit
 }
 
