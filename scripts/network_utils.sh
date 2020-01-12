@@ -93,7 +93,7 @@ menu()
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Whois"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 5"$END")" "Hops to gateway"$TAB 	 	$TAB$TAB$LIGHTYELLOW" 6"$END")" "ARP table"$TAB$TAB	
 	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"$TAB$TABTAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
 	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB 			$TAB$TAB$LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"	
-	echo -e $TAB$LIGHTYELLOW"13"$END")" "Route table"$TAB$TAB$TAB	$TAB$LIGHTYELLOW"14"$END")" "Sniff packets"$TAB				$TAB$TAB$LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
+	echo -e $TAB$LIGHTYELLOW"13"$END")" "Route table"$TAB$TAB$TAB	$TAB$LIGHTYELLOW"14"$END")" "Check IP blacklist / abuse"
 	echo -e 
 	echo ""
 	echo ""
@@ -104,7 +104,7 @@ menu()
 	echo ""
 
 	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info"$TAB 	$TAB$LIGHTYELLOW" sniff"$END")" "Sniff packets"
-	echo -e $TAB$LIGHTYELLOW" X"$END")" "Ping (personalized)"$TAB$TAB		$TAB$LIGHTYELLOW"     X"$END")" "Traceroute (personalized)"
+	echo -e $LIGHTYELLOW"     pping"$END")" "Ping (personalized)"$TAB$TAB		$TAB$LIGHTYELLOW"     X"$END")" "Traceroute (personalized)"
 	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server"
 	echo ""
 	echo ""
@@ -175,13 +175,12 @@ response_checker()
 			break
 
 		else
+			echo ""
 			echo -e "Type a valid option:"
 			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 			echo ""
 		fi
 	done
-
-	echo ""
 }
 
 ip_checker()
@@ -199,8 +198,6 @@ ip_checker()
 	done
 
 	exit_selection=false
-
-	echo ""
 }
 
 show_programs()
@@ -349,15 +346,7 @@ do
 				command_for_interfaces "ifconfig " ""
 
 				;;
-			advif)
-				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
-				echo ""
 
-				#Function               First part of the command       Second part of the command
-				#command_for_interfaces "ifconfig "                     ""
-				command_for_interfaces "nmcli device show " ""
-
-				;;
 			wc)
 				echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
 				echo ""
@@ -409,7 +398,9 @@ do
 
 				clear
 				exit
+
 				;;
+
 			1)
 				echo -e $LIGHTYELLOW"1"$END")" "Ping"
 				echo ""
@@ -438,6 +429,7 @@ do
 				ping -I ${ifaces_array[$selection]} $ip_address
 
 				;;
+
 			2)
 				echo -e $LIGHTYELLOW"2"$END")" "Try internet connection"
 				echo ""
@@ -453,6 +445,7 @@ do
 				ping www.google.es
 
 				;;
+
 			3)
 				echo -e $LIGHTYELLOW"3"$END")" "Traceroute"
 				echo ""
@@ -479,6 +472,7 @@ do
 				traceroute --queries=2 --max-hops=10 --interface=${ifaces_array[$selection]} $ip_address
 
 				;;
+
 			4)
 				echo -e $LIGHTYELLOW"4"$END")" "Whois"
 				echo ""
@@ -503,6 +497,7 @@ do
 				whois $ip_address
 
 				;;
+
 			5)
 				echo -e $LIGHTYELLOW"5"$END")" "Hops to gateway"
 				echo ""
@@ -529,6 +524,7 @@ do
 				fi
 
 				;;
+
 			6)
 				echo -e $LIGHTYELLOW"6"$END")" "ARP table"
 				echo ""
@@ -540,6 +536,7 @@ do
 				command_for_interfaces "arp -i " ""
 
 				;;
+
 			7)
 				echo -e $LIGHTYELLOW"7"$END")" "Public IP"
 				echo ""
@@ -549,6 +546,7 @@ do
 				echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
 
 				;;
+
 			8)
 				echo -e $LIGHTYELLOW"8"$END")" "Traffic"
 				echo ""
@@ -620,6 +618,7 @@ do
 				fi
 
 				;;
+
 			9)
 				echo -e $LIGHTYELLOW"9"$END")" "Traffic by interface"
 				echo ""
@@ -686,6 +685,7 @@ do
 				#iftop -i ${ifaces_array[$selection]}
 
 				;;
+
 			10)
 				echo -e $LIGHTYELLOW"10"$END")" "Check remote port status"
 				echo ""
@@ -704,10 +704,12 @@ do
 
 				ip_checker $ip_address
 
-				echo -ne $BLINK" > Port: "$END$LIGHTYELLOW ; read port ; echo -ne "\r" $END
+				echo -ne $BLINK"> Port: "$END$LIGHTYELLOW ; read port ; echo -ne "\r" $END
 				echo ""
 				
 				telnet_output=`nmap $ip_address -p $port | grep $port | cut -f 2 -d " "`
+
+				echo -ne $BLUE"PORT STATUS"$END
 
 				if [ "$telnet_output" == "open" ];
 				then
@@ -722,6 +724,7 @@ do
 				fi
 
 				;;
+
 			11)
 				echo -e $LIGHTYELLOW"11"$END")" "Ports in use"
 				echo ""
@@ -739,6 +742,7 @@ do
 				fi
 
 				;;
+
 			12)
 				echo -e $LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"
 				echo ""
@@ -754,6 +758,7 @@ do
 				iptables -S
 
 				;;
+
 			13)
 				echo -e $LIGHTYELLOW"13"$END")" "Route table"
 				echo ""
@@ -763,13 +768,9 @@ do
 				ip route
 
 				;;
-			14)
-				echo -e $LIGHTYELLOW"14"$END")" "Sniff packets"
-				echo ""
 
-				;;
-			15)
-				echo -e $LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
+			14)
+				echo -e $LIGHTYELLOW"14"$END")" "Check IP blacklist / abuse"
 				echo ""
 
 				echo -e "Enter the IP address to lookup:"
@@ -778,15 +779,104 @@ do
 				echo ""
 				echo ""
 				
-				echo -e $BLUE"AUTONOMOUS SYSTEM"$END
+				echo -e $BLUE">>> AUTONOMOUS SYSTEM <<<"$END
 				whois -h whois.cymru.com -- -v "$ip_address"
 
 				echo ""
+				echo ""
+				echo ""
+				echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
+				echo ""
 
-				echo -e $BLUE"BLACKLISTS"$END
+				echo -e $BLUE">>> BLACKLISTS <<<"$END
 				bash /etc/netutils/bl.sh $ip_address
 
 				;;
+
+			advif)
+				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
+				echo ""
+
+				#Function               First part of the command       Second part of the command
+				#command_for_interfaces "ifconfig "                     ""
+				command_for_interfaces "nmcli device show " ""
+
+				;;
+
+			sniff)
+				echo -e $LIGHTYELLOW"sniff"$END")" "Sniff packets"
+				echo ""
+
+				;;
+
+			pping)
+				echo -e $LIGHTYELLOW"advping"$END")" "Ping (personalized)"
+				echo ""
+
+				echo -e "From which interface you want to throw the ping?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+
+				response_checker "$selection" "$number_of_interfaces"
+				$exit_selection
+
+				echo $response_checker
+
+				echo -e "Fill the options:"
+				echo -ne $BLINK" >            IP: "$END$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+
+				ip_checker $ip_address
+
+
+				pping_command="ping -I ${ifaces_array[$selection]}"
+
+
+				echo -ne $BLINK">     Count (n): "$END$LIGHTYELLOW ; read count ; echo -ne "" $END
+				if [[ $count != "" ]];
+				then
+					pping_command="${pping_command} -c ${count}"
+				fi
+
+				echo -ne $BLINK">  Interval (s): "$END$LIGHTYELLOW ; read interval ; echo -ne "" $END
+				if [[ $interval != "" ]];
+				then
+					pping_command="${pping_command} -i ${interval}"
+				fi
+
+				echo -ne $BLINK">      Size (b): "$END$LIGHTYELLOW ; read size ; echo -ne "" $END
+				if [[ $size != "" ]];
+				then
+					pping_command="${pping_command} -s ${size}"
+				fi
+
+				echo -ne $BLINK">       TTL (n): "$END$LIGHTYELLOW ; read ttl ; echo -ne "" $END
+				if [[ $ttl != "" ]];
+				then
+					pping_command="${pping_command} -t ${ttl}"
+				fi
+
+				echo -ne $BLINK">  QoS (tclass): "$END$LIGHTYELLOW ; read qos ; echo -ne "" $END
+				if [[ $qos != "" ]];
+				then
+					pping_command="${pping_command} -Q ${qos}"
+				fi
+
+				echo ""
+				echo ""
+				echo ""
+				echo -e $BLUE $pping_command $ip_address $END
+				echo ""
+
+				echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
+				echo ""
+
+
+				$pping_command $ip_address
+
+				;;
+
 			ovpn)
 				echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
 				echo ""
@@ -843,13 +933,14 @@ do
 				openvpn --config /root/.secret/ovpns/${ovpns_array[$selection]}
 
 				;;
+
 			0)
 				exit
 
 				;;
+
 			*)
 				invalidoption=true
-
 
 				;;
 			esac
