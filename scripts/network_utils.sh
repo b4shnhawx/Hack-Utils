@@ -42,7 +42,7 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
 
@@ -92,8 +92,9 @@ menu()
 	echo -e $TAB$LIGHTYELLOW" 1"$END")" "Ping"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 2"$END")" "Try internet connection"	$TAB$TAB$LIGHTYELLOW" 3"$END")" "Traceroute"$TAB$TAB
 	echo -e $TAB$LIGHTYELLOW" 4"$END")" "Whois"$TAB$TAB				$TAB$TAB$LIGHTYELLOW" 5"$END")" "Hops to gateway"$TAB 	 	$TAB$TAB$LIGHTYELLOW" 6"$END")" "ARP table"$TAB$TAB	
 	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"$TAB$TABTAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
-	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB 			$TAB$TAB$LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"	
-	echo -e $TAB$LIGHTYELLOW"13"$END")" "Route table"$TAB$TAB$TAB	$TAB$LIGHTYELLOW"14"$END")" "Check IP blacklist / abuse"		$TAB$TAB$LIGHTYELLOW"15"$END")" "Speed test"
+	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB  		$TAB$TAB$LIGHTYELLOW"12"$END")" "Search port info (online)"
+	echo -e $TAB$LIGHTYELLOW"13"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW"14"$END")" "Route table"$TAB$TAB   	$TAB$TAB$LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
+	echo -e $TAB$LIGHTYELLOW"16"$END")" "Speed test"
 	echo -e 
 	echo ""
 	echo ""
@@ -744,7 +745,30 @@ do
 				;;
 
 			12)
-				echo -e $LIGHTYELLOW"12"$END")" "Firewall rules (iptables)"
+				echo -e $LIGHTYELLOW"12"$END")" "Search port info (online)"
+				echo ""
+
+				echo -e "Enter the port number:"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+				echo ""
+
+				mkdir /tmp/netutils 2> /dev/null
+				
+				lynx -accept_all_cookies -dump "https://es.adminsub.net/tcp-udp-port-finder/"$port > /tmp/netutils/lynx_ports.txt
+				
+				total_lines=`wc -l /tmp/netutils/lynx_ports.txt | cut -c1-3`
+				lines_below=`cat -n /tmp/netutils/lynx_ports.txt | cut -c4-100 | grep "squedas Recientes" | cut -c1-3`
+				lines_above=`cat -n /tmp/netutils/lynx_ports.txt | cut -c4-100 | grep "Buscar los resultados de" | cut -c1-3`
+				
+				lines_below=$((lines_below - 1))
+				lines_above=$(((lines_above + 1) * -1))
+				
+				cat /tmp/netutils/lynx_ports.txt | head -n $lines_below | tac | head -n $lines_above | tac
+
+				;;
+
+			13)
+				echo -e $LIGHTYELLOW"13"$END")" "Firewall rules (iptables)"
 				echo ""
 				echo ""
 				echo ""
@@ -759,8 +783,8 @@ do
 
 				;;
 
-			13)
-				echo -e $LIGHTYELLOW"13"$END")" "Route table"
+			14)
+				echo -e $LIGHTYELLOW"14"$END")" "Route table"
 				echo ""
 				echo ""
 				echo ""
@@ -769,8 +793,8 @@ do
 
 				;;
 
-			14)
-				echo -e $LIGHTYELLOW"14"$END")" "Check IP blacklist / abuse"
+			15)
+				echo -e $LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
 				echo ""
 
 				echo -e "Enter the IP address to lookup:"
@@ -793,6 +817,12 @@ do
 
 				;;
 
+			16)
+				echo -e $LIGHTYELLOW"16"$END")" "Speed test"
+				echo ""
+
+				;;
+				
 			advif)
 				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
 				echo ""
