@@ -181,7 +181,6 @@ response_checker()
 			echo ""
 			echo -e "Type a valid option:"
 			echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-			echo ""
 		fi
 	done
 }
@@ -275,6 +274,17 @@ install_uninstall_programs_array()
 		show_programs
 	done
 }
+
+#()
+#{
+#	#Wait for user to press the enter key after he view what he need
+#	echo ""
+#	echo ""
+#	echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
+#	tput civis
+#	read
+#  	tput cnorm
+#}
 
 #---------------- SCRIPT ----------------
 while true;
@@ -471,15 +481,12 @@ do
 				response_checker "$selection" "$number_of_interfaces"
 				$exit_selection
 
-
 				traceroute --queries=2 --max-hops=10 --interface=${ifaces_array[$selection]} $ip_address
 
 				;;
 
 			4)
 				echo -e $LIGHTYELLOW"4"$END")" "Whois"
-				echo ""
-				echo ""
 				echo ""
 
 				echo -e "Enter the IP address to lookup:"
@@ -524,26 +531,22 @@ do
 					echo "The interface is not connected to the network."
 				else
 					traceroute --queries=2 --max-hops=10 --interface=${ifaces_array[$selection]} $gateway_ip
-				fi
+				fi			
 
 				;;
 
 			6)
 				echo -e $LIGHTYELLOW"6"$END")" "ARP table"
 				echo ""
-				echo ""
-				echo ""
 
 				#Function		First part of the command	Second part of the command
 				#command_for_interfaces "arp -i "			""
 				command_for_interfaces "arp -i " ""
-
+			
 				;;
 
 			7)
 				echo -e $LIGHTYELLOW"7"$END")" "Public IP"
-				echo ""
-				echo ""
 				echo ""
 
 				echo -ne "Your public IP is >>> "$CYAN ; curl icanhazip.com ; echo -e $END
@@ -634,30 +637,50 @@ do
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
-#				$exit_selection
+				$exit_selection
 				
 				interface=$selection
 
-				echo -e "What program you want to use? ("$BLUE"m "$END" for more info)"
+				echo -e "What program you want to use?"
+
+				echo -ne " " $LIGHTYELLOW"m"$END")"
+				printf "$BLUE %-11s $END" "More info"; echo ""
 
 				options_selector $number_of_bandwith_interface_program "bandwith_interface_programs_array"
-
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-				echo ""
+				
+				if [ $selection == "m" ]
+				then
+					echo ""
 
-				while [ $selection == "m" ];
-				do
-					echo -e $BLUE"slurm" $END "Simple live graphical"
-					echo -e $BLUE"iftop "$END "Bytes received and transmited in live to specific destination"
-					echo -e $BLUE"speedometer "$END "Simple live graphical"
-					echo -e $BLUE"tcptrack "$END "Speed by each open connections"
-					echo -e $BLUE"ifstat "$END "X"
-					echo -e $BLUE"vnstat "$END "X"
-					echo -e $BLUE"nload "$END "X"
-					echo -e $BLUE"iptraf "$END "X"
+					echo -ne " " $LIGHTYELLOW"1"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "slurm" "Simple live graphical"; echo ""
+					echo -ne " " $LIGHTYELLOW"2"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "iftop" "Bytes received and transmited in live to specific destination"; echo ""
+					echo -ne " " $LIGHTYELLOW"3"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "speedometer" "Simple live graphical"; echo ""
+					echo -ne " " $LIGHTYELLOW"4"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "tcptrack" "Speed by each open connections"; echo ""
+					echo -ne " " $LIGHTYELLOW"5"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "ifstat" "X"; echo ""
+					echo -ne " " $LIGHTYELLOW"6"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "vnstat" "X"; echo ""
+					echo -ne " " $LIGHTYELLOW"7"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "nload" "X"; echo ""
+					echo -ne " " $LIGHTYELLOW"8"$END")"
+					printf "$BLUE %-11s $END >> %-1s" "iptraf" "X"; echo ""
+					echo ""
+
+					echo -ne " " $LIGHTYELLOW"0"$END")"
+					printf "$BLUE %-11s $END" "Exit"; echo ""
+					echo ""
+
+					echo -e "If you have any problem with the programs, check if they are installed with the option "$LIGHTYELLOW"chckdep"$END
+					echo ""
+
 					echo "Type an option:"
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-				done
+				fi
 
 				response_checker "$selection" "$number_of_bandwith_interface_program"
 				$exit_selection
@@ -721,6 +744,7 @@ do
 				
 				telnet_output=`nmap $ip_address -p $port | grep $port | cut -f 2 -d " "`
 
+				echo ""
 				echo -ne $BLUE"PORT STATUS"$END
 
 				if [ "$telnet_output" == "open" ];
@@ -734,6 +758,10 @@ do
 				else
 					echo -ne $END$LIGHTYELLOW "$ip_address" "$port" $UNDERYELLOW$BLACK "$telnet_output" $END
 				fi
+
+				echo ""
+				echo ""
+				echo ""
 
 				;;
 
@@ -1006,25 +1034,33 @@ do
 				;;
 			esac
 
+			#Wait for user to press the enter key after he view what he need
+			echo ""
+			echo ""
+			echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
+			tput civis
+			read
+		  	tput cnorm
+
 			exit_selection=true
 		done
 
-	#If the user type an invalid option...
-	if [[ $invalidoption == true ]];
-	then
-		#...do nothing
-		:
-
-	#...but if the option is included in the case
-	else
-		#Waits for user to press the enter key after he view what he need
-		echo ""
-		echo ""
-		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
-		tput civis
-		read
-		tput cnorm
-	fi
+#	#If the user type an invalid option...
+#	if [[ $invalidoption == true ]];
+#	then
+#		#...do nothing
+#		:
+#
+#	#...but if the option is included in the case
+#	else
+#		#Waits for user to press the enter key after he view what he need
+#		echo ""
+#		echo ""
+#		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
+#		tput civis
+#		read
+#		tput cnorm
+#	fi
 
 	#Set all control variables to default
 	#selected_interface=""
