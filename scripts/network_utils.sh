@@ -45,6 +45,7 @@ read -a ovpns_active_array <<< $ovpns_active_extracted
 programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
+web_terminals_array=(cat elinks lynx)
 
 #Saves how many interfaces have the system
 number_of_interfaces=${#ifaces_array[@]}
@@ -57,6 +58,7 @@ number_of_programs=${#programs_array[@]}
 #Saves how many programs to monitor the traffic are used in this script
 number_of_bandwith_interface_program=${#bandwith_interface_programs_array[@]}
 number_of_bandwith_program=${#bandwith_programs_array[@]}
+number_of_web_terminals=${#web_terminals_array[@]}
 
 #---------------- FUNCTIONS ----------------
 menu()
@@ -632,11 +634,11 @@ do
 				echo ""
 
 				response_checker "$selection" "$number_of_interfaces"
-				$exit_selection
+#				$exit_selection
 				
 				interface=$selection
 
-				echo -e "What program you want to use?"
+				echo -e "What program you want to use? ("$BLUE"m "$END" for more info)"
 
 				options_selector $number_of_bandwith_interface_program "bandwith_interface_programs_array"
 
@@ -645,6 +647,8 @@ do
 
 				while [ $selection == "m" ];
 				do
+					echo -e $BLUE"slurm"$END "Simple"
+					echo "Type an option:"
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				done
 
@@ -653,7 +657,7 @@ do
 
 				program_bandwidth_interface=$selection
 
-				if [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "iftop" ];
+				if [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "iftop" ]
 				then
 					iftop -i ${ifaces_array[$interface]}
 
@@ -752,18 +756,38 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
 				echo ""
 
-				mkdir /tmp/netutils 2> /dev/null
-				
-				lynx -accept_all_cookies -dump "https://es.adminsub.net/tcp-udp-port-finder/"$port > /tmp/netutils/lynx_ports.txt
-				
-				total_lines=`wc -l /tmp/netutils/lynx_ports.txt | cut -c1-3`
-				lines_below=`cat -n /tmp/netutils/lynx_ports.txt | cut -c4-100 | grep "squedas Recientes" | cut -c1-3`
-				lines_above=`cat -n /tmp/netutils/lynx_ports.txt | cut -c4-100 | grep "Buscar los resultados de" | cut -c1-3`
-				
-				lines_below=$((lines_below - 1))
-				lines_above=$(((lines_above + 1) * -1))
-				
-				cat /tmp/netutils/lynx_ports.txt | head -n $lines_below | tac | head -n $lines_above | tac
+				echo -e "How you want to view the port info?"
+				options_selector $number_of_web_terminals "web_terminals_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+				response_checker "$selection" "$number_of_web_terminals"
+
+				program_web_terminals=$selection
+
+				if [ ${web_terminals_array[$program_web_terminals]} == "cat" ]
+				then
+					mkdir /tmp/netutils 2> /dev/null
+					
+					lynx -accept_all_cookies -dump "https://es.adminsub.net/tcp-udp-port-finder/"$port > /tmp/netutils/lynx_ports.txt
+					
+					total_lines=`wc -l /tmp/netutils/lynx_ports.txt | cut -c1-3`
+					lines_below=`cat -n /tmp/netutils/lynx_ports.txt | cut -c4-100 | grep "squedas Recientes" | cut -c1-3`
+					lines_above=`cat -n /tmp/netutils/lynx_ports.txt | cut -c4-100 | grep "Buscar los resultados de" | cut -c1-3`
+					
+					lines_below=$((lines_below - 1))
+					lines_above=$(((lines_above + 1) * -1))
+					
+					cat /tmp/netutils/lynx_ports.txt | head -n $lines_below | tac | head -n $lines_above | tac
+
+				elif [ ${web_terminals_array[$program_web_terminals]} == "elinks" ]
+				then
+					elinks "https://es.adminsub.net/tcp-udp-port-finder/"$port
+
+				elif [ ${web_terminals_array[$program_web_terminals]} == "lynx" ]
+				then
+					lynx -accept_all_cookies "https://es.adminsub.net/tcp-udp-port-finder/"$port
+				fi
 
 				;;
 
