@@ -647,7 +647,14 @@ do
 
 				while [ $selection == "m" ];
 				do
-					echo -e $BLUE"slurm"$END "Simple"
+					echo -e $BLUE"slurm" $END "Simple live graphical"
+					echo -e $BLUE"iftop "$END "Bytes received and transmited in live to specific destination"
+					echo -e $BLUE"speedometer "$END "Simple live graphical"
+					echo -e $BLUE"tcptrack "$END "Speed by each open connections"
+					echo -e $BLUE"ifstat "$END "X"
+					echo -e $BLUE"vnstat "$END "X"
+					echo -e $BLUE"nload "$END "X"
+					echo -e $BLUE"iptraf "$END "X"
 					echo "Type an option:"
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				done
