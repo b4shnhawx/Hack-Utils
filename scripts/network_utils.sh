@@ -108,7 +108,7 @@ menu()
 
 	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info"$TAB 	$TAB$LIGHTYELLOW" sniff"$END")" "Sniff packets"
 	echo -e $LIGHTYELLOW"     pping"$END")" "Ping (personalized)"$TAB$TAB		$TAB$LIGHTYELLOW"     X"$END")" "Traceroute (personalized)"
-	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server"
+	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server" $TAB  $TAB$LIGHTYELLOW"cliweb"$END")" "Web in CLI (elinks)"
 	echo ""
 	echo ""
 
@@ -1020,6 +1020,17 @@ do
 				echo ""
 
 				openvpn --config /root/.secret/ovpns/${ovpns_array[$selection]}
+
+				;;
+
+			cliweb)
+				echo -e $LIGHTYELLOW"cliweb"$END")" "Web in CLI (elinks)"
+				echo ""
+
+				echo -e "Type the URL of the webpage. Press "$UNDERRED$BLACK"q or Ctrl+C to exit elinks"$END
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read url ; echo -ne "" $END
+
+				elinks $url
 
 				;;
 
