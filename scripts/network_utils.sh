@@ -338,7 +338,7 @@ do
 
 							;;
 						0)
-							exit_selection=true
+							valid_option=true
 
 							;;
 						*)
@@ -1044,34 +1044,24 @@ do
 
 				;;
 			esac
-
-			#Wait for user to press the enter key after he view what he need
-			echo ""
-			echo ""
-			echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
-			tput civis
-			read
-		  	tput cnorm
-
-			exit_selection=true
 		done
 
-#	#If the user type an invalid option...
-#	if [[ $invalidoption == true ]];
-#	then
-#		#...do nothing
-#		:
-#
-#	#...but if the option is included in the case
-#	else
-#		#Waits for user to press the enter key after he view what he need
-#		echo ""
-#		echo ""
-#		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
-#		tput civis
-#		read
-#		tput cnorm
-#	fi
+	#If the user type an invalid option...
+	if [[ $invalidoption == true ]];
+	then
+		#...do nothing
+		:
+
+	#...but if the option is included in the case
+	else
+		#Waits for user to press the enter key after he view what he need
+		echo ""
+		echo ""
+		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
+		tput civis
+		read
+		tput cnorm
+	fi
 
 	#Set all control variables to default
 	#selected_interface=""
