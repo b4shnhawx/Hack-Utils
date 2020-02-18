@@ -338,7 +338,7 @@ do
 
 							;;
 						0)
-							valid_option=true
+							
 
 							;;
 						*)
