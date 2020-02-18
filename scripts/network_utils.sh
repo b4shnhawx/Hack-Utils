@@ -42,7 +42,7 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
 web_terminals_array=(cat elinks lynx)
@@ -1044,24 +1044,34 @@ do
 
 				;;
 			esac
+
+			#Wait for user to press the enter key after he view what he need
+			echo ""
+			echo ""
+			echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
+			tput civis
+			read
+		  	tput cnorm
+
+			exit_selection=true
 		done
 
-	#If the user type an invalid option...
-	if [[ $invalidoption == true ]];
-	then
-		#...do nothing
-		:
-
-	#...but if the option is included in the case
-	else
-		#Waits for user to press the enter key after he view what he need
-		echo ""
-		echo ""
-		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
-		tput civis
-		read
-		tput cnorm
-	fi
+#	#If the user type an invalid option...
+#	if [[ $invalidoption == true ]];
+#	then
+#		#...do nothing
+#		:
+#
+#	#...but if the option is included in the case
+#	else
+#		#Waits for user to press the enter key after he view what he need
+#		echo ""
+#		echo ""
+#		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END
+#		tput civis
+#		read
+#		tput cnorm
+#	fi
 
 	#Set all control variables to default
 	#selected_interface=""
