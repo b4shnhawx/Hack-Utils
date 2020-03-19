@@ -108,7 +108,8 @@ menu()
 
 	echo -e $LIGHTYELLOW"     advif"$END")" "Advanced interfaces info"$TAB 	$TAB$LIGHTYELLOW" sniff"$END")" "Sniff packets"
 	echo -e $LIGHTYELLOW"     pping"$END")" "Ping (personalized)"$TAB$TAB		$TAB$LIGHTYELLOW"     X"$END")" "Traceroute (personalized)"
-	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server" $TAB  $TAB$LIGHTYELLOW"cliweb"$END")" "Web in CLI (elinks)"
+	echo -e $LIGHTYELLOW"      ovpn"$END")" "Connect to a OVPN server" $TAB$TAB$LIGHTYELLOW"cliweb"$END")" "Web in CLI (elinks)"
+	echo -e $LIGHTYELLOW"    macman"$END")" "MAC manufacturer" 
 	echo ""
 	echo ""
 
@@ -1040,6 +1041,19 @@ do
 
 				elinks $url
 
+				;;
+
+			macman)
+				echo -e $LIGHTYELLOW"macman"$END")" "MAC manufacturer"
+				echo ""
+
+				echo -e "Type the MAC (required internet):"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read mac ; echo -ne "" $END
+
+				mac=`echo $mac | tr '[a-z]' '[A-Z]' | tr -d ":" | tr -d "." | tr -d [:space:] | cut -c 1-6`
+				echo ""
+
+				echo -e $CYAN ; curl https://gist.githubusercontent.com/aallan/b4bb86db86079509e6159810ae9bd3e4/raw/846ae1b646ab0f4d646af9115e47365f4118e5f6/mac-vendor.txt | grep $mac ; echo -e $END
 				;;
 
 			0)
