@@ -96,7 +96,7 @@ menu()
 	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"$TAB$TABTAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
 	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB  		$TAB$TAB$LIGHTYELLOW"12"$END")" "Search port info (online)"
 	echo -e $TAB$LIGHTYELLOW"13"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW"14"$END")" "Route table"$TAB$TAB   	$TAB$TAB$LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
-	echo -e $TAB$LIGHTYELLOW"16"$END")" "Speed test"				$TAB$TAB$TAB$LIGHTYELLOW"17"$END")" "Cyber threats search (online)"
+	echo -e $TAB$LIGHTYELLOW"16"$END")" "Speed test"				$TAB$TAB$TAB$TAB$LIGHTYELLOW"17"$END")" "Cyber threats search (online)"
 	echo -e 
 	echo ""
 	echo ""
