@@ -96,7 +96,7 @@ menu()
 	echo -e	$TAB$LIGHTYELLOW" 7"$END")" "Public IP"$TAB$TAB 		$TAB$TAB$LIGHTYELLOW" 8"$END")" "Traffic"$TAB$TABTAB$TAB	$TAB$TAB$LIGHTYELLOW" 9"$END")" "Traffic by interface"
 	echo -e $TAB$LIGHTYELLOW"10"$END")" "Check remote port status" 	$TAB$TAB$LIGHTYELLOW"11"$END")" "Ports in use"$TAB  		$TAB$TAB$LIGHTYELLOW"12"$END")" "Search port info (online)"
 	echo -e $TAB$LIGHTYELLOW"13"$END")" "Firewall rules (iptables)"	$TAB$TAB$LIGHTYELLOW"14"$END")" "Route table"$TAB$TAB   	$TAB$TAB$LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
-	echo -e $TAB$LIGHTYELLOW"16"$END")" "Speed test"
+	echo -e $TAB$LIGHTYELLOW"16"$END")" "Speed test"				$TAB$TAB$LIGHTYELLOW"17"$END")" "Cyber threats search (online)"
 	echo -e 
 	echo ""
 	echo ""
@@ -890,7 +890,52 @@ do
 				echo ""
 
 				;;
+
+			17)
+				echo -e $LIGHTYELLOW"17"$END")" "Cyber threats search (online)"
+				echo ""
+
+				echo -e "Enter the threat name (Example of sintaxis Adware.MAC.Generic.12722):"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read threat ; echo -ne "" $END
+				echo ""
+
+				echo -e "How you want to view the port info?"
+				options_selector $number_of_web_terminals "web_terminals_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+				response_checker "$selection" "$number_of_web_terminals"
+
+				program_web_terminals=$selection
+
+				if [ ${web_terminals_array[$program_web_terminals]} == "cat" ]
+				then
+					clear
+
+					mkdir /tmp/netutils 2> /dev/null
+					
+					lynx -accept_all_cookies -dump "https://malwarefixes.com/threats/"$threat > /tmp/netutils/lynx_threats.txt
+					
+					total_lines=`wc -l /tmp/netutils/lynx_threats.txt | cut -c1-3`
+					lines_below=`cat -n /tmp/netutils/lynx_threats.txt | cut -c4-100 | grep "References" | cut -c1-3`
+					lines_above=`cat -n /tmp/netutils/lynx_threats.txt | cut -c4-100 | grep "* [10]Forums" | cut -c1-3`
+					
+					lines_below=$((lines_below - 1))
+					lines_above=$(((lines_above + 1) * -1))
+					
+					cat /tmp/netutils/lynx_threats.txt | head -n $lines_below | tac | head -n $lines_above | tac
+
+				elif [ ${web_terminals_array[$program_web_terminals]} == "elinks" ]
+				then
+					elinks "https://malwarefixes.com/threats/"$threat
+
+				elif [ ${web_terminals_array[$program_web_terminals]} == "lynx" ]
+				then
+					lynx -accept_all_cookies "https://malwarefixes.com/threats/"$threat
+				fi
 				
+				;;
+
 			advif)
 				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
 				echo ""
