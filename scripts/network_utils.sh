@@ -44,7 +44,7 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger tor)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger kali-anonsurf(github) torctl)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
 web_terminals_array=(cat elinks lynx)
@@ -1119,10 +1119,11 @@ do
 
 				while [[ $valid_option == false ]];
 				do
-					torctlstatus=`systemctl status tor | grep -w "Active:" | tr -s [:space:] ":" | cut -f3 -d":"`
+					torctlstatus=`torctl status | grep -w "tor service is:" | rev | cut -f1 -d" " | rev`
+					anonsurfstatus=`sudo anonsurf status | grep -w "Active:" | tr -s [:space:] ":" | cut -f3 -d":"`
 					nordvpnstatus=`nordvpn status | grep -w "Status:" | rev | cut -f1 -d" " | rev`
 
-					options_array=("IP anonymizer (tor) (activate / deactivate): $torctlstatus" "Change MAC address" "Restore MAC address" "NordVPN (activate / deactivate): $nordvpnstatus")
+					options_array=("IP anonymizer for Arch Linux (tor) (activate / deactivate): $torctlstatus" "IP anonymizer for Kali Linux (tor) (activate / deactivate): $anonsurfstatus" "Change MAC address" "Restore MAC address" "NordVPN (activate / deactivate): $nordvpnstatus")
 					options_selector 4 "options_array"
 
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
@@ -1146,6 +1147,8 @@ do
 							;;
 
 						2)
+							;;
+						3)
 							clear
 
 							iface=`ip addr | awk '/state UP/ {print $2}' | sed 's/.$//'`
@@ -1161,7 +1164,7 @@ do
 
 							;;
 
-						3)
+						4)
 						clear
 
 						iface=`ip addr | awk '/state UP/ {print $2}' | sed 's/.$//'`
@@ -1174,7 +1177,7 @@ do
 						echo -e $CYAN"\n"$output | sed 's/) /)\n/g'; echo -e $END
 						;;
 
-						4)
+						5)
 						clear
 
 						path_nordvpn=`which nordvpn`
