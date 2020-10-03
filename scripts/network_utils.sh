@@ -1119,7 +1119,7 @@ do
 
 				while [[ $valid_option == false ]];
 				do
-					torctlstatus=`systemctl status tor | grep -w "Active:" | rev | cut -f2 -d" " | rev`
+					torctlstatus=`systemctl status tor | grep -w "Active:" | tr -s [:space:] ":" | cut -f3 -d":"`
 					nordvpnstatus=`nordvpn status | grep -w "Status:" | rev | cut -f1 -d" " | rev`
 
 					options_array=("IP anonymizer (tor) (activate / deactivate): $torctlstatus" "Change MAC address" "Restore MAC address" "NordVPN (activate / deactivate): $nordvpnstatus")
