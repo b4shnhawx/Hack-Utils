@@ -1137,10 +1137,10 @@ do
 							if [[ $torctlstatus == 'inactive' ]];
 							then
 								echo -e $GREEN"\n------------- Activating TOR -------------\n"$END
-								torctl start
+								sudo systemctl start tor
 							else
 								echo -e $RED"\n------------- Deactivating TOR -------------\n"$END
-								torctl stop
+								sudo systemctl stop tor
 							fi
 
 							;;
