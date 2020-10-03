@@ -234,12 +234,12 @@ show_programs()
 
 		#program_name=""
 		path_actual_program=""
-		
-		echo -e "\nList of programs you must install manually:"
-		echo -e "\ttorctl (only for Arch Linux)"
-		echo -e "\tkali-anonsurf (only for Kali Linux)"
-		echo -e "\tnordvpn"
 	done
+	
+	echo -e "\nList of programs you must install manually:"
+	echo -e "\ttorctl (only for Arch Linux)"
+	echo -e "\tkali-anonsurf (only for Kali Linux)"
+	echo -e "\tnordvpn"
 }
 
 install_uninstall_programs_array()
