@@ -44,7 +44,7 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger kali-anonsurf(github) torctl)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger kali-anonsurf(kali:github) torctl)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload iptraf)
 bandwith_programs_array=(vnstat bwm-ng)
 web_terminals_array=(cat elinks lynx)
