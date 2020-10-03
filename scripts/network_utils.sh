@@ -358,13 +358,13 @@ do
 
 							;;
 						man)
-							echo -e $UNDERWHITE$BLACK"TORCTL											    "$END
+							echo -e $UNDERWHITE$BLACK"TORCTL                                                                                            "$END
 							echo -e "														    "
 							echo -e $BLUE"https://github.com/BlackArch/torctl									    "$END
 							echo -e "                                                                                                                   "
 							echo -e $GREEN"pacman -S torctl												    "$END
 							
-							echo -e $UNDERWHITE$BLACK"ANONSURF											    "$END
+							echo -e $UNDERWHITE$BLACK"ANONSURF                                                                                          "$END
 							echo -e "														    "
 							echo -e $BLUE"https://github.com/Und3rf10w/kali-anonsurf.git								    "$END
 							echo -e "                                                                                                                   "
@@ -372,7 +372,7 @@ do
 							echo -e $GREEN"cd kali-anonsurf							 					    "$END
 							echo -e $GREEN"sudo bash installer.sh							  				    "$END
 							
-							echo -e $UNDERWHITE$BLACK"NORDVPN											    "$END
+							echo -e $UNDERWHITE$BLACK"NORDVPN                                                                                           "$END
 							echo -e $UNDERWHITE$BLACK"Debian or Ubuntu distros                                                                          "$END
 							echo -e "                                                                                                                   "
 							echo -e $BLUE"https://blog.sleeplessbeastie.eu/2019/02/04/how-to-use-nordvpn-command-line-utility/                          "$END
