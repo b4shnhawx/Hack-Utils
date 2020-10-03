@@ -329,8 +329,8 @@ do
 					echo ""
 					echo ""
 
-					echo -e " " $BLUE"id"$END")" "Install all the dependencies (before install, exit netutils and type apt-get update && apt-get upgrade)"
-					echo -e " " $BLUE"ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
+					echo -e " " $BLUE" id"$END")" "Install all the dependencies (before install, exit netutils and type apt-get update && apt-get upgrade)"
+					echo -e " " $BLUE" ud"$END")" "Uninstall all the dependencies (except ping, nmcli and traceroute)"
 					echo -e " " $BLUE"man"$END")" "View steps to install manual the programs that must be installed manually"
 					echo ""
 					echo -e " " $BLUE" 0"$END")" "Cancel"
