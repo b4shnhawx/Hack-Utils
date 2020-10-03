@@ -358,9 +358,46 @@ do
 
 							;;
 						man)
-							echo -e $UNDERWHITE"torctl\n"$END
-							echo -e $GREEN"pacman -S torctl"$END
-							echo -e $BLUE"https://github.com/BlackArch/torctl"$END
+							echo -e $UNDERWHITE$BLACK"TORCTL											    "$END
+							echo -e "														    "
+							echo -e $BLUE"https://github.com/BlackArch/torctl									    "$END
+							echo -e "                                                                                                                   "
+							echo -e $GREEN"pacman -S torctl												    "$END
+							
+							echo -e $UNDERWHITE$BLACK"ANONSURF											    "$END
+							echo -e "														    "
+							echo -e $BLUE"https://github.com/Und3rf10w/kali-anonsurf.git								    "$END
+							echo -e "                                                                                                                   "
+							echo -e $GREEN"git clone https://github.com/Und3rf10w/kali-anonsurf.git							    "$END
+							echo -e $GREEN"cd kali-anonsurf							 					    "$END
+							echo -e $GREEN"sudo bash installer.sh							  				    "$END
+							
+							echo -e $UNDERWHITE$BLACK"NORDVPN											    "$END
+							echo -e $UNDERWHITE$BLACK"Debian or Ubuntu distros                                                                          "$END
+							echo -e "                                                                                                                   "
+							echo -e $BLUE"https://blog.sleeplessbeastie.eu/2019/02/04/how-to-use-nordvpn-command-line-utility/                          "$END
+							echo -e "                                                                                                                   "
+							echo -e $GREEN"sudo apt install wget apt-transport-https                                                                    "
+							echo -e "wget --directory-prefix /tmp https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb   "
+							echo -e "sudo apt install /tmp/nordvpn-release_1.0.0_all.deb                                                                "
+							echo -e "sudo apt update                                                                                                    "
+							echo -e "sudo apt install nordvpn                                                                                     	    "$END
+							echo -e "                                                                                                                   "
+							echo -e "                                                                                                                   "
+							echo -e $UNDERWHITE$BLACK"Arch distro                                                                                       "$END
+							echo -e "                                                                                                                   "
+							echo -e "https://wiki.archlinux.org/index.php/NordVPN                                                                       "
+							echo -e "                                                                                                                   "
+							echo -e $GREEN"pacman -S ca-certificates                                                                                    "
+							echo -e "pacman -S iproute2                                                                                                 "
+							echo -e "pacman -S ipset                                                                                                    "
+							echo -e "pacman -S iptables                                                                                                 "
+							echo -e "pacman -S libxslt                                                                                                  "
+							echo -e "pacman -S procps                                                                                                   "
+							echo -e "git clone https://aur.archlinux.org/nordvpn-bin.git                                                                "
+							echo -e "cd nordvpn-bin                                                                                                     "
+							echo -e "makepkg                                                                                                            "
+							echo -e "pacman -U nordvpn-bin-3.8.4-1-x86_64.pkg.tar.zst                                                                   "$END
 							
 							valid_option=true
 							
@@ -1199,33 +1236,8 @@ do
 						if [[ $path_nordvpn == '' ]];
 						then
 							echo -e "																																																										"
-							echo -e $UNDERRED$BLACK"NordVPN not installed."$END" To install it follow the next instructions: 														"
-							echo -e "																																																										"
-							echo -e $UNDERWHITE$BLACK"Debian or Ubuntu distros                                                                                          "$END
-							echo -e "                                                                                                                   "
-							echo -e "https://blog.sleeplessbeastie.eu/2019/02/04/how-to-use-nordvpn-command-line-utility/                               "
-							echo -e "                                                                                                                   "
-							echo -e $GREEN"sudo apt install wget apt-transport-https                                                                    "
-							echo -e "wget --directory-prefix /tmp https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb   "
-							echo -e "sudo apt install /tmp/nordvpn-release_1.0.0_all.deb                                                                "
-							echo -e "sudo apt update                                                                                                    "
-							echo -e "sudo apt install nordvpn                                                                                     	    "$END
-							echo -e "                                                                                                                   "
-							echo -e "                                                                                                                   "
-							echo -e $UNDERWHITE$BLACK"Arch distro                                                                                                       "$END
-							echo -e "                                                                                                                   "
-							echo -e "https://wiki.archlinux.org/index.php/NordVPN                                                                       "
-							echo -e "                                                                                                                   "
-							echo -e $GREEN"pacman -S ca-certificates                                                                                    "
-							echo -e "pacman -S iproute2                                                                                                 "
-							echo -e "pacman -S ipset                                                                                                    "
-							echo -e "pacman -S iptables                                                                                                 "
-							echo -e "pacman -S libxslt                                                                                                  "
-							echo -e "pacman -S procps                                                                                                   "
-							echo -e "git clone https://aur.archlinux.org/nordvpn-bin.git                                                                "
-							echo -e "cd nordvpn-bin                                                                                                     "
-							echo -e "makepkg                                                                                                            "
-							echo -e "pacman -U nordvpn-bin-3.8.4-1-x86_64.pkg.tar.zst                                                                   "$END
+							echo -e $UNDERRED$BLACK"NordVPN not installed."$END
+							
 						else
 							if [[ $nordvpnstatus == 'Disconnected' ]];
 							then
