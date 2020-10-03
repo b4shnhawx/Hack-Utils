@@ -1123,7 +1123,7 @@ do
 					anonsurfstatus=`sudo anonsurf status | grep -w "Active:" | tr -s [:space:] ":" | cut -f3 -d":"`
 					nordvpnstatus=`nordvpn status | grep -w "Status:" | rev | cut -f1 -d" " | rev`
 
-					options_array=("IP anonymizer for Arch Linux (tor) (activate / deactivate): $torctlstatus" "IP anonymizer for Kali Linux (tor) (activate / deactivate): $anonsurfstatus" "Change MAC address" "Restore MAC address" "NordVPN (activate / deactivate): $nordvpnstatus")
+					options_array=("IP TOR anonymizer for Arch Linux (torctl) (activate / deactivate): $torctlstatus" "IP TOR anonymizer for Kali Linux (anonsurf) (activate / deactivate): $anonsurfstatus" "Change MAC address" "Restore MAC address" "NordVPN (activate / deactivate): $nordvpnstatus")
 					options_selector 5 "options_array"
 
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
