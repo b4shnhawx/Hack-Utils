@@ -1124,7 +1124,7 @@ do
 					nordvpnstatus=`nordvpn status | grep -w "Status:" | rev | cut -f1 -d" " | rev`
 
 					options_array=("IP anonymizer for Arch Linux (tor) (activate / deactivate): $torctlstatus" "IP anonymizer for Kali Linux (tor) (activate / deactivate): $anonsurfstatus" "Change MAC address" "Restore MAC address" "NordVPN (activate / deactivate): $nordvpnstatus")
-					options_selector 4 "options_array"
+					options_selector 5 "options_array"
 
 					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
 					echo ""
