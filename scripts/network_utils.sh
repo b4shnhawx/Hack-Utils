@@ -606,7 +606,7 @@ do
 				echo ""
 				echo ""
 
-				ip_checker $ip_address
+				#ip_checker $ip_address
 
 				echo "    ____  ____  __  ______    _____   __   _       ____  ______  _________"
 				echo "   / __ \/ __ \/  |/  /   |  /  _/ | / /  | |     / / / / / __ \/  _/ ___/"
