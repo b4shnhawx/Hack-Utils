@@ -104,17 +104,18 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "7" ")" "Public IP"					 "8" ")" "Traffic monitoring (iptraf)"		"9" ")" "Traffic monitoring ($number_of_bandwith_interface_program utilities)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"10" ")" "Check remote port status"	 	"11" ")" "Ports in use"					   "12" ")" "Search port info (online)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"13" ")" "Firewall rules (iptables)"	"14" ")" "Route table"					   "15" ")" "Check IP blacklist / abuse"
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"16" ")" "Internet speed test"			"17" ")" "Cyber threats search (Malware Bazaar API)"   "" "" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"16" ")" "Internet speed test"			"" "" ""   "" "" ""
 	echo -e
 	echo ""
 
 	echo -e $CYAN$BOLD"  >>> ADVANCED <<<  "$END
 	echo ""
 
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								 "advif" ")" "Advanced interfaces info" 		"sniff" ")" "Sniff packets"
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								 "pping" ")" "Ping (personalized)" 					"X" ")" "Traceroute (personalized)"
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								  "ovpn" ")" "Connect to a OVPN server" 	   "cliweb" ")" "Web in CLI (elinks)"
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								"macman" ")" "MAC manufacturer" 				 "anon" ")" "Anonymizer"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "advif" ")" "Advanced interfaces info" 					   "sniff" ")" "Sniff packets"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "pping" ")" "Ping (personalized)" 								   "X" ")" "Traceroute (personalized)"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "ovpn" ")" "Connect to a OVPN server" 	   				  "cliweb" ")" "Web in CLI (elinks)"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 				 				"anon" ")" "Anonymizer"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"" "" ""
 	echo ""
 	echo ""
 
@@ -1069,118 +1070,6 @@ do
 
 				;;
 
-			17)
-				echo -e $LIGHTYELLOW"17"$END")" "Cyber threats search (Malware Bazaar API)"
-				echo ""
-
-				echo -e "Enter the hash MD5, SHA1 or SHA256 of the threat (Example):"
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read hash ; echo -ne "" $END
-				echo ""
-
-
-				wget --post-data "query=get_info&hash="$hash https://mb-api.abuse.ch/api/v1/ --output-document=/tmp/hackutils/malware_bazaar_tmp.json
-				sed 's/ANY.RUN/ANYRUN/g' /tmp/hackutils/malware_bazaar_tmp.json > /tmp/hackutils/malware_bazaar.json
-				rm /tmp/hackutils/malware_bazaar_tmp.json
-
-				if [[ $(cat /tmp/hackutils/malware_bazaar.json | jq -r .query_status) != "ok" ]];
-				then
-					echo -e $RED$BOLD "Hash not found in Malware Bazaar"
-					echo ""
-
-					break
-				fi
-
-				files_array=( "/tmp/hackutils/malware_bazaar_tmp.json" "/tmp/hackutils/malware_bazaar.json" "/tmp/hackutils/triage_signatures_raw.txt" "/tmp/hackutils/triage_scores_raw.txt" )
-
-				for file in "${files_array[@]}"
-				do
-					touch $file
-					chmod 766 $file
-				done
-
-				echo -e $CYAN$BOLD " > HASHES" $END
-				echo -ne "SHA256: " $CYAN$BOLD; jq -r '.data[] | .sha256_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "SHA3_384: " $CYAN$BOLD; jq -r '.data[] | .sha3_384_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "SHA1: " $CYAN$BOLD; jq -r '.data[] | .sha1_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "MD5: " $CYAN$BOLD; jq -r '.data[] | .md5_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo ""
-				echo -e $CYAN$BOLD " > FILE INFO" $END
-				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[] | .first_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Last seen: " $CYAN$BOLD; jq -r '.data[] | .last_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "File name: " $CYAN$BOLD; jq -r '.data[] | .file_name' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "File size: " $CYAN$BOLD; output=`jq -r '.data[] | .file_size' /tmp/hackutils/malware_bazaar.json`; echo -ne "0"; echo "scale=3; $output / 1024 /1024" | bc -l | sed "s/$/ MB/g"; echo -ne $END
-				echo -ne "File type mime: " $CYAN$BOLD; jq -r '.data[] | .file_type_mime' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "File type: " $CYAN$BOLD; jq -r '.data[] | .file_type' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Reporter: " $CYAN$BOLD; jq -r '.data[] | .reporter' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Origin country: " $CYAN$BOLD; jq -r '.data[] | .origin_country' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Signature: " $CYAN$BOLD; jq -r '.data[] | .signature' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Code sign: " $CYAN$BOLD; jq -r '.data[] | .code_sign' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Delivery method: " $CYAN$BOLD; jq -r '.data[] | .delivery_method' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Comment: " $CYAN$BOLD; jq -r '.data[] | .comment' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo ""
-				echo -e $CYAN$BOLD " > ANALYSIS" $END
-				echo -e $CYAN$BOLD "any.run" $END
-				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].verdict' /tmp/hackutils/malware_bazaar.json | sed '/Malicious[[:space:]]activity/s//'$(printf "\e[31mMaliciousactivity\033[0m")'/' |  sed 's/Maliciousactivity/Malicious activity/g'; echo -ne $END;
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].analysis_url' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -e $CYAN$BOLD "cape" $END
-				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.CAPE.detection' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.CAPE.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -e $CYAN$BOLD "tria.ge" $END
-				echo -ne "Malware family: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.malware_family' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Score: " $CYAN$BOLD; score=`jq -r '.data[].vendor_intel.Triage.score' /tmp/hackutils/malware_bazaar.json`; malware_score_checker $score; echo -ne $END
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.Triage.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -e "Signatures: " 
-				echo ""
-
-				jq -r '.data[].vendor_intel.Triage.signatures[].signature' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_signatures_raw.txt
-				jq -r '.data[].vendor_intel.Triage.signatures[].score' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_scores_raw.txt
-
-				counter=1
-				ladder="   "
-
-				echo -ne $CYAN$BOLD"$ladder""Init>"$END
-
-				while IFS= read -r line
-				do
-					score=`cat /tmp/hackutils/triage_scores_raw.txt | sed -n $counter\p`
-
-					echo -e "┐ "
-					echo -ne "$ladder""┌────┴─╢ "
-					echo -e $CYAN$BOLD $line $END
-					echo -ne "$ladder""├─╢ Score: "
-
-					malware_score_checker $score
-
-					echo -e "$ladder""│"
-					echo -e "$ladder""│"
-					echo -ne "$ladder""└───>───"
-
-					$((counter++)) 2> /dev/null
-					ladder+="   "
-
-					sleep 0.1
-
-				done < /tmp/hackutils/triage_signatures_raw.txt
-
-				echo -e $CYAN$BOLD"\bEnd<" $END
-				echo ""
-				echo -e $CYAN$BOLD "ReversingLabs" $END
-				echo -ne "Threat name: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.threat_name' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Status: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.status' /tmp/hackutils/malware_bazaar.json | sed '/MALICIOUS/s//'$(printf "\e[31mMALICIOUS\033[0m")'/'; echo -ne $END;
-				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.first_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Scanner count: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_count' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Scanner match: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_match' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Scanner score: " $CYAN$BOLD; output=`jq -r '.data[].vendor_intel.ReversingLabs.scanner_percent' /tmp/hackutils/malware_bazaar.json`; output=`echo "scale=0; $output / 10" | bc -l`; malware_score_checker $output; echo -ne $END
-				echo -e $CYAN$BOLD "UnpacMe" $END
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.UnpacMe[].link' /tmp/hackutils/malware_bazaar.json | uniq; echo -ne $END
-
-				for file in "${files_array[@]}"
-				do
-					rm $file
-				done
-
-				;;
-
 			advif)
 				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
 				echo ""
@@ -1355,6 +1244,13 @@ do
 
 				echo -e $CYAN$BOLD$output$END
 
+#					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read mac ; echo -ne "" $END
+#
+#					mac=`echo $mac | tr '[a-z]' '[A-Z]' | tr -d ":" | tr -d "." | tr -d [:space:] | cut -c 1-6`
+#					echo ""
+#
+#					echo -e $CYAN$BOLD ; curl https://gist.githubusercontent.com/aallan/b4bb86db86079509e6159810ae9bd3e4/raw/846ae1b646ab0f4d646af9115e47365f4118e5f6/mac-vendor.txt | grep $mac ; echo -e $END
+
 				;;
 
 			anon)
@@ -1478,27 +1374,131 @@ do
 							;;
 
 						0)
+							ignore_continue_enter=true
 							break
 
-							ignore_continue_enter=true
-						;;
+							;;
 
 						*)
 							clear
+							;;
+					esac
+				done
+				;;
+				
 
-						;;
-				esac
+			malware)
+				echo -e $LIGHTYELLOW"malware"$END")" "Cyber threats search (Malware Bazaar API)"
+				echo ""
 
-			done
+				echo -e "Enter the hash MD5, SHA1 or SHA256 of the threat (Example):"
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read hash ; echo -ne "" $END
+				echo ""
 
 
-#					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read mac ; echo -ne "" $END
-#
-#					mac=`echo $mac | tr '[a-z]' '[A-Z]' | tr -d ":" | tr -d "." | tr -d [:space:] | cut -c 1-6`
-#					echo ""
-#
-#					echo -e $CYAN$BOLD ; curl https://gist.githubusercontent.com/aallan/b4bb86db86079509e6159810ae9bd3e4/raw/846ae1b646ab0f4d646af9115e47365f4118e5f6/mac-vendor.txt | grep $mac ; echo -e $END
-					;;
+				wget --post-data "query=get_info&hash="$hash https://mb-api.abuse.ch/api/v1/ --output-document=/tmp/hackutils/malware_bazaar_tmp.json
+				sed 's/ANY.RUN/ANYRUN/g' /tmp/hackutils/malware_bazaar_tmp.json > /tmp/hackutils/malware_bazaar.json
+				rm /tmp/hackutils/malware_bazaar_tmp.json
+
+				if [[ $(cat /tmp/hackutils/malware_bazaar.json | jq -r .query_status) != "ok" ]];
+				then
+					echo -e $RED$BOLD "Hash not found in Malware Bazaar"
+					echo ""
+
+					break
+				fi
+
+				files_array=( "/tmp/hackutils/malware_bazaar_tmp.json" "/tmp/hackutils/malware_bazaar.json" "/tmp/hackutils/triage_signatures_raw.txt" "/tmp/hackutils/triage_scores_raw.txt" )
+
+				for file in "${files_array[@]}"
+				do
+					touch $file
+					chmod 766 $file
+				done
+
+				echo -e $CYAN$BOLD " > HASHES" $END
+				echo -ne "SHA256: " $CYAN$BOLD; jq -r '.data[] | .sha256_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "SHA3_384: " $CYAN$BOLD; jq -r '.data[] | .sha3_384_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "SHA1: " $CYAN$BOLD; jq -r '.data[] | .sha1_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "MD5: " $CYAN$BOLD; jq -r '.data[] | .md5_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo ""
+				echo -e $CYAN$BOLD " > FILE INFO" $END
+				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[] | .first_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Last seen: " $CYAN$BOLD; jq -r '.data[] | .last_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "File name: " $CYAN$BOLD; jq -r '.data[] | .file_name' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "File size: " $CYAN$BOLD; output=`jq -r '.data[] | .file_size' /tmp/hackutils/malware_bazaar.json`; echo -ne "0"; echo "scale=3; $output / 1024 /1024" | bc -l | sed "s/$/ MB/g"; echo -ne $END
+				echo -ne "File type mime: " $CYAN$BOLD; jq -r '.data[] | .file_type_mime' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "File type: " $CYAN$BOLD; jq -r '.data[] | .file_type' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Reporter: " $CYAN$BOLD; jq -r '.data[] | .reporter' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Origin country: " $CYAN$BOLD; jq -r '.data[] | .origin_country' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Signature: " $CYAN$BOLD; jq -r '.data[] | .signature' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Code sign: " $CYAN$BOLD; jq -r '.data[] | .code_sign' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Delivery method: " $CYAN$BOLD; jq -r '.data[] | .delivery_method' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Comment: " $CYAN$BOLD; jq -r '.data[] | .comment' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo ""
+				echo -e $CYAN$BOLD " > ANALYSIS" $END
+				echo -e $CYAN$BOLD "any.run" $END
+				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].verdict' /tmp/hackutils/malware_bazaar.json | sed '/Malicious[[:space:]]activity/s//'$(printf "\e[31mMaliciousactivity\033[0m")'/' |  sed 's/Maliciousactivity/Malicious activity/g'; echo -ne $END;
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].analysis_url' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -e $CYAN$BOLD "cape" $END
+				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.CAPE.detection' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.CAPE.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -e $CYAN$BOLD "tria.ge" $END
+				echo -ne "Malware family: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.malware_family' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Score: " $CYAN$BOLD; score=`jq -r '.data[].vendor_intel.Triage.score' /tmp/hackutils/malware_bazaar.json`; malware_score_checker $score; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.Triage.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -e "Signatures: " 
+				echo ""
+
+				jq -r '.data[].vendor_intel.Triage.signatures[].signature' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_signatures_raw.txt
+				jq -r '.data[].vendor_intel.Triage.signatures[].score' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_scores_raw.txt
+
+				counter=1
+				ladder="   "
+
+				echo -ne $CYAN$BOLD"$ladder""Init>"$END
+
+				while IFS= read -r line
+				do
+					score=`cat /tmp/hackutils/triage_scores_raw.txt | sed -n $counter\p`
+
+					echo -e "┐ "
+					echo -ne "$ladder""┌────┴─╢ "
+					echo -e $CYAN$BOLD $line $END
+					echo -ne "$ladder""├─╢ Score: "
+
+					malware_score_checker $score
+
+					echo -e "$ladder""│"
+					echo -e "$ladder""│"
+					echo -ne "$ladder""└───>───"
+
+					$((counter++)) 2> /dev/null
+					ladder+="   "
+
+					sleep 0.1
+
+				done < /tmp/hackutils/triage_signatures_raw.txt
+
+				echo -e $CYAN$BOLD"\bEnd<" $END
+				echo ""
+				echo -e $CYAN$BOLD "ReversingLabs" $END
+				echo -ne "Threat name: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.threat_name' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Status: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.status' /tmp/hackutils/malware_bazaar.json | sed '/MALICIOUS/s//'$(printf "\e[31mMALICIOUS\033[0m")'/'; echo -ne $END;
+				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.first_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner count: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_count' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner match: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_match' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner score: " $CYAN$BOLD; output=`jq -r '.data[].vendor_intel.ReversingLabs.scanner_percent' /tmp/hackutils/malware_bazaar.json`; output=`echo "scale=0; $output / 10" | bc -l`; malware_score_checker $output; echo -ne $END
+				echo -e $CYAN$BOLD "UnpacMe" $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.UnpacMe[].link' /tmp/hackutils/malware_bazaar.json | uniq; echo -ne $END
+
+				for file in "${files_array[@]}"
+				do
+					rm $file
+				done
+
+				;;
+
 			0)
 				exit
 
