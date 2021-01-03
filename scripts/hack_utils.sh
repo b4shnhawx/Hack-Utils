@@ -479,7 +479,7 @@ do
 				echo -e $LIGHTYELLOW"up"$END")" "Update Hack_Utils"
 				echo ""
 
-				echo $CYAN$BOLD" > Updating Hack_Utils..." $END
+				echo -e $CYAN$BOLD" > Updating Hack_Utils..." $END
 				echo ""
 
 				sleep 1
