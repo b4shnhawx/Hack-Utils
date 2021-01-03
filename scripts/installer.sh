@@ -1,13 +1,13 @@
 #!/bin/bash
 
 cd
-sudo mkdir /etc/netutils/
-sudo cp Network-Utils/scripts/network_utils.sh /etc/netutils/
-sudo cp Network-Utils/scripts/bl.sh /etc/netutils/
-sudo cp Network-Utils/scripts/netutils /bin/
+sudo mkdir /etc/hackutils/
+sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
+sudo cp Hack-Utils/scripts/bl.sh /etc/netutils/
+sudo cp Hack-Utils/scripts/hackutils /bin/
 
-sudo chmod 700 /bin/netutils
-sudo chmod +x /bin/netutils
+sudo chmod 700 /bin/hackutils
+sudo chmod +x /bin/hackutils
 
 cd
-sudo rm -rf Network-Utils/
+sudo rm -rf Hack-Utils/
