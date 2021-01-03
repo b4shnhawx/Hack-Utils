@@ -407,14 +407,12 @@ do
 						echo -e "cd nordvpn-bin                                                                                                     "
 						echo -e "makepkg                                                                                                            "
 						echo -e "pacman -U nordvpn-bin-3.8.4-1-x86_64.pkg.tar.zst                                                                   "$END
-						
-					
-					
+
 						valid_option=true
 					
 					;;
 				0)
-					valid_option=true
+					ignore_continue_enter=true
 					;;
 				*)
 					clear
