@@ -1070,7 +1070,7 @@ do
 				;;
 
 			17)
-				echo -e $LIGHTYELLOW"17"$END")" "Cyber threats search (online)"
+				echo -e $LIGHTYELLOW"17"$END")" "Cyber threats search (Malware Bazaar API)"
 				echo ""
 
 				echo -e "Enter the hash MD5, SHA1 or SHA256 of the threat (Example):"
