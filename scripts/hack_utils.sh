@@ -302,6 +302,27 @@ install_uninstall_programs_array()
 	done
 }
 
+malware_score_checker()
+{
+	score=$1
+
+	if [ $score == "null" ];
+	then
+		echo -e $GREEN$BOLD"Neutral"$END
+
+	elif [ $score -lt 3 ];
+	then
+		echo -e $GREEN$BOLD"$score / 10"$END
+
+	elif [ $score -lt 8 ];
+	then
+		echo -e $LIGHTYELLOW$BOLD"$score / 10"$END
+					
+	elif [ $score -gt 7 ];
+	then
+		echo -e $RED$BOLD"$score / 10"$END
+	fi
+}
 #()
 #{
 #	#Wait for user to press the enter key after he view what he need
@@ -1099,15 +1120,15 @@ do
 				echo ""
 				echo -e $CYAN$BOLD " > ANALYSIS" $END
 				echo -e $CYAN$BOLD "any.run" $END
-				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].verdict' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "URL: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].analysis_url' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].verdict' /tmp/hackutils/malware_bazaar.json | sed '/Malicious[[:space:]]activity/s//'$(printf "\e[31mMaliciousactivity\033[0m")'/' |  sed 's/Maliciousactivity/Malicious activity/g'; echo -ne $END;
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].analysis_url' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				echo -e $CYAN$BOLD "cape" $END
 				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.CAPE.detection' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "URL: " $CYAN$BOLD; jq -r '.data[].vendor_intel.CAPE.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.CAPE.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				echo -e $CYAN$BOLD "tria.ge" $END
 				echo -ne "Malware family: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.malware_family' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "Score: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.score' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				echo -ne "URL: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Score: " $CYAN$BOLD; score=`jq -r '.data[].vendor_intel.Triage.score' /tmp/hackutils/malware_bazaar.json`; malware_score_checker $score; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.Triage.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				echo -e "Signatures: " 
 				echo ""
 
@@ -1123,57 +1144,35 @@ do
 				do
 					score=`cat /tmp/hackutils/triage_scores_raw.txt | sed -n $counter\p`
 
-					sleep 0.1
-
 					echo -e "┐ "
 					echo -ne "$ladder""┌────┴─╢ "
 					echo -e $CYAN$BOLD $line $END
 					echo -ne "$ladder""├─╢ Score: "
 
-					if [ $score == "null" ];
-					then
-						echo -e $GREEN"Neutral"$END
+					malware_score_checker $score
 
-					elif [ $score -lt 3 ];
-					then
-						echo -e $GREEN"$score"$END
+					echo -e "$ladder""│"
+					echo -e "$ladder""│"
+					echo -ne "$ladder""└───>───"
 
-					elif [ $score -lt 8 ];
-					then
-						echo -e $LIGHTYELLOW"$score"$END
-					
-					elif [ $score -gt 7 ];
-					then
-						echo -e $RED"$score"$END
-					fi
+					$((counter++)) 2> /dev/null
+					ladder+="   "
 
 					sleep 0.1
 
-					echo -e "$ladder""│"
-					echo -e "$ladder""│"
-					echo -ne "$ladder""└──>────"
-
-					counter=$((counter++))
-
-					ladder+="   "
-
 				done < /tmp/hackutils/triage_signatures_raw.txt
 
-				echo -ne $CYAN$BOLD"\bEnd<" $END
-
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
-
+				echo -e $CYAN$BOLD"\bEnd<" $END
+				echo ""
+				echo -e $CYAN$BOLD "ReversingLabs" $END
+				echo -ne "Threat name: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.threat_name' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Status: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.status' /tmp/hackutils/malware_bazaar.json | sed '/MALICIOUS/s//'$(printf "\e[31mMALICIOUS\033[0m")'/'; echo -ne $END;
+				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.first_seen' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner count: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_count' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner match: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_match' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner score: " $CYAN$BOLD; output=`jq -r '.data[].vendor_intel.ReversingLabs.scanner_percent' /tmp/hackutils/malware_bazaar.json`; output=`echo "scale=0; $output / 10" | bc -l`; malware_score_checker $output; echo -ne $END
+				echo -e $CYAN$BOLD "UnpacMe" $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.UnpacMe[].link' /tmp/hackutils/malware_bazaar.json | uniq; echo -ne $END
 
 				for file in "${files_array[@]}"
 				do
