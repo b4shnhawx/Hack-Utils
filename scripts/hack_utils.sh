@@ -316,6 +316,8 @@ install_uninstall_programs_array()
 #---------------- SCRIPT ----------------
 #trap 'break' INT
 
+mkdir /tmp/hackutils
+
 while true;
 do
 	echo -e $END
@@ -407,12 +409,15 @@ do
 						echo -e "cd nordvpn-bin                                                                                                     "
 						echo -e "makepkg                                                                                                            "
 						echo -e "pacman -U nordvpn-bin-3.8.4-1-x86_64.pkg.tar.zst                                                                   "$END
-
+						
+					
+					
 						valid_option=true
 					
 					;;
 				0)
 					ignore_continue_enter=true
+
 					;;
 				*)
 					clear
@@ -1051,13 +1056,6 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read hash ; echo -ne "" $END
 				echo ""
 
-				files_array=( "/tmp/hackutils/malware_bazaar_tmp.json" "/tmp/hackutils/malware_bazaar.json" "/tmp/hackutils/triage_signatures_raw.txt" "/tmp/hackutils/triage_scores_raw.txt" )
-
-				for file in "${files_array[@]}"
-				do
-					touch $file
-					chmod 766 $file
-				done
 
 				wget --post-data "query=get_info&hash="$hash https://mb-api.abuse.ch/api/v1/ --output-document=/tmp/hackutils/malware_bazaar_tmp.json
 				sed 's/ANY.RUN/ANYRUN/g' /tmp/hackutils/malware_bazaar_tmp.json > /tmp/hackutils/malware_bazaar.json
@@ -1070,6 +1068,14 @@ do
 
 					break
 				fi
+
+				files_array=( "/tmp/hackutils/malware_bazaar_tmp.json" "/tmp/hackutils/malware_bazaar.json" "/tmp/hackutils/triage_signatures_raw.txt" "/tmp/hackutils/triage_scores_raw.txt" )
+
+				for file in "${files_array[@]}"
+				do
+					touch $file
+					chmod 766 $file
+				done
 
 				echo -e $CYAN$BOLD " > HASHES" $END
 				echo -ne "SHA256: " $CYAN$BOLD; jq -r '.data[] | .sha256_hash' /tmp/hackutils/malware_bazaar.json; echo -ne $END
@@ -1103,6 +1109,7 @@ do
 				echo -ne "Score: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.score' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				echo -ne "URL: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.link' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				echo -e "Signatures: " 
+				echo ""
 
 				jq -r '.data[].vendor_intel.Triage.signatures[].signature' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_signatures_raw.txt
 				jq -r '.data[].vendor_intel.Triage.signatures[].score' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_scores_raw.txt
@@ -1116,32 +1123,37 @@ do
 				do
 					score=`cat /tmp/hackutils/triage_scores_raw.txt | sed -n $counter\p`
 
+					sleep 0.1
+
 					echo -e "┐ "
 					echo -ne "$ladder""┌────┴─╢ "
 					echo -e $CYAN$BOLD $line $END
 					echo -ne "$ladder""├─╢ Score: "
+
 					if [ $score == "null" ];
 					then
 						echo -e $GREEN"Neutral"$END
 
-					elif [ $score < 3 ];
+					elif [ $score -lt 3 ];
 					then
 						echo -e $GREEN"$score"$END
 
-					elif [ $score < 8 ];
+					elif [ $score -lt 8 ];
 					then
 						echo -e $LIGHTYELLOW"$score"$END
 					
-					elif [ $score > 7 ];
+					elif [ $score -gt 7 ];
 					then
 						echo -e $RED"$score"$END
 					fi
+
+					sleep 0.1
 
 					echo -e "$ladder""│"
 					echo -e "$ladder""│"
 					echo -ne "$ladder""└──>────"
 
-					$counter=$((counter++))
+					counter=$((counter++))
 
 					ladder+="   "
 
@@ -1161,6 +1173,12 @@ do
 				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
 				#echo -ne "XXXXX: " $CYAN$BOLD; jq -r '.data[] | .XXXXX' /tmp/hackutils/malware_bazaar.json; echo -ne $END
+
+
+				for file in "${files_array[@]}"
+				do
+					rm $file
+				done
 
 				;;
 
