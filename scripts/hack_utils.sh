@@ -1061,11 +1061,11 @@ do
 				echo -e $CYAN$BOLD" > INITIATING INTERNET SPEED TEST"$END
 				echo ""
 
-				output=`speedtest | sed 's/\n/#/g'`
+				output=`speedtest | sed 's/$/#/g'`
 
 				sleep 0.3
-
-				echo -e $output | sed 's/#/\n/g' | sed 's/Testing/\nTesting/g' | sed ''/Download/s//`printf "\033[31mDownload\033[0m"`/'' | sed ''/Upload/s//`printf "\033[32mUpload\033[0m"`/'' 
+			
+				echo -e $output | sed 's/#/\n/g' | sed 's/Testing/\nTesting/g' | sed ''/Download/s//`printf "\033[31m↓Download\033[0m"`/'' | sed ''/Upload/s//`printf "\033[32m↑Upload\033[0m"`/'' | sed 's/↓Download/ ↓ Download/g' | sed 's/↑Upload/ ↑ Upload/g' 
 
 				;;
 
