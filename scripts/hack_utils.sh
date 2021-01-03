@@ -1061,8 +1061,7 @@ do
 				echo -e $CYAN$BOLD" > INITIATING INTERNET SPEED TEST"$END
 				echo ""
 
-				#output=`speedtest | sed 's/\n/#/g'`
-				output=`cat /home/b4shnhawx/prueba_speedtest | sed 's/$/#/g'`
+				output=`speedtest | sed 's/\n/#/g'`
 
 				sleep 0.3
 
