@@ -112,10 +112,10 @@ menu()
 	echo ""
 
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "advif" ")" "Advanced interfaces info" 					   "sniff" ")" "Sniff packets"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "pping" ")" "Ping (personalized)" 								   "X" ")" "Traceroute (personalized)"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "ovpn" ")" "Connect to a OVPN server" 	   				  "cliweb" ")" "Web in CLI (elinks)"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 				 				"anon" ")" "Anonymizer"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"" "" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "ovpn" ")" "Connect to a OVPN server" 				 		"anon" ")" "Anonymizer"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 	   				   		  "cliweb" ")" "Web in CLI (elinks)"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"conv" ")" "Hexadecimal / Base64 converter"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "pping" ")" "Ping (personalized)" 								   "" "" ""
 	echo ""
 	echo ""
 
@@ -1499,6 +1499,13 @@ do
 
 				;;
 
+			conv)
+				echo -e $LIGHTYELLOW"conv"$END")" "Hexadecimal / Base64 converter"
+				echo ""
+
+				echo "nothing... 4 now..."
+
+				;;
 			0)
 				exit
 
