@@ -1256,7 +1256,9 @@ do
 				elif [[ $ovpns_extracted == '' ]];
 				then
 					echo "There is no OVPN profiles configured in the system."
-					echo "You need to export your OVPN profiles from your OVPN Server to the path $HOME/.secret/ovpns/ of this OVPN client."
+					echo "You need to export your OVPN profiles from your OVPN Server to the path $HOME/.secret/ovpns/ of this OVPN client and then rerun Hack_Utils."
+
+					exit 0
 				else
 					:
 				fi
@@ -1288,6 +1290,8 @@ do
 
 				elinks $url
 
+				ignore_continue_enter=true
+
 				;;
 
 			macman)
@@ -1301,7 +1305,7 @@ do
 				echo ""
 				echo ""
 
-				echo "Vendor:"
+				echo "> VENDOR"
 				output=`curl https://gist.githubusercontent.com/aallan/b4bb86db86079509e6159810ae9bd3e4/raw/846ae1b646ab0f4d646af9115e47365f4118e5f6/mac-vendor.txt | grep $mac`
 
 				echo -e $CYAN$BOLD$output$END
