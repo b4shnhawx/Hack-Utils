@@ -494,6 +494,14 @@ do
 				nmcli device wifi connect $ssid password $psswd
 				echo ""
 
+				## If there is an error executing the last command, will break the case statement.
+				if [[ $? == 1 ]];
+				then
+
+					echo -e $RED "An error was ocurred while try to connect to the AP (probably icorrect password)."
+
+					break
+				fi
 				sleep 2
 
 				echo -e $CYAN$BOLD" > You are now connected to $ssid"
