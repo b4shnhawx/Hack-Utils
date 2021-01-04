@@ -54,7 +54,7 @@ read -a ifaces_array <<< $interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload bwm-ng)
 web_terminals_array=(cat elinks lynx)
 
@@ -99,6 +99,7 @@ menu()
 	echo ""
 
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"if" ")" "Interfaces info (ifconfig)" 	"wc" ")" "Connect to Wifi (nmcli)"
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"tv" ")" "Teamviewer" 	"" "" ""
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "1" ")" "Ping"							 "2" ")" "Try internet connection"			"3" ")" "Traceroute"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "4" ")" "Whois"						 "5" ")" "Hops to gateway"					"6" ")" "ARP table"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "7" ")" "Public IP"					 "8" ")" "Traffic monitoring (iptraf)"		"9" ")" "Traffic monitoring ($number_of_bandwith_interface_program utilities)"
@@ -251,6 +252,7 @@ show_programs()
 	echo -e "\ttorctl (only for Arch Linux)"
 	echo -e "\tkali-anonsurf (only for Kali Linux)"
 	echo -e "\tnordvpn"
+	echo -e "\tteamviewer"
 }
 
 install_uninstall_programs_array()
@@ -435,8 +437,15 @@ do
 						echo -e "makepkg                                                                                                            "
 						echo -e "pacman -U nordvpn-bin-3.8.4-1-x86_64.pkg.tar.zst                                                                   "$END
 						
-					
-					
+						echo -e $UNDERWHITE$BLACK"\n\nTEAMVIEWER                                                                                          "$END
+						echo -e $UNDERWHITE$BLACK"     Kali Linux                                                                                         "$END
+						echo -e "														    "
+						echo -e $CYAN$BOLD"https://newvo.com.au/how-to-install-teamviewer-on-linux-cli/						    "$END
+						echo -e "                                                                                                                   "
+						echo -e $GREEN"cd													    "$END
+						echo -e $GREEN"wget https://download.teamviewer.com/download/linux/teamviewer_amd64.deb				  	    "$END
+						echo -e $GREEN"sudo apt install ./teamviewer_amd64.deb									    "$END
+						
 						valid_option=true
 					
 					;;
