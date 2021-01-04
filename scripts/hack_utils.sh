@@ -113,9 +113,11 @@ menu()
 
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "advif" ")" "Advanced interfaces info" 					   "sniff" ")" "Sniff packets"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "ovpn" ")" "Connect to a OVPN server" 				 		"anon" ")" "Anonymizer"
+	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 							    "sshtun" ")" "SSH tunneling"			 				 	   "pping" ")" "Ping (personalized)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 	   				   		  "cliweb" ")" "Web in CLI (elinks)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"conv" ")" "Hexadecimal / Base64 converter"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "pping" ")" "Ping (personalized)" 								   "" "" ""
+	printf "$RED %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "fkap" ")" "Fake Access Point: Evil twin" 					 "dwa" ")" "Deauth Wireless Attack"
+	printf "$RED %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "htb" ")" "Hack The Box" 					 "" "" ""
 	echo ""
 	echo ""
 
@@ -200,7 +202,7 @@ response_checker()
 			echo ""
 
 			## If selection is 0, exit this option
-			if [ $selection == "0" ]; then break; fi
+			if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 		fi
 	done
 }
@@ -324,6 +326,7 @@ malware_score_checker()
 		echo -e $RED$BOLD"$score / 10"$END
 	fi
 }
+
 #()
 #{
 #	#Wait for user to press the enter key after he view what he need
@@ -492,7 +495,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 				
 				response_checker "$selection" ""
 
@@ -538,7 +541,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 				response_checker "$selection" "$number_of_interfaces"					
 				
@@ -587,7 +590,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -650,7 +653,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -720,7 +723,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 				
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -768,7 +771,7 @@ do
 				fi
 
 				## If selection is 0, exit this option		
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 				
 				response_checker "$selection" "$number_of_bandwith_interface_program"
 
@@ -897,7 +900,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -965,7 +968,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 				response_checker "$selection" "$number_of_web_terminals"
 
@@ -1083,6 +1086,66 @@ do
 				echo -e $LIGHTYELLOW"sniff"$END")" "Sniff packets"
 				echo ""
 
+				echo -e "From which interface you want to sniff the network?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+
+				## If selection is 0, exit this option
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				
+				response_checker "$selection" "$number_of_interfaces"
+
+				filters=""
+
+				while [ "$filters" == "" ];
+				do
+					echo ""
+					echo -e "Type the filters for tcpdump (Press enter = ignore. Type "$LIGHTYELLOW"h"$END" = view some tcpdump help)"
+					echo -ne $BLINK" > Filters: "$END$LIGHTYELLOW ; read filters ; echo -ne "" $END
+
+					if [ "$filters" == "h" ];
+					then
+						echo ""
+						echo -e $CYAN$BOLD "EXAMPLES" $END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"port 80"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"src port 80"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"not port 80"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"not portrange 50-150"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"src host 192.168.2.10"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"dst host 192.168.2.10"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"host 192.168.2.10"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"host 192.168.2.1 and port 443"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"less 850 and src host 192.168.2.10"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"greater 500 and less 1200"$END
+						echo -e "tcpdump -i ${ifaces_array[$selection]} "$LIGHTYELLOW"greater 100 and (src host google.com or src host microsoft.com)"$END
+						echo ""
+						echo -e $CYAN$BOLD "FLAGS" $END
+						echo -e $LIGHTYELLOW"[S]"$END" - SYN. The first step to establish the connection."
+						echo -e $LIGHTYELLOW"[F]"$END" - END. Termination of the connection."
+						echo -e $LIGHTYELLOW"[.]"$END" - ACK. Acknowledgement package received successfully."
+						echo -e $LIGHTYELLOW"[P]"$END" - PUSH. Tells the receiver to process packets instead of buffering them."
+						echo -e $LIGHTYELLOW"[R]"$END" - RST. Communication stopped."
+						echo -e $LIGHTYELLOW"[F.]"$END" - FIN-ACK. Flags can include more than one value, as in this example. Acknowledgement of the termination of the connection."
+
+						filters=""
+
+					elif [ "$filters" == "" ];
+					then
+						break
+
+					fi
+				done
+
+				echo ""
+				echo ""
+				echo -e $CYAN$BOLD " > SNIFFING PACKETS IN ${ifaces_array[$selection]}" $END
+				echo ""
+				echo -e $UNDERRED$BLACK"Ctrl+C to cancel"$END
+				echo ""
+				tcpdump -i ${ifaces_array[$selection]} $filters
+
 				;;
 
 			pping)
@@ -1096,7 +1159,7 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 
 				## If selection is 0, exit this option
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 				
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -1170,7 +1233,7 @@ do
 					echo ""
 
 					## If selection is 0, exit this option		
-					if [ $selection == "0" ]; then break; fi
+					if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 					response_checker "$selection" "$number_of_ovpns_active"
 
@@ -1181,14 +1244,14 @@ do
 					echo ""
 
 					## If selection is 0, exit this option		
-					if [ $selection == "0" ]; then break; fi
+					if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 					response_checker "$selection" "$number_of_ovpns_active"
 
 					ping -I ${ifaces_array[$selection]} $ping_address
 
 
-					${ovpns_active_array[$selection}
+					${ovpns_active_array[$selection]}
 
 				elif [[ $ovpns_extracted == '' ]];
 				then
@@ -1204,7 +1267,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option		
-				if [ $selection == "0" ]; then break; fi
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
 
 				response_checker "$selection" "$number_of_ovpns"
 
@@ -1253,12 +1316,11 @@ do
 				;;
 
 			anon)
-				valid_option=false
 
 				echo -e $LIGHTYELLOW"anon"$END")" "Anonymizer"
 				echo ""
 
-				while [[ $valid_option == false ]];
+				while true;
 				do
 					torctlstatus=`torctl status | grep -w "tor service is:" | rev | cut -f1 -d" " | rev`
 					anonsurfstatus=`sudo anonsurf status | grep -w "Active:" | tr -s [:space:] ":" | cut -f3 -d":"`
@@ -1453,7 +1515,7 @@ do
 				jq -r '.data[].vendor_intel.Triage.signatures[].score' /tmp/hackutils/malware_bazaar.json > /tmp/hackutils/triage_scores_raw.txt
 
 				counter=1
-				ladder="   "
+				ladder="  "
 
 				echo -ne $CYAN$BOLD"$ladder""Init>"$END
 
@@ -1468,12 +1530,12 @@ do
 
 					malware_score_checker $score
 
+
 					echo -e "$ladder""│"
-					echo -e "$ladder""│"
-					echo -ne "$ladder""└───>───"
+					echo -ne "$ladder""└───>──"
 
 					$((counter++)) 2> /dev/null
-					ladder+="   "
+					ladder+="  "
 
 					sleep 0.1
 
@@ -1499,12 +1561,173 @@ do
 				;;
 
 			conv)
-				echo -e $LIGHTYELLOW"conv"$END")" "Hexadecimal / Base64 converter"
+				echo -e $LIGHTYELLOW"conv"$END")" "Hex / Base64 converter"
+				echo ""
+
+				options_array=( "Base64" "Hex" "Binary" )
+				options_selector 3 "options_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				## If selection is 0, exit this option
+				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+
+				string=" "
+
+				case $selection in
+					1)
+						while true;
+						do
+							clear 
+
+							if [[ $string == "exit" ]];
+							then
+								ignore_continue_enter=true
+								break
+							fi
+	
+							echo -e $LIGHTYELLOW"conv"$END")" "Base64 converter"
+							echo ""
+							
+							echo -e $CYAN$BOLD" > DECODE"$END
+							echo $string | base64 --decode 2> /dev/null 
+							
+							echo ""
+							echo ""
+							
+							echo -e $CYAN$BOLD" > ENCODE "$END
+							echo $string | base64 | sed '/^Cg==$/d'
+							
+							echo ""
+							echo ""
+							echo ""
+
+							echo -e "Type the string you want to encode / decode (To return to the main menu type "$LIGHTYELLOW"exit"$END"):"
+							echo -ne $BLINK" > "$END"Text: "$LIGHTYELLOW ; read string ; echo -ne "" $END
+
+						done
+						;;
+
+					2)
+						while true;
+						do
+							clear 
+
+							if [[ $string == "exit" ]];
+							then
+								ignore_continue_enter=true
+								break
+							fi
+	
+							echo -e $LIGHTYELLOW"conv"$END")" "Hex converter"
+							echo ""
+							
+							echo -e $CYAN$BOLD" > DECODE"$END
+							echo $string | xxd -p -r
+							
+							echo ""
+							echo ""
+							
+							echo -e $CYAN$BOLD" > ENCODE "$END
+							echo $string | xxd -ps | sed '/^0a$/d' 
+							echo ""
+							echo ""
+
+							echo -e $CYAN$BOLD" > HEXDUMP "$END
+							echo $string | xxd | sed '/^00000000: 0a                                       .$/d'
+
+							echo ""
+							echo ""
+							echo ""
+
+							echo -e "Type the string you want to encode / decode (To return to the main menu type "$LIGHTYELLOW"exit"$END"):"
+							echo -ne $BLINK" > "$END"Text: "$LIGHTYELLOW ; read string ; echo -ne "" $END
+
+						done
+
+						;;
+
+					3)
+						while true;
+						do
+							clear 
+
+							if [[ $string == "exit" ]];
+							then
+								ignore_continue_enter=true
+								break
+							fi
+	
+							echo -e $LIGHTYELLOW"conv"$END")" "Binary converter"
+							echo ""
+							
+							echo -e $CYAN$BOLD" > ENCODE"$END
+							output=`echo $string | xxd -b -d | sed 's/  /:/g' | sed 's/: /:/g' | cut -f2 -d":"`  
+							echo $output | sed '/^00001010$/d'
+							
+							echo ""
+							echo ""
+							echo ""
+
+							echo -e $CYAN$BOLD" > BINARYDUMP "$END
+							echo $string | xxd -b -d | sed '/^00000000: 00001010                                               .$/d'
+							echo ""
+							echo ""
+
+							echo -e "Type the string you want to encode / decode (To return to the main menu type "$LIGHTYELLOW"exit"$END"):"
+							echo -ne $BLINK" > "$END"Text: "$LIGHTYELLOW ; read string ; echo -ne "" $END
+
+						done
+
+						;;
+
+
+					0)
+						ignore_continue_enter=true
+						break
+
+						;;
+					*)
+						clear
+
+						;;
+				esac
+
+				;;
+
+			sshtun)
+				echo -e $LIGHTYELLOW"sshtun"$END")" "SSH tunneling"
 				echo ""
 
 				echo "nothing... 4 now..."
 
 				;;
+
+			fkap)
+				echo -e $LIGHTYELLOW"fkap"$END")" "Fake Access Point: Evil twin"
+				echo ""
+
+				echo "nothing... 4 now..."
+
+				;;
+
+			dwa)
+				echo -e $LIGHTYELLOW"dwa"$END")" "Deauth Wireless Attack"
+				echo ""
+
+				echo "nothing... 4 now..."
+
+				;;
+
+			htb)
+				echo -e $LIGHTYELLOW"htb"$END")" "Hack The Box"
+				echo ""
+
+				echo "nothing... 4 now..."
+
+				;;
+
 			0)
 				exit
 
