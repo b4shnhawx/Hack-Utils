@@ -4,7 +4,9 @@
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/banner_menu.png">
 </p>
 
-### Installing
+## Description
+This tool was thought to allow us to manage several programs or third party tools from the same interface in a fast and intuitive way.
+
 To install the script:
 ```
 cd ~
@@ -18,4 +20,14 @@ To use netutils you must run it as root.
 sudo hackutils
 ```
 
-### Examples
+## Top tools
+
+First of all, you can download all the necessary programs with the chckdep option (except a couple of programs that must be installed manually).
+<p align="center">
+  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/chckdep.png">
+</p>
+
+We can use the anon option to anonymize ourselves usin anonsurf to connect to the TOR network, change our MAC or connect to NordVPN servers (account licensed required in NordVPN).
+<p align="center">
+  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/anon2.png">
+</p>
