@@ -99,7 +99,7 @@ menu()
 	echo ""
 
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"if" ")" "Interfaces info (ifconfig)" 	"wc" ")" "Connect to Wifi (nmcli)"
-	printf "$RED %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"tv" ")" "Teamviewer" 	"" "" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"tv" ")" "Teamviewer" 	"" "" ""
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "1" ")" "Ping"							 "2" ")" "Try internet connection"			"3" ")" "Traceroute"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "4" ")" "Whois"						 "5" ")" "Hops to gateway"					"6" ")" "ARP table"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	 "7" ")" "Public IP"					 "8" ")" "Traffic monitoring (iptraf)"		"9" ")" "Traffic monitoring ($number_of_bandwith_interface_program utilities)"
@@ -187,10 +187,12 @@ response_checker()
 	do
 		if [ "$selection" == "0" ] || [ "$selection" == "n" ];
 		then
-			exit_selection=true
+			selection="exit"
 			invalidoption=true
 
 			ignore_continue_enter=true
+
+			break
 
 		elif [ $selection -lt $number_of_options ] || [ "$selection" == "y" ];
 		then
@@ -203,7 +205,7 @@ response_checker()
 			echo ""
 
 			## If selection is 0, exit this option
-			if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+			if [[ $selection == "exit" ]]; then break; fi
 		fi
 	done
 }
@@ -469,6 +471,67 @@ do
 
 				;;
 
+			tv)
+				echo -e $LIGHTYELLOW"tv"$END")" "Teamviewer"
+				echo ""
+				#Function		First part of the command	Second part of the command
+				#command_for_interfaces "ifconfig "			""
+				
+				echo -e "What you want to do?"
+
+				options_array=("Connect to TeamViewer server" "Setup this TeamViewer server")
+				options_selector 2 "options_array"
+			
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				## If selection is 0, exit this option
+				if [[ $selection == "exit" ]]; then break; fi
+
+				case $selection in
+					1)
+
+						;;
+
+					2)
+						teamviewer daemon restart > /dev/null
+		
+						teamviewer info
+						echo ""
+		
+						output=`teamviewer info | grep "TeamViewer ID:" | egrep -o '[0-9]{7,12}'`
+						teamviewer info | grep "TeamViewer ID:" | tr -d [[:space:]] | cut -c4-16,20-30 | sed 's/TeamViewerID:/TeamViewer ID: /g' | sed ''/[0-9]*$/s//`printf "$CYAN$BOLD$output$END"`/''
+
+						echo "You want to setup a password to this TeamViewer server?"
+						echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+						echo ""
+
+						response_checker "$selection" ""
+						
+						if [[ $selection == "exit" ]]; then break; fi
+
+						echo "Type your new password:"
+						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read psswd ; echo -ne "" $END
+						echo ""
+
+						teamviewer passwd $psswd
+
+						;;
+
+					0)
+						ignore_continue_enter=true
+						break
+
+						;;
+
+					*)
+						clear
+						;;
+				esac
+
+
+				;;
+
 			wc)
 				echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
 				echo ""
@@ -492,31 +555,30 @@ do
 				echo ""
 
 				nmcli device wifi connect $ssid password $psswd
-				echo ""
 
 				## If there is an error executing the last command, will break the case statement.
 				if [[ $? == 1 ]];
 				then
 
-					echo -e $RED "An error was ocurred while try to connect to the AP (probably icorrect password)."
+					echo -e $RED "An error was ocurred while try to connect to the AP (probably incorrect password)."
 
 					break
 				fi
+
 				sleep 2
 
-				echo -e $CYAN$BOLD" > You are now connected to $ssid"
+				echo -e $CYAN$BOLD" > You are now connected to $ssid" $END
 				echo ""
 
 				echo "You want to test your internet connection?"
 				echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
-				
 				response_checker "$selection" ""
 
-				ping -c 5 8.8.8.8
+				if [[ $selection == "exit" ]]; then break; fi
+				
+				ping -c 5 www.google.com
 
 				;;
 
@@ -558,7 +620,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				response_checker "$selection" "$number_of_interfaces"					
 				
@@ -607,7 +669,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -670,7 +732,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -740,7 +802,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 				
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -788,7 +850,7 @@ do
 				fi
 
 				## If selection is 0, exit this option		
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 				
 				response_checker "$selection" "$number_of_bandwith_interface_program"
 
@@ -917,7 +979,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -985,7 +1047,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				response_checker "$selection" "$number_of_web_terminals"
 
@@ -1110,7 +1172,7 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 				
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -1176,7 +1238,7 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 				
 				response_checker "$selection" "$number_of_interfaces"
 
@@ -1250,7 +1312,7 @@ do
 					echo ""
 
 					## If selection is 0, exit this option		
-					if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+					if [[ $selection == "exit" ]]; then break; fi
 
 					response_checker "$selection" "$number_of_ovpns_active"
 
@@ -1261,7 +1323,7 @@ do
 					echo ""
 
 					## If selection is 0, exit this option		
-					if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+					if [[ $selection == "exit" ]]; then break; fi
 
 					response_checker "$selection" "$number_of_ovpns_active"
 
@@ -1286,7 +1348,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option		
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				response_checker "$selection" "$number_of_ovpns"
 
@@ -1592,7 +1654,7 @@ do
 				echo ""
 
 				## If selection is 0, exit this option
-				if [[ $selection == "0" ]]; then ignore_continue_enter=true; break; fi
+				if [[ $selection == "exit" ]]; then break; fi
 
 				string=" "
 
