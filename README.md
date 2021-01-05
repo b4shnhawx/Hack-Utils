@@ -22,13 +22,13 @@ sudo hackutils
 
 ## Top tools
 
-* First of all, you can download all the necessary programs with the ***chckdep*** option (except a couple of programs that must be installed manually).
+- First of all, you can download all the necessary programs with the ***chckdep*** option (except a couple of programs that must be installed manually).
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/chkdep.png" width="950">
 </p>
 <br>
 <br>
-* We can use the ***anon*** option to anonymize ourselves usin anonsurf to connect to the TOR network, change our MAC or connect to NordVPN servers (account licensed required in NordVPN).
+- We can use the ***anon*** option to anonymize ourselves usin anonsurf to connect to the TOR network, change our MAC or connect to NordVPN servers (account licensed required in NordVPN).
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/anon_nord.gif" width="950">
 </p>
@@ -39,26 +39,26 @@ sudo hackutils
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/malware.gif" width="950">
 </p>
 <br>
-<br/>
+</br>
 * We can manage various ovpn profiles to connect us to different OpenVPN servers (in this case I only have one profile)
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/ovpn.png" width="950">
 </p>
 <br>
 <br/>
-* Never get information about your own IP was so easy!!
+- Never get information about your own IP was so easy!!
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/public_ip.png" width="950">
 </p>
 <br>
 <br>
-* Sniff packets in the terminal an apply filters to sniff only what you want to sniff.
+- Sniff packets in the terminal an apply filters to sniff only what you want to sniff.
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/sniff.png" width="950">
 </p>
 <br>
 <br>
-* Personally I love this option. Check the bandwith speed that our ISP provide us!!
+- I personally love this option - check out the broadband speed provided by our ISP! ( Only 30 Mbps? I thought I had 100 Mbps contracted :/ )
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/speed_test.png" width="950">
 </p>
