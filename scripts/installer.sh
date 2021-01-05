@@ -7,6 +7,7 @@ cat <<EOF > /etc/hackutils/hack_utils.conf
 OVPNS_DIR="$HOME/.secret/ovpns/"
 HTB_DIR="$HOME/HTB/"
 EOF
+
 sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/bl.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/hackutils /bin/
