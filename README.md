@@ -22,18 +22,17 @@ sudo hackutils
 
 ## Top tools
 
-First of all, you can download all the necessary programs with the chckdep option (except a couple of programs that must be installed manually).
+> First of all, you can download all the necessary programs with the ***chckdep*** option (except a couple of programs that must be installed manually).
 <p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/chkdep.png" width="800">
+  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/chkdep.png" width="950">
 </p>
 
-We can use the anon option to anonymize ourselves usin anonsurf to connect to the TOR network, change our MAC or connect to NordVPN servers (account licensed required in NordVPN).
+> We can use the ***anon*** option to anonymize ourselves usin anonsurf to connect to the TOR network, change our MAC or connect to NordVPN servers (account licensed required in NordVPN).
 <p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/anon_nord.gif" width="800">
+  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/anon_nord.gif" width="950">
 </p>
 
-With the malware option
-```diff
-+ this text is highlighted in green
-- this text is highlighted in red
-```
+> With the ***malware*** option we can check with the hash of a virus if it is malicious or not.  
+<p align="center">
+  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/malware.gif" width="950">
+</p>
