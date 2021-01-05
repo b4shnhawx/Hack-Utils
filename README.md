@@ -29,22 +29,16 @@ sudo hackutils
 ![anon](https://github.com/davidahid/Hack-Utils/blob/master/images/anon_nord.gif)
 
 * With the ***malware*** option we can check with the hash of a virus if it is malicious or not and how is acting. 
-<p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/malware.gif" width="950">
-</p>
-* We can manage various ovpn profiles to connect us to different OpenVPN servers (in this case I only have one profile)
-<p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/ovpn.png" width="950">
-</p>
+![malware](https://github.com/davidahid/Hack-Utils/blob/master/images/malware.gif)
+
+* We can manage various ovpn profiles to connect us to different OpenVPN servers with ***ovpn*** (in this case I only have one profile)
+![ovpn](https://github.com/davidahid/Hack-Utils/blob/master/images/ovpn.png)
+
 * Never get information about your own IP was so easy!!
-<p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/public_ip.png" width="950">
-</p>
+![7](https://github.com/davidahid/Hack-Utils/blob/master/images/public_ip.png)
+
 * Sniff packets in the terminal an apply filters to sniff only what you want to sniff.
-<p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/sniff.png" width="950">
-</p>
+![sniff](https://github.com/davidahid/Hack-Utils/blob/master/images/sniff.png)
+
 * I personally love this option - check out the broadband speed provided by our ISP! ( Only 30 Mbps? I thought I had 100 Mbps contracted :/ )
-<p align="center">
-  <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/speed_test.png" width="950">
-</p>
+![16](https://github.com/davidahid/Hack-Utils/blob/master/images/speed_test.png)
