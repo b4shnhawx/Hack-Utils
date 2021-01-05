@@ -2,6 +2,7 @@
 
 cd
 sudo mkdir /etc/hackutils/
+sudo touch /etc/hackutils/hack_utils.conf
 sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/bl.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/hackutils /bin/
