@@ -490,6 +490,18 @@ do
 
 				case $selection in
 					1)
+						nohup sudo teamviewer &
+
+						if [[ $? == 1 ]];
+						then
+
+							echo -e $RED "An error was ocurred while try execute TeamViewer (probably related with the user that launch the program)."
+
+							break
+						fi
+
+						echo -e $CYAN$BOLD"Executing TeamViewer GUI..."$END
+						echo ""
 
 						;;
 
@@ -520,12 +532,14 @@ do
 
 					0)
 						ignore_continue_enter=true
+
 						break
 
 						;;
 
 					*)
 						clear
+
 						;;
 				esac
 
