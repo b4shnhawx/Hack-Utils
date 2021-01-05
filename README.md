@@ -39,13 +39,13 @@ sudo hackutils
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/malware.gif" width="950">
 </p>
 <br>
-<br>
+<br/>
 * We can manage various ovpn profiles to connect us to different OpenVPN servers (in this case I only have one profile)
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/ovpn.png" width="950">
 </p>
 <br>
-<br>
+<br/>
 * Never get information about your own IP was so easy!!
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/public_ip.png" width="950">
