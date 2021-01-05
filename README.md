@@ -1,10 +1,10 @@
-### Hack_Utils
+# Hack_Utils
 
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/banner_menu.png">
 </p>
 
-# Installing
+### Installing
 To install the script:
 ```
 cd ~
@@ -18,4 +18,4 @@ To use netutils you must run it as root.
 sudo hackutils
 ```
 
-# Examples
+### Examples
