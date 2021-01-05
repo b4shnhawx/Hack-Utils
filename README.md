@@ -31,3 +31,9 @@ We can use the anon option to anonymize ourselves usin anonsurf to connect to th
 <p align="center">
   <img src="https://github.com/davidahid/Hack-Utils/blob/master/images/anon_nord.gif" width="800">
 </p>
+
+With the malware option
+```diff
++ this text is highlighted in green
+- this text is highlighted in red
+```
