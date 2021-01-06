@@ -4,8 +4,10 @@ cd
 sudo mkdir /etc/hackutils/
 sudo touch /etc/hackutils/hack_utils.conf
 cat <<EOF > /etc/hackutils/hack_utils.conf
-OVPNS_DIR="$HOME/.secret/ovpns/"
-HTB_DIR="$HOME/HTB/"
+ARRAY
+1			OVPN_DIR=$HOME/.secret/ovpns/
+2			HTB_DIR=$HOME/HTB/
+3			TMP_DIR=/tmp/hackutils
 EOF
 
 sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
