@@ -15,6 +15,7 @@ sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/bl.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/htbMkt.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/dwa.sh /etc/hackutils/
+sudo cp -r Hack-Utils/scripts/conky/ /etc/hackutils/
 sudo cp Hack-Utils/scripts/hackutils /bin/
 
 sudo chmod 700 /bin/hackutils
