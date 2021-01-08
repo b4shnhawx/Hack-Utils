@@ -4,6 +4,5 @@ Version=0.9.4
 Type=Application
 Name=Conky
 Comment=
-Exec=conky --quiet --config=HOME/.conkyrc --daemonize --pause=5
 StartupNotify=false
 Terminal=false
