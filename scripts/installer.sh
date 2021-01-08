@@ -8,7 +8,7 @@ ARRAY
 OVPN_DIR=$HOME/.secret/ovpns/
 HTB_DIR=$HOME/HTB/
 TMP_DIR=/tmp/hackutilss
-HTB_OVPN_NAME=davidahid
+HTB_OVPN_NAME=YOUR_HTB_NAME.ovpn
 EOF
 
 sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
