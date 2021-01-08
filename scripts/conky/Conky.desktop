@@ -4,9 +4,6 @@ Version=0.9.4
 Type=Application
 Name=Conky
 Comment=
-Exec=sh "/home/b4shnhawx/Scripts/boot/conky.init.sh"
-OnlyShowIn=XFCE;
-RunHook=0
+Exec=conky --quiet --config=HOME/.conkyrc --daemonize --pause=5
 StartupNotify=false
 Terminal=false
-Hidden=false
