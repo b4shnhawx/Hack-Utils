@@ -663,6 +663,18 @@ do
 				echo -e $LIGHTYELLOW"conky"$END")" "Setup conky desktop"
 				echo ""
 
+				echo -e "What interface you want to monitor in conky?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_interfaces"					
+
+				## If selection is 0, exit this option
+				if [[ $selection == "exit" ]]; then break; fi
+
 				rm ${directories_array[3]}Conky.desktop
 				rm ${directories_array[4]}.conkyrc
 				rm ${directories_array[5]}internet_test.sh
@@ -672,7 +684,7 @@ do
 				echo "Copying: /etc/hackutils/conky/internet_test.sh > ${directories_array[5]}"
 
 				cat /etc/hackutils/conky/Conky.desktop | sed "s|\$HOME/|${directories_array[4]}|g" > ${directories_array[3]}Conky.desktop
-				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME/|${directories_array[5]}|g" > ${directories_array[4]}.conkyrc
+				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME/|${directories_array[5]}|g" | sed "s|\$interface/|${ifaces_array[$selection]}|g" > ${directories_array[4]}.conkyrc
 
 				cp /etc/hackutils/conky/internet_test.sh ${directories_array[5]}
 
