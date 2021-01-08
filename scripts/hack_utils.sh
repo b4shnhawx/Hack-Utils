@@ -76,7 +76,7 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.5"
+version="0.6.0"
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
 #All OVPNS profiles used in the system in one column
@@ -152,7 +152,7 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 	   				   		  "cliweb" ")" "Web in CLI (elinks)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"conv" ")" "Hexadecimal / Base64 converter"
 	printf "$RED %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "fkap" ")" "Fake Access Point: Evil twin" 					 "dwa" ")" "Deauth Wireless Attack"
-	printf "$RED %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "htb" ")" "Hack The Box" 					 "" "" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "htb" ")" "Hack The Box" 					 "" "" ""
 	echo ""
 	echo ""
 
