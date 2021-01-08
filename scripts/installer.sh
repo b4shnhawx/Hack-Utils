@@ -11,7 +11,7 @@ CONKYRC_DIR=$HOME/
 SCRIPTS_DIR=$HOME/Scripts/
 HTB_OVPN_NAME=YOUR_HTB_NAME.ovpn
 EOF
-sudo cp hack_utils.conf /etc/hackutils/hack_utils.conf
+sudo cp $HOME/Hack-Utils/scripts/hack_utils.conf /etc/hackutils/
 
 sudo cp Hack-Utils/scripts/hack_utils.sh /etc/hackutils/
 sudo cp Hack-Utils/scripts/bl.sh /etc/hackutils/
