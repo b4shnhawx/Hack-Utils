@@ -156,7 +156,7 @@ menu()
 	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 							    "sshtun" ")" "SSH tunneling"			 				 	   "pping" ")" "Ping (personalized)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 	   				   		  "cliweb" ")" "Web in CLI (elinks)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"conv" ")" "Hexadecimal / Base64 converter"
-	printf "$RED %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "fkap" ")" "Fake Access Point: Evil twin" 					 "dwa" ")" "Deauth Wireless Attack"
+	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "fkap" ")" "Fake Access Point: Evil twin" 					 "dwa" ")" "Deauth Wireless Attack"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "htb" ")" "Hack The Box" 					 "" "" ""
 	echo ""
 	echo ""
