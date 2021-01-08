@@ -42,10 +42,10 @@ TAB="\t"
 ##---------------- FIRST OF ALL ----------------
 ## Read the config file. Create al directories located in the .conf file and save the directories and the configs in the specified array.
 ##	ARRAY 					CONFIG:
-##	${directories_array[1]}		OVPN_DIR
-##	${directories_array[2]}		HTB_DIR
-##	${directories_array[3]}		TMP_DIR
-##	${configurations[1]}	HTB_OVPN_NAME
+##	${directories_array[0]}		OVPN_DIR
+##	${directories_array[1]}		HTB_DIR
+##	${directories_array[2]}		TMP_DIR
+##	${configurations_array[0]}	HTB_OVPN_NAME
 
 while IFS= read -r line
 do
@@ -72,7 +72,6 @@ do
 	else
 		configurations_array=("${configurations_array[@]}" $config)
 	fi
-
 done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
@@ -394,13 +393,15 @@ do
 
 						invalidoption=false
 
-						;;
+					;;
+
 					ud)
 						install_uninstall_programs_array "" "purge" "$option"
 
 						invalidoption=false
 
-						;;
+					;;
+
 					man)
 						clear
 						
@@ -452,7 +453,7 @@ do
 						echo -e "														    "
 						echo -e $CYAN$BOLD"https://newvo.com.au/how-to-install-teamviewer-on-linux-cli/						    "$END
 						echo -e "                                                                                                                   "
-						echo -e $GREEN"cd													    "$END
+						echo -e $GREEN"cd ~/Downloads													    "$END
 						echo -e $GREEN"wget https://download.teamviewer.com/download/linux/teamviewer_amd64.deb				  	    "$END
 						echo -e $GREEN"sudo apt install ./teamviewer_amd64.deb									    "$END
 						
@@ -461,24 +462,32 @@ do
 						echo -e "														    "
 						echo -e $CYAN$BOLD"https://github.com/s4vitar/htbExplorer.git					    "$END
 						echo -e "                                                                                                                   "
-						echo -e $GREEN"cd Downloads													    "$END
-						echo -e $GREEN"git clone https://github.com/s4vitar/htbExplorer.git; cd htbExplorer		  	    "$END
-						echo -e $GREEN"sudo cp htbExplorer /usr/bin									    "$END
-						
+						echo -e $GREEN"cd ~/Downloads													    "$END
+						echo -e $GREEN"git clone https://github.com/s4vitar/htbExplorer.git 				"$END
+						echo -e $GREEN"cd htbExplorer		  	    										"$END
+						echo -e $GREEN"cp htbExplorer htbExplorer_tmp"$END
+						echo -e $GREEN"cat htbExplorer_tmp | sed 's/API_TOKEN=""/API_TOKEN=\""$CYAN$BOLD"YOUR_HTB_API_TOKEN\""$END$GREEN"/g' > htbExplorer									    "$END
+						echo -e $GREEN"sudo cp downloadVPN.py /etc/hackutils/ 									    "$END
+						echo -e $GREEN"sudo cp htbExplorer /etc/hackutils/ 									    "$END
+						echo -e $GREEN"sudo cp htbExplorer /usr/bin 									    "$END
+						echo -e $GREEN"sudo chmod +x /usr/bin/htbExplorer 										"$END
 					
 					;;
-				0)
-					ignore_continue_enter=true
+
+					0)
+						ignore_continue_enter=true
 
 					;;
-				*)
-					invalidoption=true
-					ignore_continue_enter=false	
+
+					*)
+						invalidoption=true
+						ignore_continue_enter=false	
 
 					;;
 				esac
 
-				;;
+			;;
+
 			if)
 				echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
 				echo ""
@@ -487,7 +496,7 @@ do
 				#command_for_interfaces "ifconfig "			""
 				command_for_interfaces "ifconfig " ""
 
-				;;
+			;;
 
 			tv)
 				echo -e $LIGHTYELLOW"tv"$END")" "Teamviewer"
@@ -510,7 +519,7 @@ do
 					1)
 						nohup sudo teamviewer &
 
-						if [[ $? == 1 ]];
+						if [[ $? != 0 ]];
 						then
 
 							echo -e $RED "An error was ocurred while try execute TeamViewer (probably related with the user that launch the program)."
@@ -521,7 +530,7 @@ do
 						echo -e $CYAN$BOLD"Executing TeamViewer GUI..."$END
 						echo ""
 
-						;;
+					;;
 
 					2)
 						teamviewer daemon restart > /dev/null
@@ -546,20 +555,20 @@ do
 
 						teamviewer passwd $psswd
 
-						;;
+					;;
 
 					0)
 						ignore_continue_enter=true
 
 						break
 
-						;;
+					;;
 
 					*)
 						invalidoption=true
 						ignore_continue_enter=false	
 
-						;;
+					;;
 	
 
 				esac
@@ -574,12 +583,10 @@ do
 				nmcli device wifi rescan
 
 				## If there is an error executing the last command, will break the case statement.
-				if [[ $? == 1 ]];
+				if [[ $? != 0 ]];
 				then
-
 					echo -e $RED "An error was ocurred while try to scan the wireless networks (probably not a valid wireless interface detected)."
 
-					break
 				fi
 
 				nmcli device wifi list
@@ -592,12 +599,12 @@ do
 				nmcli device wifi connect $ssid password $psswd
 
 				## If there is an error executing the last command, will break the case statement.
-				if [[ "$?" == "1" ]];
+				if [[ $? != 0 ]];
 				then
-
 					echo -e $RED "An error was ocurred while try to connect to the AP (probably incorrect password)."
 
 					break
+
 				fi
 
 				sleep 2
@@ -673,6 +680,7 @@ do
 
 				ping -I ${ifaces_array[$selection]} $ip_address
 
+				break
 				;;
 
 			2)
@@ -852,7 +860,7 @@ do
 				options_selector $number_of_bandwith_interface_program "bandwith_interface_programs_array"
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 
-				if [ $selection == "m" ]
+				if [[ $selection == "m" ]];
 				then
 					echo ""
 
@@ -892,35 +900,35 @@ do
 
 				program_bandwidth_interface=$selection
 
-				if [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "slurm" ]
+				if [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "slurm" ]];
 				then
 					slurm -i ${ifaces_array[$interface]} -z
 
 					ignore_continue_enter=true
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "iftop" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "iftop" ]];
 				then
 					iftop -i ${ifaces_array[$interface]}
 
 					ignore_continue_enter=true
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "speedometer" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "speedometer" ]];
 				then
 					speedometer -r ${ifaces_array[$interface]} -t ${ifaces_array[$interface]}
 
 					ignore_continue_enter=true
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "tcptrack" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "tcptrack" ]];
 				then
 					tcptrack -i ${ifaces_array[$interface]}
 
 					ignore_continue_enter=true
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "ifstat" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "ifstat" ]];
 				then
 					ifstat -t -i ${ifaces_array[$interface]} 0.5
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "vnstat" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "vnstat" ]];
 				then
 					echo ""
 					echo "Select an option to do:"
@@ -989,13 +997,13 @@ do
 					esac
 					
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "nload" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "nload" ]];
 				then
 					nload -a 30
 
 					ignore_continue_enter=true
 
-				elif [ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "bwm-ng" ]
+				elif [[ ${bandwith_interface_programs_array[$program_bandwidth_interface]} == "bwm-ng" ]];
 				then
 					bwm-ng bwm-ng --allif 2
 
@@ -1033,11 +1041,11 @@ do
 				echo ""
 				echo -e $CYAN$BOLD" > PORT STATUS"$END
 
-				if [ "$telnet_output" == "open" ];
+				if [[ "$telnet_output" == "open" ]];
 				then
 					echo -ne "$ip_address:$port" $END">>" $UNDERGREEN$BLACK "OPEN" $END
 
-				elif [ "$telnet_output" == "closed" ];
+				elif [[ "$telnet_output" == "closed" ]];
 				then
 					echo -ne "$ip_address" "$port" $UNDERRED$WHITE "CLOSED" $END
 
@@ -1090,26 +1098,26 @@ do
 
 				program_web_terminals=$selection
 
-				if [ ${web_terminals_array[$program_web_terminals]} == "cat" ]
+				if [[ ${web_terminals_array[$program_web_terminals]} == "cat" ]];
 				then
-					lynx -accept_all_cookies -dump "https://es.adminsub.net/tcp-udp-port-finder/"$port > ${directories_array[3]}/lynx_ports.txt
+					lynx -accept_all_cookies -dump "https://es.adminsub.net/tcp-udp-port-finder/"$port > ${directories_array[2]}/lynx_ports.txt
 
-					total_lines=`wc -l ${directories_array[3]}/lynx_ports.txt | cut -c1-3`
-					lines_below=`cat -n ${directories_array[3]}/lynx_ports.txt | cut -c4-100 | grep "squedas Recientes" | cut -c1-3`
-					lines_above=`cat -n ${directories_array[3]}/lynx_ports.txt | cut -c4-100 | grep "Buscar los resultados de" | cut -c1-3`
+					total_lines=`wc -l ${directories_array[2]}/lynx_ports.txt | cut -c1-3`
+					lines_below=`cat -n ${directories_array[2]}/lynx_ports.txt | cut -c4-100 | grep "squedas Recientes" | cut -c1-3`
+					lines_above=`cat -n ${directories_array[2]}/lynx_ports.txt | cut -c4-100 | grep "Buscar los resultados de" | cut -c1-3`
 
 					lines_below=$((lines_below - 1))
 					lines_above=$(((lines_above + 1) * -1))
 
-					cat ${directories_array[3]}/lynx_ports.txt | head -n $lines_below | tac | head -n $lines_above | tac
+					cat ${directories_array[2]}/lynx_ports.txt | head -n $lines_below | tac | head -n $lines_above | tac
 
-				elif [ ${web_terminals_array[$program_web_terminals]} == "elinks" ]
+				elif [[ ${web_terminals_array[$program_web_terminals]} == "elinks" ]];
 				then
 					elinks "https://es.adminsub.net/tcp-udp-port-finder/"$port
 
 					ignore_continue_enter=true
 
-				elif [ ${web_terminals_array[$program_web_terminals]} == "lynx" ]
+				elif [[ ${web_terminals_array[$program_web_terminals]} == "lynx" ]];
 				then
 					lynx -accept_all_cookies "https://es.adminsub.net/tcp-udp-port-finder/"$port
 
@@ -1219,7 +1227,7 @@ do
 					echo -e "Type the filters for tcpdump (Press enter = ignore. Type "$LIGHTYELLOW"h"$END" = view some tcpdump help)"
 					echo -ne $BLINK" > Filters: "$END$LIGHTYELLOW ; read filters ; echo -ne "" $END
 
-					if [ "$filters" == "h" ];
+					if [[ "$filters" == "h" ]];
 					then
 						echo ""
 						echo -e $CYAN$BOLD "EXAMPLES" $END
@@ -1245,7 +1253,7 @@ do
 
 						filters=""
 
-					elif [ "$filters" == "" ];
+					elif [[ "$filters" == "" ]];
 					then
 						break
 
@@ -1388,7 +1396,7 @@ do
 				echo -e "NOTE: Hack_Utils will close." $END
 				echo ""
 
-				openvpn --config ${directories_array[1]}/${ovpns_array[$selection]}
+				openvpn --config ${directories_array[0]}/${ovpns_array[$selection]}
 
 				;;
 
@@ -1567,11 +1575,11 @@ do
 				echo ""
 
 
-				wget --post-data "query=get_info&hash="$hash https://mb-api.abuse.ch/api/v1/ --output-document=${directories_array[3]}/malware_bazaar_tmp.json
-				sed 's/ANY.RUN/ANYRUN/g' ${directories_array[3]}/malware_bazaar_tmp.json > ${directories_array[3]}/malware_bazaar.json
-				rm ${directories_array[3]}/malware_bazaar_tmp.json
+				wget --post-data "query=get_info&hash="$hash https://mb-api.abuse.ch/api/v1/ --output-document=${directories_array[2]}/malware_bazaar_tmp.json
+				sed 's/ANY.RUN/ANYRUN/g' ${directories_array[2]}/malware_bazaar_tmp.json > ${directories_array[2]}/malware_bazaar.json
+				rm ${directories_array[2]}/malware_bazaar_tmp.json
 
-				if [[ $(cat ${directories_array[3]}/malware_bazaar.json | jq -r .query_status) != "ok" ]];
+				if [[ $(cat ${directories_array[2]}/malware_bazaar.json | jq -r .query_status) != "ok" ]];
 				then
 					echo -e $RED$BOLD "Hash not found in Malware Bazaar"
 					echo ""
@@ -1579,7 +1587,7 @@ do
 					break
 				fi
 
-				files_array=( "${directories_array[3]}/malware_bazaar_tmp.json" "${directories_array[3]}/malware_bazaar.json" "${directories_array[3]}/triage_signatures_raw.txt" "${directories_array[3]}/triage_scores_raw.txt" )
+				files_array=( "${directories_array[2]}/malware_bazaar_tmp.json" "${directories_array[2]}/malware_bazaar.json" "${directories_array[2]}/triage_signatures_raw.txt" "${directories_array[2]}/triage_scores_raw.txt" )
 
 				for file in "${files_array[@]}"
 				do
@@ -1588,41 +1596,41 @@ do
 				done
 
 				echo -e $CYAN$BOLD " > HASHES" $END
-				echo -ne "SHA256: " $CYAN$BOLD; jq -r '.data[] | .sha256_hash' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "SHA3_384: " $CYAN$BOLD; jq -r '.data[] | .sha3_384_hash' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "SHA1: " $CYAN$BOLD; jq -r '.data[] | .sha1_hash' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "MD5: " $CYAN$BOLD; jq -r '.data[] | .md5_hash' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
+				echo -ne "SHA256: " $CYAN$BOLD; jq -r '.data[] | .sha256_hash' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "SHA3_384: " $CYAN$BOLD; jq -r '.data[] | .sha3_384_hash' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "SHA1: " $CYAN$BOLD; jq -r '.data[] | .sha1_hash' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "MD5: " $CYAN$BOLD; jq -r '.data[] | .md5_hash' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
 				echo ""
 				echo -e $CYAN$BOLD " > FILE INFO" $END
-				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[] | .first_seen' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Last seen: " $CYAN$BOLD; jq -r '.data[] | .last_seen' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "File name: " $CYAN$BOLD; jq -r '.data[] | .file_name' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "File size: " $CYAN$BOLD; output=`jq -r '.data[] | .file_size' ${directories_array[3]}/malware_bazaar.json`; echo -ne "0"; echo "scale=3; $output / 1024 /1024" | bc -l | sed "s/$/ MB/g"; echo -ne $END
-				echo -ne "File type mime: " $CYAN$BOLD; jq -r '.data[] | .file_type_mime' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "File type: " $CYAN$BOLD; jq -r '.data[] | .file_type' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Reporter: " $CYAN$BOLD; jq -r '.data[] | .reporter' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Origin country: " $CYAN$BOLD; jq -r '.data[] | .origin_country' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Signature: " $CYAN$BOLD; jq -r '.data[] | .signature' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Code sign: " $CYAN$BOLD; jq -r '.data[] | .code_sign' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Delivery method: " $CYAN$BOLD; jq -r '.data[] | .delivery_method' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Comment: " $CYAN$BOLD; jq -r '.data[] | .comment' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
+				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[] | .first_seen' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Last seen: " $CYAN$BOLD; jq -r '.data[] | .last_seen' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "File name: " $CYAN$BOLD; jq -r '.data[] | .file_name' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "File size: " $CYAN$BOLD; output=`jq -r '.data[] | .file_size' ${directories_array[2]}/malware_bazaar.json`; echo -ne "0"; echo "scale=3; $output / 1024 /1024" | bc -l | sed "s/$/ MB/g"; echo -ne $END
+				echo -ne "File type mime: " $CYAN$BOLD; jq -r '.data[] | .file_type_mime' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "File type: " $CYAN$BOLD; jq -r '.data[] | .file_type' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Reporter: " $CYAN$BOLD; jq -r '.data[] | .reporter' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Origin country: " $CYAN$BOLD; jq -r '.data[] | .origin_country' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Signature: " $CYAN$BOLD; jq -r '.data[] | .signature' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Code sign: " $CYAN$BOLD; jq -r '.data[] | .code_sign' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Delivery method: " $CYAN$BOLD; jq -r '.data[] | .delivery_method' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Comment: " $CYAN$BOLD; jq -r '.data[] | .comment' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
 				echo ""
 				echo -e $CYAN$BOLD " > ANALYSIS" $END
 				echo -e $CYAN$BOLD "any.run" $END
-				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].verdict' ${directories_array[3]}/malware_bazaar.json | sed '/Malicious[[:space:]]activity/s//'$(printf "\e[31mMaliciousactivity\033[0m")'/' |  sed 's/Maliciousactivity/Malicious activity/g'; echo -ne $END;
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].analysis_url' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].verdict' ${directories_array[2]}/malware_bazaar.json | sed '/Malicious[[:space:]]activity/s//'$(printf "\e[31mMaliciousactivity\033[0m")'/' |  sed 's/Maliciousactivity/Malicious activity/g'; echo -ne $END;
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.ANYRUN[].analysis_url' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
 				echo -e $CYAN$BOLD "cape" $END
-				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.CAPE.detection' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.CAPE.link' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Detection: " $CYAN$BOLD; jq -r '.data[].vendor_intel.CAPE.detection' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.CAPE.link' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
 				echo -e $CYAN$BOLD "tria.ge" $END
-				echo -ne "Malware family: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.malware_family' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Score: " $CYAN$BOLD; score=`jq -r '.data[].vendor_intel.Triage.score' ${directories_array[3]}/malware_bazaar.json`; malware_score_checker $score; echo -ne $END
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.Triage.link' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Malware family: " $CYAN$BOLD; jq -r '.data[].vendor_intel.Triage.malware_family' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Score: " $CYAN$BOLD; score=`jq -r '.data[].vendor_intel.Triage.score' ${directories_array[2]}/malware_bazaar.json`; malware_score_checker $score; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.Triage.link' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
 				echo -e "Signatures: " 
 				echo ""
 
-				jq -r '.data[].vendor_intel.Triage.signatures[].signature' ${directories_array[3]}/malware_bazaar.json > ${directories_array[3]}/triage_signatures_raw.txt
-				jq -r '.data[].vendor_intel.Triage.signatures[].score' ${directories_array[3]}/malware_bazaar.json > ${directories_array[3]}/triage_scores_raw.txt
+				jq -r '.data[].vendor_intel.Triage.signatures[].signature' ${directories_array[2]}/malware_bazaar.json > ${directories_array[2]}/triage_signatures_raw.txt
+				jq -r '.data[].vendor_intel.Triage.signatures[].score' ${directories_array[2]}/malware_bazaar.json > ${directories_array[2]}/triage_scores_raw.txt
 
 				counter=1
 				ladder="  "
@@ -1631,7 +1639,7 @@ do
 
 				while IFS= read -r line
 				do
-					score=`cat ${directories_array[3]}/triage_scores_raw.txt | sed -n $counter\p`
+					score=`cat ${directories_array[2]}/triage_scores_raw.txt | sed -n $counter\p`
 
 					echo -e "┐ "
 					echo -ne "$ladder""┌────┴─╢ "
@@ -1649,19 +1657,19 @@ do
 
 					sleep 0.1
 
-				done < ${directories_array[3]}/triage_signatures_raw.txt
+				done < ${directories_array[2]}/triage_signatures_raw.txt
 
 				echo -e $CYAN$BOLD"\bEnd<" $END
 				echo ""
 				echo -e $CYAN$BOLD "ReversingLabs" $END
-				echo -ne "Threat name: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.threat_name' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Status: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.status' ${directories_array[3]}/malware_bazaar.json | sed '/MALICIOUS/s//'$(printf "\e[31mMALICIOUS\033[0m")'/'; echo -ne $END;
-				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.first_seen' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Scanner count: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_count' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Scanner match: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_match' ${directories_array[3]}/malware_bazaar.json; echo -ne $END
-				echo -ne "Scanner score: " $CYAN$BOLD; output=`jq -r '.data[].vendor_intel.ReversingLabs.scanner_percent' ${directories_array[3]}/malware_bazaar.json`; output=`echo "scale=0; $output / 10" | bc -l`; malware_score_checker $output; echo -ne $END
+				echo -ne "Threat name: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.threat_name' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Status: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.status' ${directories_array[2]}/malware_bazaar.json | sed '/MALICIOUS/s//'$(printf "\e[31mMALICIOUS\033[0m")'/'; echo -ne $END;
+				echo -ne "First seen: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.first_seen' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner count: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_count' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner match: " $CYAN$BOLD; jq -r '.data[].vendor_intel.ReversingLabs.scanner_match' ${directories_array[2]}/malware_bazaar.json; echo -ne $END
+				echo -ne "Scanner score: " $CYAN$BOLD; output=`jq -r '.data[].vendor_intel.ReversingLabs.scanner_percent' ${directories_array[2]}/malware_bazaar.json`; output=`echo "scale=0; $output / 10" | bc -l`; malware_score_checker $output; echo -ne $END
 				echo -e $CYAN$BOLD "UnpacMe" $END
-				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.UnpacMe[].link' ${directories_array[3]}/malware_bazaar.json | uniq; echo -ne $END
+				echo -ne "URL: " $BLUE$BOLD; jq -r '.data[].vendor_intel.UnpacMe[].link' ${directories_array[2]}/malware_bazaar.json | uniq; echo -ne $END
 
 				for file in "${files_array[@]}"
 				do
@@ -1841,19 +1849,50 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read machine ; echo -ne "" $END
 				echo ""
 
-				cd ${directories_array[2]}
+				sudo htbExplorer -s $machine
+
+				cd ${directories_array[1]}
 				mkdir $machine; cd $machine
 				bash /etc/hackutils/htbMkt.sh
 
-				echo -ne "\n\nDirectory created for $GREEN$machine$END -->" $GREEN; pwd; echo -e $END
-				echo -ne "Directory tree created $GREEN$machine$END machine: \n"; tree ~/HTB/$machine
+				echo -ne "\n\nDirectory created for $CYAN$BOLD$machine$END -->" $CYAN$BOLD; pwd; echo -e $END
+				echo -ne "Directory tree created $CYAN$BOLD$machine$END machine: \n"; tree ~/HTB/$machine
+				echo ""
+				echo ""
 
-				;;
+				echo -e $UNDERWHITE$BLACK$BLINK"Press ENTER to connect HTB VPN"$END ; read ; echo -e "" $END
+
+				echo -ne $CYAN$BOLD"--------- Login in HTB ---------\n"$END
+
+				pkill "openvpn"
+
+				echo -ne "Email: "
+				python /etc/hackutils/downloadVPN.py ${configurations_array[0]}
+
+				read
+
+				if [[ $(ls /etc/hackutils | grep \.ovpn) != ${configurations_array[0]} ]];
+				then
+					echo -e $RED "An error was ocurred while trying to download VPN (probably bad email / password or not installed htbExplorer (use chckdep --> man))."
+				
+					break
+				fi
+				
+				mv ${configurations_array[0]} ${directories_array[0]}
+
+				echo ""
+				echo -ne $CYAN$BOLD"--------- Connecting to HTB VPN ---------\n"$END
+
+				echo -e "HTB VPN directory: $CYAN$BOLD${directories_array[0]}${configurations_array[0]}"$END
+
+				nohup openvpn ${directories_array[0]}${configurations_array[0]} 2> /dev/null &
+
+			;;
 
 			0)
 				exit
 
-				;;
+			;;
 
 			*)
 				invalidoption=ignore
@@ -1863,14 +1902,16 @@ do
 				;;
 			esac
 
-			exit_selection=true
+			break
+
+	done
 
 	#If the user type an invalid option...
 	if [[ $ignore_continue_enter == true ]];
 	then
 		#...do nothing
-		break
-
+		:
+	
 	#...but if the option is included in the case
 	elif [[ $invalidoption == false ]];
 	then
@@ -1880,9 +1921,8 @@ do
 		echo -ne $UNDERGRAY$BLACK"Press ENTER to go back to the main menu"$END$HIDE
 		tput civis
 		read
-		break
 		tput cnorm
-
+	
 	elif [[ $invalidoption == true ]];
 	then
 		#Waits for user to press the enter key after he view what he need
@@ -1891,12 +1931,27 @@ do
 		echo -ne $UNDERRED$WHITE"Invalid option... omiting... Press ENTER to go back to the main menu"$END$HIDE
 		tput civis
 		read
-		break
 		tput cnorm
-	else
+	
+	elif [[ $invalidoption == error ]];
+	then
+		tput civis
+		read
+		tput cnorm
+	
+	elif [[ $invalidoption == ignore ]];
+	then
 		:
+	
+	else
+		#Waits for user to press the enter key after he view what he need
+		echo ""
+		echo ""
+		echo -ne $UNDERRED$WHITE"error"$END$HIDE
+		tput civis
+		read
+		tput cnorm
 	fi
-		done
 
 	invalidoption=false
 	ignore_continue_enter=false
