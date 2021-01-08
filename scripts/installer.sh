@@ -7,7 +7,10 @@ cat <<EOF > /etc/hackutils/hack_utils.conf
 ARRAY
 OVPN_DIR=$HOME/.secret/ovpns/
 HTB_DIR=$HOME/HTB/
-TMP_DIR=/tmp/hackutils
+TMP_DIR=/tmp/hackutils/
+CONKY_DIR=$HOME/.config/autostart/
+CONKYRC_DIR=$HOME/
+SCRIPTS_DIR=$HOME/Scripts/
 HTB_OVPN_NAME=YOUR_HTB_NAME.ovpn
 EOF
 
