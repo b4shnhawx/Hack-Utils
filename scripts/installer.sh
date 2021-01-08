@@ -2,7 +2,7 @@
 
 cd
 sudo mkdir /etc/hackutils/
-cat <<EOF > hack_utils.conf
+cat <<EOF > $HOME/Hack-Utils/scripts/hack_utils.conf
 OVPN_DIR=$HOME/.secret/ovpns/
 HTB_DIR=$HOME/HTB/
 TMP_DIR=/tmp/hackutils/
