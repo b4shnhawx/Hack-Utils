@@ -76,24 +76,29 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.6.0"
+version="0.6.5"
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
+#All wlanX interfaces in used in the system
+wlan_interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | egrep -o "wlan[0-9]{1,2}" | tr '\n' " "`
 #All OVPNS profiles used in the system in one column
 ovpns_extracted=`ls --width=1 ${directories_array[@]}/ | tr '\n' " "`
 ovpns_active_extracted=`ps aux | grep openvpn | grep ${directories_array[@]}/ | rev | cut -f1 -d "/" | rev | tr '\n' " "`
 
 #Transforms the strings into arrays
 read -a ifaces_array <<< $interfaces_extracted
+read -a wlan_ifaces_array <<< $wlan_interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload bwm-ng)
 web_terminals_array=(cat elinks lynx)
 
 #Saves how many interfaces have the system
 number_of_interfaces=${#ifaces_array[@]}
+#Saves how many wlan interfaces have the system
+number_of_wlan_interfaces=${#wlan_ifaces_array[@]}
 #Saves how many ovpns profiles have the system
 number_of_ovpns=${#ovpns_array[@]}
 #Saves how many ovpns active connections have the system
@@ -587,6 +592,7 @@ do
 				then
 					echo -e $RED "An error was ocurred while try to scan the wireless networks (probably not a valid wireless interface detected)."
 
+					break
 				fi
 
 				nmcli device wifi list
@@ -1837,9 +1843,98 @@ do
 				echo -e $LIGHTYELLOW"dwa"$END")" "Deauth Wireless Attack"
 				echo ""
 
-				echo "nothing... 4 now..."
+				echo -e "What you want to do?"
+				
+				options_array=("Attack a WiFi network" "View the backgrounded attack" "End the backgrounded attack")
+				options_selector 3 "options_array"
 
-				;;
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				## If selection is 0, exit this option
+				if [[ $selection == "exit" ]]; then break; fi
+
+				case $selection in
+					1)
+
+						echo -e "From which interface you want to make the attack"
+
+						options_selector $number_of_wlan_interfaces "wlan_ifaces_array"
+
+						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+						echo ""
+
+						response_checker "$selection" "$number_of_wlan_interfaces"
+
+						## If selection is 0, exit this option
+						if [[ $selection == "exit" ]]; then break; fi
+		
+							time=0.1
+		
+							active_sessions=`tmux list-sessions | egrep "DWA-[0-9]{0,1}" | cut -f1 -d":"`
+		
+						for session in $active_sessions:
+						do
+							tmux kill-session -t $session && sleep $time
+		
+						done
+		
+						tmux new-session -d -t DWA && sleep $time
+						tmux split-window -h && sleep $time
+						tmux resize-pane -t 1 -L 12 && sleep $time
+		
+						tmux select-pane -t 0 && sleep $time
+		
+						tmux send-keys "sudo bash /etc/hackutils/dwa.sh ${wlan_ifaces_array[$selection]} 2> /dev/null" C-m && sleep $time
+						#tmux list-sessions
+						tmux attach-session -t DWA
+		
+						echo -e $CYAN$BOLD" > THE ATTACK IS WORKING ON BACKGROUND IN TMUX"$END
+					;;
+
+					2)
+						echo "Active tmux sessions:"
+						tmux list-sessions | grep DWA
+						tmux attach-session -t DWA
+
+						echo ""
+					;;
+
+					3)
+						echo "Killing tmux session..."
+						#tmux kill-session -t DWA
+						
+						for interface in ${wlan_ifaces_array[@]}
+						do
+							output=`iwconfig $interface | grep "Mode:Monitor" | egrep -o "wlan[0-9]{1,2}"`
+
+							if [[ -n "$output" ]];
+							then
+								echo "Setting the $interface as managed mode..."
+								ip link set $interface down
+								iwconfig $interface mode managed
+								ip link set $interface up
+							fi
+		
+						done
+					;;
+
+
+					0)
+						ignore_continue_enter=true
+
+						break
+
+					;;
+
+					*)
+						invalidoption=true
+						ignore_continue_enter=false	
+
+					;;
+	
+				esac
+			;;
 
 			htb)
 				echo -e $LIGHTYELLOW"htb"$END")" "Hack The Box"
