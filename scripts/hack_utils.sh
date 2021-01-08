@@ -45,6 +45,9 @@ TAB="\t"
 ##	${directories_array[0]}		OVPN_DIR
 ##	${directories_array[1]}		HTB_DIR
 ##	${directories_array[2]}		TMP_DIR
+##	${directories_array[3]}		CONKY_DIR
+##	${directories_array[4]}		CONKYRC_DIR
+##	${directories_array[5]}		SCRIPTS_DIR
 ##	${configurations_array[0]}	HTB_OVPN_NAME
 
 while IFS= read -r line
@@ -91,7 +94,7 @@ read -a wlan_ifaces_array <<< $wlan_interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload bwm-ng)
 web_terminals_array=(cat elinks lynx)
 
@@ -128,8 +131,8 @@ menu()
 	echo -e $CYAN$BOLD"  >>> MISCELLANEOUS <<<  "$END
 	echo ""
 
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   "chckdep" ")" "Check all the dependencies"   "up" ")" "Update Hack_Utils"
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								     "0" ")" "Exit"
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   "chckdep" ")" "Check all the dependencies"   "up" 	")" "Update Hack_Utils"
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								     "0" ")" "Exit"							"conky" ")" "Setup conky desktop"
 	echo ""
 	echo ""
 
@@ -151,13 +154,13 @@ menu()
 	echo -e $CYAN$BOLD"  >>> ADVANCED <<<  "$END
 	echo ""
 
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 "advif" ")" "Advanced interfaces info" 					   "sniff" ")" "Sniff packets"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "ovpn" ")" "Connect to a OVPN server" 				 		"anon" ")" "Anonymizer"
-	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 							    "sshtun" ")" "SSH tunneling"			 				 	   "pping" ")" "Ping (personalized)"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								"macman" ")" "MAC manufacturer" 	   				   		  "cliweb" ")" "Web in CLI (elinks)"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       "malware" ")" "Cyber threats search (Malware Bazaar API)" 		"conv" ")" "Hexadecimal / Base64 converter"
-	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  "fkap" ")" "Fake Access Point: Evil twin" 					 "dwa" ")" "Deauth Wireless Attack"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  "htb" ")" "Hack The Box" 					 "" "" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								 	"advif"		")" "Advanced interfaces info" 						"sniff" 	")" "Sniff packets"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  	"ovpn" 		")" "Connect to a OVPN server" 				 		"anon" 		")" "Anonymizer"
+	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 							    			"sshtun" 	")" "SSH tunneling"			 				 		"pping" 	")" "Ping (personalized)"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 									"macman" 	")" "MAC manufacturer" 	   				   			"cliweb" 	")" "Web in CLI (elinks)"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       		"malware" 	")" "Cyber threats search (Malware Bazaar API)" 	"conv" 		")" "Hexadecimal / Base64 converter"
+	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"" 	"" ""
 	echo ""
 	echo ""
 
@@ -655,6 +658,19 @@ do
 				exit
 
 				;;
+
+			conky)
+				echo -e $LIGHTYELLOW"conky"$END")" "Setup conky desktop"
+				echo ""
+
+				cat /etc/hackutils/conky/Conky.desktop > ${directories_array[3]}/Conky.desktop
+
+				echo "Exec=conky --quiet --config=${directories_array[4]}/.conkyrc --daemonize --pause=5" >> ${directories_array[3]}/Conky.desktop
+
+				cp /etc/hackutils/conky/.conkyrc ${directories_array[4]}
+				cp /etc/hackutils/conky/internet_test.sh ${directories_array[5]}
+
+			;;
 
 			1)
 				echo -e $LIGHTYELLOW"1"$END")" "Ping"
@@ -1474,13 +1490,22 @@ do
 						2)
 							clear
 
-							if [[ $anonsurfstatus == 'inactive' ]];
+							path=`which anonsurf`
+
+							if [[ $path == '' ]];
 							then
-								echo -e $GREEN"\n------------- Activating ANONSURF -------------\n"$END
-								anonsurf start
+								echo -e "																																																										"
+								echo -e $UNDERRED$BLACK"Anonsurf not installed."$END
+							
 							else
-								echo -e $RED"\n------------- Deactivating ANONSURF -------------\n"$END
-								anonsurf stop
+								if [[ $anonsurfstatus == 'inactive' ]];
+								then
+									echo -e $GREEN"\n------------- Activating ANONSURF -------------\n"$END
+									anonsurf start
+								else
+									echo -e $RED"\n------------- Deactivating ANONSURF -------------\n"$END
+									anonsurf stop
+								fi
 							fi
 
 							;;
@@ -1518,9 +1543,9 @@ do
 						5)
 							clear
 
-							path_nordvpn=`which nordvpn`
+							path=`which nordvpn`
 
-							if [[ $path_nordvpn == '' ]];
+							if [[ $path == '' ]];
 							then
 								echo -e "																																																										"
 								echo -e $UNDERRED$BLACK"NordVPN not installed."$END
