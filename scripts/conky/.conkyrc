@@ -53,6 +53,6 @@ ${color cyan}Up: 	${color lightgreen}${upspeed eth0}
 ${upspeedgraph}
 ${color cyan}Down: ${color orange}${downspeed eth0}
 ${downspeedgraph}${color}
-${color cyan}Internet ${color}${exec command bash /root/Scripts/internet_test.sh}${color}
+${color cyan}Internet ${color}${exec command bash $HOME/internet_test.sh}${color}
 ${hr}
 ]]
