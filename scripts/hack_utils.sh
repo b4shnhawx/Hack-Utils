@@ -663,12 +663,16 @@ do
 				echo -e $LIGHTYELLOW"conky"$END")" "Setup conky desktop"
 				echo ""
 
+				rm ${directories_array[3]}Conky.desktop
+				rm ${directories_array[4]}.conkyrc
+				rm ${directories_array[5]}internet_test.sh
+
 				echo "Copying: /etc/hackutils/conky/Conky.desktop > ${directories_array[3]}Conky.desktop"
 				echo "Copying: /etc/hackutils/conky/.conkyrc > ${directories_array[4]}.conkyrc"
 				echo "Copying: /etc/hackutils/conky/internet_test.sh > ${directories_array[5]}"
 
-				cat /etc/hackutils/conky/Conky.desktop | sed "s|\$HOME|${directories_array[4]}|g" > ${directories_array[3]}Conky.desktop
-				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME|${directories_array[5]}|g" > ${directories_array[4]}.conkyrc
+				cat /etc/hackutils/conky/Conky.desktop | sed "s|\$HOME/|${directories_array[4]}|g" > ${directories_array[3]}Conky.desktop
+				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME/|${directories_array[5]}|g" > ${directories_array[4]}.conkyrc
 
 				cp /etc/hackutils/conky/internet_test.sh ${directories_array[5]}
 
