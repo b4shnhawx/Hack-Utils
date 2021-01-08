@@ -6,3 +6,4 @@ Name=Conky
 Comment=
 StartupNotify=false
 Terminal=false
+Exec=conky --quiet --config=$HOME.conkyrc --daemonize --pause=5
