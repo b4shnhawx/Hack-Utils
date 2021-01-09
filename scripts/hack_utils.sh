@@ -159,7 +159,7 @@ menu()
 	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 							    			"sshtun" 	")" "SSH tunneling"			 				 		"pping" 	")" "Ping (personalized)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 									"macman" 	")" "MAC manufacturer" 	   				   			"cliweb" 	")" "Web in CLI (elinks)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       		"malware" 	")" "Cyber threats search (Malware Bazaar API)" 	"conv" 		")" "Hexadecimal / Base64 converter"
-	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"" 	"" ""
 	echo ""
 	echo ""
@@ -1878,71 +1878,121 @@ do
 				echo -e $LIGHTYELLOW"fkap"$END")" "Fake Access Point: Evil twin"
 				echo ""
 
-				echo -e "From which wireless interface you want to start the Evil Twin?"
-
-				options_selector $number_of_wlan_interfaces "wlan_ifaces_array"
-
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
-				echo ""
-
-				response_checker "$selection" "$number_of_interfaces"					
-
-				## If selection is 0, exit this option
-				if [[ $selection == "exit" ]]; then break; fi
+				echo -e "What you want to do?"
 				
-				selection_interface=$selection
-
-				echo -e "What IP address do you want the Evil Twin to have? This address wil be the default GW for the clients."
-				echo -e "Press enter to leave by default ("$CYAN$BOLD"10.10.0.1"$END")."
-				echo -ne $BLINK" >  "$END" IP: "$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
-				echo ""
-
-				if [[ -z $ip_address ]];
-				then
-					ip_address="10.10.0.1"
-
-				else
-					ip_checker $ip_address
-
-				fi
-
-				echo -e "Which interface you want to use for post-routing (NAT to internet)?"
-
-				options_selector $number_of_interfaces "ifaces_array"
+				options_array=("Create an Evil Twin" "View the backgrounded Evil Twin")
+				options_selector 2 "options_array"
 
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "$selection" "$number_of_interfaces"					
-
 				## If selection is 0, exit this option
 				if [[ $selection == "exit" ]]; then break; fi
 
-				selection_interface_nat=$selection
+				case $selection in
+					1)
 
-				time=0.1
-		
-				active_sessions=`tmux list-sessions | egrep "FKAP-[0-9]{0,1}" | cut -f1 -d":"`
-		
-				for session in $active_sessions:
-				do
-					tmux kill-session -t $session && sleep $time
-		
-				done
-		
-				tmux new-session -d -t FKAP && sleep $time
-				tmux split-window -h && sleep $time
-				tmux resize-pane -t 1 -L 12 && sleep $time
-		
-				tmux select-pane -t 0 && sleep $time
-		
-				tmux send-keys "sudo bash /etc/hackutils/fkap.sh ${wlan_ifaces_array[$selection_interface]} $ip_address ${ifaces_array[$selection_interface_nat]} 2> /dev/null" C-m && sleep $time
-				#tmux list-sessions
-				tmux attach-session -t FKAP
-		
-				echo -e $CYAN$BOLD" > THE EVIL TWIN IS WORKING ON BACKGROUND IN TMUX"$END
+						echo -e "From which wireless interface you want to start the Evil Twin?"
 
-				;;
+						options_selector $number_of_wlan_interfaces "wlan_ifaces_array"
+
+						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+						echo ""
+
+						response_checker "$selection" "$number_of_interfaces"					
+
+						## If selection is 0, exit this option
+						if [[ $selection == "exit" ]]; then break; fi
+				
+						selection_interface=$selection
+		
+						echo -e "What IP address do you want the Evil Twin to have? This address wil be the default GW for the clients."
+						echo -e "Press enter to leave by default ("$CYAN$BOLD"10.10.0.1"$END")."
+						echo -ne $BLINK" >  "$END" IP: "$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+						echo ""
+
+						if [[ -z $ip_address ]];
+						then
+							ip_address="10.10.0.1"
+		
+						else
+							ip_checker $ip_address
+		
+						fi
+
+						echo -e "Enter the SSID name for the network:"
+						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read ssid ; echo -ne "" $END
+						echo ""
+		
+						echo -e "Enter the password to access the network."
+						echo -e "Press "$CYAN$BOLD"enter"$END" to create an open AP:"
+						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read passwd ; echo -ne "" $END
+						echo ""
+
+						echo -e "Which interface you want to use for post-routing (NAT to internet)?"
+		
+						options_selector $number_of_interfaces "ifaces_array"
+		
+						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+						echo ""
+
+						response_checker "$selection" "$number_of_interfaces"					
+		
+						## If selection is 0, exit this option
+						if [[ $selection == "exit" ]]; then break; fi
+
+						selection_interface_nat=$selection
+		
+						time=0.1
+				
+						active_sessions=`tmux list-sessions | egrep "FKAP-[0-9]{0,1}" | cut -f1 -d":"`
+				
+						for session in $active_sessions:
+						do
+							tmux kill-session -t $session && sleep $time
+				
+						done
+				
+						tmux new-session -d -t FKAP && sleep $time
+						tmux split-window -h && sleep $time
+						#tmux resize-pane -t 1 -L 12 && sleep $time
+						
+						tmux select-pane -t 1 && sleep $time
+						tmux send-keys "sudo bash /etc/hackutils/arp_table.sh 2> /dev/null" C-m && sleep $time
+
+						tmux select-pane -t 0 && sleep $time
+						tmux send-keys "sudo bash /etc/hackutils/fkap.sh ${wlan_ifaces_array[$selection_interface]} $ip_address $ssid $passwd ${ifaces_array[$selection_interface_nat]} 2> /dev/null" C-m && sleep $time
+						#tmux list-sessions
+
+						echo -e $CYAN$BOLD" > The Evil Twin can be run in the background by pressing Ctrl + b --> d (detached)"$END
+						sleep 5
+						
+						tmux attach-session -t FKAP
+
+						echo -e $CYAN$BOLD" > THE EVIL TWIN IS WORKING ON BACKGROUND IN TMUX"$END
+					;;
+
+					2)
+						echo "Active tmux sessions:"
+						tmux list-sessions | grep FKAP
+						tmux attach-session -t FKAP
+
+						echo ""
+					;;
+					
+					0)
+						ignore_continue_enter=true
+
+						break
+					;;
+
+					*)
+						invalidoption=true
+						ignore_continue_enter=false	
+					;;
+	
+				esac
+			;;
 
 			dwa)
 				echo -e $LIGHTYELLOW"dwa"$END")" "Deauth Wireless Attack"
@@ -1986,11 +2036,14 @@ do
 		
 						tmux new-session -d -t DWA && sleep $time
 						tmux split-window -h && sleep $time
-						tmux resize-pane -t 1 -L 12 && sleep $time
-		
+						#tmux resize-pane -t 1 -L 12 && sleep $time
+
+						tmux select-pane -t 1 && sleep $time
+						tmux send-keys "sudo bash /etc/hackutils/arp_table.sh 2> /dev/null" C-m && sleep $time
+
 						tmux select-pane -t 0 && sleep $time
-		
 						tmux send-keys "sudo bash /etc/hackutils/dwa.sh ${wlan_ifaces_array[$selection]} 2> /dev/null" C-m && sleep $time
+						
 						#tmux list-sessions
 						tmux attach-session -t DWA
 		
