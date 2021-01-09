@@ -94,7 +94,7 @@ read -a wlan_ifaces_array <<< $wlan_interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 read -a ovpns_active_array <<< $ovpns_active_extracted
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky)
+programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky hostapd dnsmasq)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload bwm-ng)
 web_terminals_array=(cat elinks lynx)
 
@@ -684,7 +684,7 @@ do
 				echo "Copying: /etc/hackutils/conky/internet_test.sh > ${directories_array[5]}"
 
 				cat /etc/hackutils/conky/Conky.desktop | sed "s|\$HOME/|${directories_array[4]}|g" > ${directories_array[3]}Conky.desktop
-				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME/|${directories_array[5]}|g" | sed "s|\$interface/|${ifaces_array[$selection]}|g" > ${directories_array[4]}.conkyrc
+				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME/|${directories_array[5]}|g" | sed "s|\$interface|${ifaces_array[$selection]}|g" > ${directories_array[4]}.conkyrc
 
 				cp /etc/hackutils/conky/internet_test.sh ${directories_array[5]}
 
@@ -1878,7 +1878,69 @@ do
 				echo -e $LIGHTYELLOW"fkap"$END")" "Fake Access Point: Evil twin"
 				echo ""
 
-				echo "nothing... 4 now..."
+				echo -e "From which wireless interface you want to start the Evil Twin?"
+
+				options_selector $number_of_wlan_interfaces "wlan_ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_interfaces"					
+
+				## If selection is 0, exit this option
+				if [[ $selection == "exit" ]]; then break; fi
+				
+				selection_interface=$selection
+
+				echo -e "What IP address do you want the Evil Twin to have? This address wil be the default GW for the clients."
+				echo -e "Press enter to leave by default ("$CYAN$BOLD"10.10.0.1"$END")."
+				echo -ne $BLINK" >  "$END" IP: "$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
+				echo ""
+
+				if [[ -z $ip_address ]];
+				then
+					ip_address="10.10.0.1"
+
+				else
+					ip_checker $ip_address
+
+				fi
+
+				echo -e "Which interface you want to use for post-routing (NAT to internet)?"
+
+				options_selector $number_of_interfaces "ifaces_array"
+
+				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+				echo ""
+
+				response_checker "$selection" "$number_of_interfaces"					
+
+				## If selection is 0, exit this option
+				if [[ $selection == "exit" ]]; then break; fi
+
+				selection_interface_nat=$selection
+
+				time=0.1
+		
+				active_sessions=`tmux list-sessions | egrep "FKAP-[0-9]{0,1}" | cut -f1 -d":"`
+		
+				for session in $active_sessions:
+				do
+					tmux kill-session -t $session && sleep $time
+		
+				done
+		
+				tmux new-session -d -t FKAP && sleep $time
+				tmux split-window -h && sleep $time
+				tmux resize-pane -t 1 -L 12 && sleep $time
+		
+				tmux select-pane -t 0 && sleep $time
+		
+				tmux send-keys "sudo bash /etc/hackutils/fkap.sh ${wlan_ifaces_array[$selection_interface]} $ip_address ${ifaces_array[$selection_interface_nat]} 2> /dev/null" C-m && sleep $time
+				#tmux list-sessions
+				tmux attach-session -t FKAP
+		
+				echo -e $CYAN$BOLD" > THE EVIL TWIN IS WORKING ON BACKGROUND IN TMUX"$END
 
 				;;
 
@@ -1912,9 +1974,9 @@ do
 						## If selection is 0, exit this option
 						if [[ $selection == "exit" ]]; then break; fi
 		
-							time=0.1
+						time=0.1
 		
-							active_sessions=`tmux list-sessions | egrep "DWA-[0-9]{0,1}" | cut -f1 -d":"`
+						active_sessions=`tmux list-sessions | egrep "DWA-[0-9]{0,1}" | cut -f1 -d":"`
 		
 						for session in $active_sessions:
 						do
