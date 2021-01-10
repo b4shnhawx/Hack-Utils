@@ -159,14 +159,45 @@ menu()
 	printf "$RED %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 							    			"sshtun" 	")" "SSH tunneling"			 				 		"pping" 	")" "Ping (personalized)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 									"macman" 	")" "MAC manufacturer" 	   				   			"cliweb" 	")" "Web in CLI (elinks)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       		"malware" 	")" "Cyber threats search (Malware Bazaar API)" 	"conv" 		")" "Hexadecimal / Base64 converter"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$RED%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"" 	"" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  	"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"rev" 		")" "Listener for reverse shells connections"
 	echo ""
 	echo ""
 
 	echo "Type an option:"
 	echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
 	echo ""
+}
+
+#Function for wait 12 seconds
+waitFunction()
+{
+	repeats=$1
+	milisec=$2
+	#Hide the cursor to view the waiting bar without the backgorund color of the cursor
+	tput civis
+
+	#Bucle that repeats 3 times
+	for count in [ 0..$repeats ];
+	do
+		#Print compatible with format (-e) and without new line (-n).
+		#With the \\r (\r carriage return) we erase the first char of the line,
+		#so we can write another character in the same line without the prev char.
+		echo -ne $LIGHTYELLOW"| \\r"$END
+		sleep $milisec
+		echo -ne $LIGHTYELLOW"/ \\r"$END
+		sleep $milisec
+		echo -ne $LIGHTYELLOW"- \\r"$END
+		sleep $milisec
+		echo -ne $LIGHTYELLOW"\ \\r"$END
+		sleep $milisec
+	done
+
+	#Show again the cursor.
+	tput cvvis
+
+	#Erase the last character of the waitFunction and then go to the next line
+	echo -ne " \\r\n"
 }
 
 command_for_interfaces()
@@ -616,7 +647,7 @@ do
 
 				fi
 
-				sleep 2
+				waitFunction "5" "0.40"
 
 				echo -e $CYAN$BOLD" > You are now connected to $ssid" $END
 				echo ""
@@ -640,7 +671,7 @@ do
 				echo -e $CYAN$BOLD" > Updating Hack_Utils..." $END
 				echo ""
 
-				sleep 1
+				waitFunction "5" "0.40"
 
 				cd
 				rm -r  Hack-Utils/
@@ -1228,7 +1259,7 @@ do
 
 				output=`speedtest | sed 's/$/#/g'`
 
-				sleep 0.3
+				waitFunction "5" "0.20"
 			
 				echo -e $output | sed 's/#/\n/g' | sed 's/Testing/\nTesting/g' | sed ''/Download/s//`printf "\033[31m↓Download\033[0m"`/'' | sed ''/Upload/s//`printf "\033[32m↑Upload\033[0m"`/'' | sed 's/↓Download/ ↓ Download/g' | sed 's/↑Upload/ ↑ Upload/g' 
 
@@ -1965,7 +1996,7 @@ do
 						#tmux list-sessions
 
 						echo -e $CYAN$BOLD" > The Evil Twin can be run in the background by pressing Ctrl + b --> d (detached)"$END
-						sleep 5
+						waitFunction "5" "0.40"
 						
 						tmux attach-session -t FKAP
 
@@ -2140,6 +2171,104 @@ do
 
 				nohup openvpn ${directories_array[0]}${configurations_array[0]} 2> /dev/null &
 
+			;;
+
+			rev)
+				while true;
+				do
+					clear
+	
+					echo -e $LIGHTYELLOW"rev"$END")" "Listener for reverse shells connections"
+					echo ""
+	
+					echo -e "What you want to do?"
+					
+					options_array=("Start new listener" "View one backgrounded listener" "Terminate all enabled reverse shells")
+					options_selector 3 "options_array"
+	
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+					echo ""
+	
+					## If selection is 0, exit this option
+					if [[ $selection == "exit" ]]; then break; fi
+	
+					case $selection in
+						1)
+	
+							echo "Type the port you want to use for listen:"
+							echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+							echo ""
+			
+								while [[ $port -lt 1 || $port -gt 65535 || $port == *[a-zA-Z]* ]];
+								do
+									echo "Type a valid port number:"
+									echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+									echo ""
+								done
+			
+							time=0.1
+			
+							tmux new-session -d -t REV-$port && sleep $time
+							#tmux resize-pane -t 1 -L 12 && sleep $time
+							tmux select-pane -t 0 && sleep $time
+	
+							tmux send-keys "nc -nlvp $port " C-m && sleep $time
+							
+						;;
+	
+						2)
+							sessions_extracted=`tmux list-sessions | egrep -o "^REV-[0-9]{1,5}-[0-9]{1,2}" | tr '\n' " "`
+	
+							read -a sessions_array <<< $sessions_extracted 
+							
+							number_of_sessions=${#sessions_array[@]}
+	
+							if [[ $number_of_sessions > 0 ]];
+							then
+								echo "Select the reverse shell:"
+								options_selector $number_of_sessions "sessions_array"
+	
+								echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+								echo ""
+	
+								echo -e $CYAN$BOLD" > Remember that if you want to exit but keep the reverse shell in background you must press Ctrl + b --> d (detached)"$END
+								waitFunction "5" "0.20"
+	
+								tmux attach-session -t ${sessions_array[$selection]}
+	
+							else
+								echo -e $LIGHTRED$BOLD"No reverse shell available"$END
+	
+								break
+							fi
+						;;
+	
+						3)
+							active_sessions=`tmux list-sessions | egrep "^REV-[0-9]{1,5}-[0-9]{1,2}" | cut -f1 -d":"`
+			
+							for session in $active_sessions:
+							do
+								echo "Killing reverse shell $session"
+								tmux kill-session -t $session && sleep $time
+								waitFunction "3" "0.03"
+							done
+						;;
+	
+						0)
+							ignore_continue_enter=true
+	
+							break
+	
+						;;
+	
+						*)
+							invalidoption=true
+							ignore_continue_enter=false	
+	
+						;;
+		
+					esac
+				done
 			;;
 
 			0)
