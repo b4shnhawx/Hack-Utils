@@ -428,7 +428,7 @@ do
 					id)
 						install_uninstall_programs_array "install" "" "$option"
 						echo ""
-						echo "If you have some problems installing some programs, enter --> apt-get install --fix-missing"
+						echo -e $CYAN$BOLD"If you have some problems installing some programs, enter --> apt-get install --fix-missing"$END
 
 						invalidoption=false
 
