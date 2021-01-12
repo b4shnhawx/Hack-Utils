@@ -330,12 +330,12 @@ install_uninstall_programs_array()
 		#program_name=${programs_array[$program_number]}
 
 		echo ""
-		echo "Checking ${programs_array[$program]} ..."
+		echo -e $CYAN$BOLD"Checking ${programs_array[$program]} ..."$END
 		sleep 0.1
 
 		if [[ $path_actual_program == '' && $option == "id" ]];
 		then
-			echo "Installing ${programs_array[$program]} ..."
+			echo -e $CYAN$BOLD"Installing ${programs_array[$program]} ..."$END
 			echo ""
 
 			#echo "sudo apt-get --assume-yes $1 ${programs_array[$program]} > /dev/null"
