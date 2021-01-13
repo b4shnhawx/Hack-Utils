@@ -2129,45 +2129,99 @@ do
 				echo -e $LIGHTYELLOW"htb"$END")" "Hack The Box"
 				echo ""
 
-				echo "Type the name of the machine you want to hack:"
-				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read machine ; echo -ne "" $END
-				echo ""
-
-				sudo htbExplorer -s $machine
-
-				cd ${directories_array[1]}
-				mkdir $machine; cd $machine
-				bash /etc/hackutils/htbMkt.sh
-
-				echo -ne "\n\nDirectory created for $CYAN$BOLD$machine$END -->" $CYAN$BOLD; pwd; echo -e $END
-				echo -ne "Directory tree created $CYAN$BOLD$machine$END machine: \n"; tree ${directories_array[1]}/$machine
-				echo ""
-				echo ""
-
-				echo -e $UNDERWHITE$BLACK$BLINK"Press ENTER to connect HTB VPN"$END ; read ; echo -e "" $END
-
-				echo -ne $CYAN$BOLD"--------- Login in HTB ---------\n"$END
-
-				pkill "openvpn"
-
-				echo -ne "Email: "
-				python /etc/hackutils/downloadVPN.py ${configurations_array[0]}
-
-				if [[ $(ls /etc/hackutils | grep \.ovpn) != ${configurations_array[0]} ]];
+				if [[ $(ls /etc/hackutils | grep htbExplorer) != "" ]];
 				then
-					echo -e $RED "An error was ocurred while trying to download VPN (probably bad email / password or not installed htbExplorer (use chckdep --> man))."
+					echo "Type the name of the machine you want to hack:"
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read machine ; echo -ne "" $END
+					echo ""
+
+					sudo htbExplorer -s $machine
+					cd ${directories_array[1]}
+					mkdir $machine; cd $machine
+					bash /etc/hackutils/htbMkt.sh
+
+					echo -ne "\n\nDirectory created for $CYAN$BOLD$machine$END -->" $CYAN$BOLD; pwd; echo -e $END
+					echo -ne "Directory tree created $CYAN$BOLD$machine$END machine: \n"; tree ${directories_array[1]}/$machine
+					echo ""
+					echo ""
+
+					echo -e $UNDERWHITE$BLACK$BLINK"Press ENTER to connect HTB VPN"$END ; read ; echo -e "" $END
+					echo -ne $CYAN$BOLD"--------- Login in HTB ---------\n"$END
+					pkill "openvpn"
+
+					waitFunction "4" "0.10"
+
+					cd /etc/hackutils/
+
+					echo -ne "Email: "
+					sudo python /etc/hackutils/htbExplorer/downloadVPN.py ${configurations_array[0]}
+
+					if [[ $(ls /etc/hackutils | grep \.ovpn) != ${configurations_array[0]} ]];
+					then
+						echo -e $LIGHTRED$BOLD"An error was ocurred while trying to download VPN (probably bad email / password, bad installation of htbExplorer or bad configuration in hack_utils.conf)."
 				
-					break
+						break
+					fi
+				
+					mv ${configurations_array[0]} ${directories_array[0]}
+					echo ""
+					echo -ne $CYAN$BOLD"--------- Connecting to HTB VPN ---------\n"$END
+					echo -e "HTB VPN directory: $CYAN$BOLD${directories_array[0]}${configurations_array[0]}"$END
+					waitFunction "6" "0.10"
+					nohup openvpn ${directories_array[0]}${configurations_array[0]} 2> /dev/null &
+				
+				else
+					mkdir /etc/hackutils/ 2> /dev/null
+					cd /etc/hackutils/
+
+					echo -e $LIGHTRED$BOLD"htbExplorer is not installed..."$END
+					echo -e $CYAN$BOLD" > Downloading repository from github.com/s4vitar..."$END
+
+					git clone https://github.com/s4vitar/htbExplorer.git 				
+					cd htbExplorer	    										
+					cp htbExplorer htbExplorer_tmp
+
+					echo ""
+					echo "Type your HTB API token:"
+					echo -ne $BLINK" > "$END$LIGHTYELLOW ; read api ; echo -ne "" $END
+					echo ""
+
+					cat htbExplorer_tmp | sed "s|API_TOKEN=""|API_TOKEN='${api}' #|g" > htbExplorer	
+					#sudo cp downloadVPN.py /etc/hackutils/ 									    
+					#sudo cp htbExplorer /etc/hackutils/ 									   
+					sudo cp htbExplorer /usr/bin 									    
+					sudo chmod +x /usr/bin/htbExplorer
+					
 				fi
+
 				
-				mv ${configurations_array[0]} ${directories_array[0]}
+				
+				
 
-				echo ""
-				echo -ne $CYAN$BOLD"--------- Connecting to HTB VPN ---------\n"$END
 
-				echo -e "HTB VPN directory: $CYAN$BOLD${directories_array[0]}${configurations_array[0]}"$END
 
-				nohup openvpn ${directories_array[0]}${configurations_array[0]} 2> /dev/null &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				
 
 			;;
 
