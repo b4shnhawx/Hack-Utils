@@ -2140,7 +2140,7 @@ do
 				bash /etc/hackutils/htbMkt.sh
 
 				echo -ne "\n\nDirectory created for $CYAN$BOLD$machine$END -->" $CYAN$BOLD; pwd; echo -e $END
-				echo -ne "Directory tree created $CYAN$BOLD$machine$END machine: \n"; tree ~/HTB/$machine
+				echo -ne "Directory tree created $CYAN$BOLD$machine$END machine: \n"; tree ${directories_array[1]}/$machine
 				echo ""
 				echo ""
 
@@ -2152,8 +2152,6 @@ do
 
 				echo -ne "Email: "
 				python /etc/hackutils/downloadVPN.py ${configurations_array[0]}
-
-				read
 
 				if [[ $(ls /etc/hackutils | grep \.ovpn) != ${configurations_array[0]} ]];
 				then
