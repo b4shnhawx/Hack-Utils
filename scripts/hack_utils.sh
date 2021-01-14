@@ -79,7 +79,7 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.6.9"
+version="0.7.0"
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
 #All wlanX interfaces in used in the system
