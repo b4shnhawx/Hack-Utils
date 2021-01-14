@@ -1466,7 +1466,7 @@ do
 				echo ""
 				echo -ne $CYAN$BOLD" > Connecting to VPN with profile ${ovpns_array[$selection]}\n"$END
 
-				nohup openvpn --config ${directories_array[0]}${ovpns_array[$selection]} 2> /dev/null &
+				sudo openvpn --config ${directories_array[0]}${ovpns_array[$selection]} 2> /dev/null &
 
 				waitFunction "6" "0.10"
 
