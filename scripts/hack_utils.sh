@@ -129,8 +129,9 @@ menu()
 	echo -e $CYAN$BOLD"  >>> MISCELLANEOUS <<<  "$END
 	echo ""
 
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   "chckdep" ")" "Check all the dependencies"   "up" 	")" "Update Hack_Utils"
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								     "0" ")" "Exit"							"conky" ")" "Setup conky desktop"
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   	 "chckdep" ")" "Check all the dependencies"   		"up" 	")" "Update Hack_Utils"
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   		"conf" ")" "Modify Hack_utils config file"  	"" 	"" ""
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								 	   "0" ")" "Exit"								"conky" ")" "Setup conky desktop"
 	echo ""
 	echo ""
 
@@ -724,6 +725,16 @@ do
 				cat /etc/hackutils/conky/.conkyrc | sed "s|\$HOME/|${directories_array[5]}|g" | sed "s|\$interface|${ifaces_array[$selection]}|g" > ${directories_array[4]}.conkyrc
 
 				cp /etc/hackutils/conky/internet_test.sh ${directories_array[5]}
+
+			;;
+
+			conf)
+				echo -e $LIGHTYELLOW"conf"$END")" "Modify Hack_utils config file"
+				echo ""
+
+				sudo nano /etc/hackutils/hack_utils.conf
+
+				ignore_continue_enter=true
 
 			;;
 
