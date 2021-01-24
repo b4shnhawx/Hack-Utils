@@ -94,7 +94,7 @@ read -a wlan_ifaces_array <<< $wlan_interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 
 
-programs_array=(ping network-manager traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky hostapd dnsmasq)
+programs_array=(ping network-manager traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky hostapd dnsmasq netcat)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload bwm-ng)
 web_terminals_array=(cat elinks lynx)
 
@@ -338,7 +338,7 @@ install_uninstall_programs_array()
 			echo ""
 
 			#echo "sudo apt-get --assume-yes $1 ${programs_array[$program]} > /dev/null"
-			sudo apt-get --assume-yes $1 $2 ${programs_array[$program]} &> /dev/null
+			sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes $1 $2 ${programs_array[$program]} &> /dev/null
 			pacman -Sy --noconfirm ${programs_array[$program]} &> /dev/null
 
 		elif [[ ${programs_array[$program]} == "nmcli" ]];
