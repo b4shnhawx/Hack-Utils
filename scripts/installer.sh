@@ -21,3 +21,4 @@ sudo chmod +x /bin/hackutils
 
 cd
 rm -rf Hack-Utils/
+cd
