@@ -116,11 +116,11 @@ menu()
 	clear
 
 	echo -e $TAB$BOLD$RED"
-       .				 		  	         ╹┃
-       #.  .		     ┏━       ╻ ╻┏━┓┏━╸╻┏    ╻ ╻╺┳╸╻╻  ┏━┓        ╻╹
-      .#|##|.    .|	     ╹        ┣━┫┣━┫┃  ┣┻┓   ┃ ┃ ┃ ┃┃  ┗━┓        ┃╹
-     .#|#####||.###.         ┃╹       ╹ ╹╹ ╹┗━╸╹ ╹╺━╸┗━┛ ╹ ╹┗━╸┗━┛       ━┛  $GREEN v$version $RED
-     			     ╹┃       by$PURPLE b4shnhawx $RED
+$TAB  .$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB╹┃
+$TAB  #.  .$TAB$TAB$TAB$TAB$TAB$TAB ┏━       ╻ ╻┏━┓┏━╸╻┏    ╻ ╻╺┳╸╻╻  ┏━┓        ╻╹
+$TAB .#|##|.    .|$TAB$TAB$TAB ╹        ┣━┫┣━┫┃  ┣┻┓   ┃ ┃ ┃ ┃┃  ┗━┓        ┃╹
+$TAB.#|#####||.###.$TAB$TAB$TAB ┃╹       ╹ ╹╹ ╹┗━╸╹ ╹╺━╸┗━┛ ╹ ╹┗━╸┗━┛       ━┛  $GREEN v$version $RED
+$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB ╹┃       by$PURPLE b4shnhawx $RED
 
 01111001 01101111 01110101 00100000 01100110 01101111 01110101 01101110 01100100 00100000 01101101 01111001 00100000
      01100101 01100001 01110011 01110100 01100101 01110010 00100000 01100101 01100111 01100111 00100000 00111011 00101001
