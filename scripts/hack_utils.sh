@@ -115,16 +115,16 @@ menu()
 {
 	clear
 
-	echo -e $TAB$BOLD$RED"
-$TAB  .$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB╹┃
-$TAB  #.  .$TAB$TAB$TAB$TAB$TAB$TAB ┏━       ╻ ╻┏━┓┏━╸╻┏    ╻ ╻╺┳╸╻╻  ┏━┓        ╻╹
-$TAB .#|##|.    .|$TAB$TAB$TAB ╹        ┣━┫┣━┫┃  ┣┻┓   ┃ ┃ ┃ ┃┃  ┗━┓        ┃╹
-$TAB.#|#####||.###.$TAB$TAB$TAB ┃╹       ╹ ╹╹ ╹┗━╸╹ ╹╺━╸┗━┛ ╹ ╹┗━╸┗━┛       ━┛  $GREEN v$version $RED
-$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB$TAB ╹┃       by$PURPLE b4shnhawx $RED
-
-01111001 01101111 01110101 00100000 01100110 01101111 01110101 01101110 01100100 00100000 01101101 01111001 00100000
-     01100101 01100001 01110011 01110100 01100101 01110010 00100000 01100101 01100111 01100111 00100000 00111011 00101001
-	\n"$END
+	printf $RED$BOLD
+	printf "   .                                                                 ╹┃\n"
+	printf "   #.  .                 ┏━       ╻ ╻┏━┓┏━╸╻┏    ╻ ╻╺┳╸╻╻  ┏━┓        ╻╹\n"
+	printf "  .#|##|.    .|          ╹        ┣━┫┣━┫┃  ┣┻┓   ┃ ┃ ┃ ┃┃  ┗━┓        ┃╹\n"
+	printf " .#|#####||.###.         ┃╹       ╹ ╹╹ ╹┗━╸╹ ╹╺━╸┗━┛ ╹ ╹┗━╸┗━┛       ━┛  $GREEN v$version $RED\n"
+	printf "                        ╹┃        by$PURPLE b4shnhawx $RED\n"
+	printf "\n"
+	printf "01111001 01101111 01110101 00100000 01100110 01101111 01110101 01101110 01100100 00100000 01101101 01111001 00100000\n"
+	printf "     01100101 01100001 01110011 01110100 01100101 01110010 00100000 01100101 01100111 01100111 00100000 00111011 00101001\n"
+	printf $END
 
 	echo -e $CYAN$BOLD"  >>> MISCELLANEOUS <<<  "$END
 	echo ""
