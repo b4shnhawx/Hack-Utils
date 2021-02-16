@@ -1780,12 +1780,14 @@ do
 				echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 				echo ""
 
-				response_checker "" ""
+				echo $selection
+
+				response_checker "$selection" "3"
 
 				## If selection is 0, exit this option
-				if [[ $selection == "exit" ]]; then break; fi
+				if [[ $selection == "0" ]]; then break; fi
 
-				string=" "
+				string=""
 
 				case $selection in
 					1)
