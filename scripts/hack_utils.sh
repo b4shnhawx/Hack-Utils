@@ -134,8 +134,6 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   		"conf" ")" "Modify Hack_utils config file"  	"" 	"" ""
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								 	   "0" ")" "Exit"								"conky" ")" "Setup conky desktop"
 	echo ""
-	echo ""
-
 
 	echo -e $CYAN$BOLD"  >>> BASICS <<<  "$END
 	echo ""
@@ -148,7 +146,6 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"10" ")" "Check remote port status"	 	"11" ")" "Ports in use"					   "12" ")" "Search port info (online)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"13" ")" "Firewall rules (iptables)"	"14" ")" "Route table"					   "15" ")" "Check IP blacklist / abuse"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 	"16" ")" "Internet speed test"			"" "" ""   "" "" ""
-	echo -e
 	echo ""
 
 	echo -e $CYAN$BOLD"  >>> ADVANCED <<<  "$END
@@ -161,7 +158,6 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       		"malware" 	")" "Cyber threats search (Malware Bazaar API)" 	"conv" 		")" "Hexadecimal / Base64 converter"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  	"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"rev" 		")" "Listener for reverse shells connections"
-	echo ""
 	echo ""
 
 	echo "Type an option:"
