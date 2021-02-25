@@ -79,7 +79,8 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.7.0"
+version="0.7.1"
+last_version=`curl -s https://raw.githubusercontent.com/b4shnhawx/Hack-Utils/master/version.txt`
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
 #All wlanX interfaces in used in the system
@@ -124,12 +125,12 @@ menu()
 	printf "\n"
 	printf "01111001 01101111 01110101 00100000 01100110 01101111 01110101 01101110 01100100 00100000 01101101 01111001 00100000\n"
 	printf "     01100101 01100001 01110011 01110100 01100101 01110010 00100000 01100101 01100111 01100111 00100000 00111011 00101001\n"
-	printf $END
+	printf "\n"$END
 
 	echo -e $CYAN$BOLD"  >>> MISCELLANEOUS <<<  "$END
 	echo ""
 
-	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   	 "chckdep" ")" "Check all the dependencies"   		"up" 	")" "Update Hack_Utils"
+	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-0s$END " 							   	 "chckdep" ")" "Check all the dependencies"   		"up" 	")" "Update Hack_Utils"; echo -e "(Last git version:$BOLD$GREEN v$last_version$END)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 							   		"conf" ")" "Modify Hack_utils config file"  	"" 	"" ""
 	printf "$LIGHTYELLOW %9s$END%-0s %-29s$END$LIGHTYELLOW%9s$END%-0s %-29s$END \n" 								 	   "0" ")" "Exit"								"conky" ")" "Setup conky desktop"
 	echo ""
