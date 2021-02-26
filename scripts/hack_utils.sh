@@ -240,7 +240,7 @@ response_checker()
 
 	while true;
 	do
-		if [ "$selection" == "0" ] || [ "$selection" == "n" ];
+		if [[ "$selection" == "0"  ||  "$selection" == "n" ]];
 		then
 			selection="exit"
 			invalidoption=true
@@ -249,7 +249,7 @@ response_checker()
 
 			break
 
-		elif [[ $selection -lt $number_of_options || "$selection" == "y" ]];
+		elif [[ "$selection" < $number_of_options || "$selection" == "y" ]];
 		then
 			break
 
@@ -560,6 +560,8 @@ do
 
 				case $selection in
 					1)
+
+						teamviewer daemon start
 						nohup sudo teamviewer &
 
 						if [[ $? != 0 ]];
@@ -576,6 +578,7 @@ do
 					;;
 
 					2)
+						teamviewer daemon disable > /dev/null
 						teamviewer daemon restart > /dev/null
 		
 						teamviewer info
@@ -584,7 +587,7 @@ do
 						output=`teamviewer info | grep "TeamViewer ID:" | egrep -o '[0-9]{7,12}'`
 						teamviewer info | grep "TeamViewer ID:" | tr -d [[:space:]] | cut -c4-16,20-30 | sed 's/TeamViewerID:/TeamViewer ID: /g' | sed ''/[0-9]*$/s//`printf "$CYAN$BOLD$output$END"`/''
 
-						echo "You want to setup a password to this TeamViewer server?"
+						echo "You want to setup a new password to this TeamViewer server?"
 						echo -ne "[ y/n ]"$BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 						echo ""
 
