@@ -561,7 +561,7 @@ do
 				case $selection in
 					1)
 
-						teamviewer daemon start
+						sudo teamviewer daemon start
 						nohup sudo teamviewer &
 
 						if [[ $? != 0 ]];
@@ -578,8 +578,8 @@ do
 					;;
 
 					2)
-						teamviewer daemon disable > /dev/null
-						teamviewer daemon restart > /dev/null
+						sudo teamviewer daemon disable > /dev/null
+						sudo teamviewer daemon restart > /dev/null
 		
 						teamviewer info
 						echo ""
