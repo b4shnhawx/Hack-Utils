@@ -272,7 +272,7 @@ tmux send-keys "airodump-ng $interface --update $aircrackUpdate --bssid $bssid -
 tmux select-pane -t 0
 
 echo -e $CYAN$BOLD"3"$END") Finally type the MAC of the device that you want to kick out of the wireless network."
-echo -e "Press Enter to inject deauth packets to de broadcast MAC ("$CYAN$BOLD"FF:FF:FF:FF:FF:FF"$END"). This affects to all hosts connected to the network."
+echo -e "Press "$LIGHTYELLOW"ENTER"$END" to inject deauth packets to de broadcast MAC ("$CYAN$BOLD"FF:FF:FF:FF:FF:FF"$END"). This affects to all hosts connected to the network."
 
 echo -ne $BLINK" > "$END"Victim MAC: "$LIGHTYELLOW ; read victimmac ; echo -ne "" $END
 echo ""
