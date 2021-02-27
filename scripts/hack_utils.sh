@@ -193,7 +193,7 @@ waitFunction()
 	tput cvvis
 
 	#Erase the last character of the waitFunction and then go to the next line
-	echo -ne " \\r\n"
+	echo -ne " \\r"
 }
 
 command_for_interfaces()
@@ -560,9 +560,10 @@ do
 
 				case $selection in
 					1)
+						echo -e $CYAN$BOLD"Killing previous instaces of TeamViewer GUI..."$END
 
-						sudo teamviewer daemon start
-						nohup sudo teamviewer &
+						sudo pklill teamviewer
+						waitFunction "6" "0.10"	
 
 						if [[ $? != 0 ]];
 						then
@@ -573,7 +574,10 @@ do
 						fi
 
 						echo -e $CYAN$BOLD"Executing TeamViewer GUI..."$END
-						echo ""
+
+						sudo teamviewer daemon start
+						waitFunction "6" "0.10"
+						nohup sudo teamviewer &
 
 					;;
 
@@ -1151,8 +1155,8 @@ do
 				echo -e $LIGHTYELLOW"11"$END")" "Ports in use"
 				echo ""
 
-				echo -e "Enter the port number or press ENTER to view all ports:"
-				echo -ne $BLINK"> "$END"Port: "$LIGHTYELLOW ; read port ; echo -ne "" $END
+				echo -e "Enter the port number, IP address or program name. Press "$LIGHTYELLOW"ENTER"$END" to view all connections:"
+				echo -ne $BLINK"> "$END"Search: "$LIGHTYELLOW ; read port ; echo -ne "" $END
 				echo ""
 
 				if [[ $port == '' ]];
@@ -1273,6 +1277,8 @@ do
 
 				echo -e $CYAN$BOLD" > INITIATING INTERNET SPEED TEST"$END
 				echo ""
+
+				waitFunction "5" "0.20"
 
 				output=`speedtest | sed 's/$/#/g'`
 
@@ -1952,7 +1958,7 @@ do
 						selection_interface=$selection
 		
 						echo -e "What IP address do you want the Evil Twin to have? This address wil be the default GW for the clients."
-						echo -e "Press enter to leave by default ("$CYAN$BOLD"10.10.0.1"$END")."
+						echo -e "Press "$LIGHTYELLOW"ENTER"$END" to leave by default ("$CYAN$BOLD"10.10.0.1"$END")."
 						echo -ne $BLINK" >  "$END" IP: "$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 						echo ""
 
@@ -1970,7 +1976,7 @@ do
 						echo ""
 		
 						echo -e "Enter the password to access the network."
-						echo -e "Press "$CYAN$BOLD"enter"$END" to create an open AP:"
+						echo -e "Press "$LIGHTYELLOW"ENTER"$END" to create an open AP:"
 						echo -ne $BLINK" > "$END$LIGHTYELLOW ; read passwd ; echo -ne "" $END
 						echo ""
 
@@ -2082,9 +2088,6 @@ do
 						tmux new-session -d -t DWA && sleep $time
 						tmux split-window -h && sleep $time
 						#tmux resize-pane -t 1 -L 12 && sleep $time
-
-						tmux select-pane -t 1 && sleep $time
-						tmux send-keys "sudo bash /etc/hackutils/arp_table.sh 2> /dev/null" C-m && sleep $time
 
 						tmux select-pane -t 0 && sleep $time
 						tmux send-keys "sudo bash /etc/hackutils/dwa.sh ${wlan_ifaces_array[$selection]} 2> /dev/null" C-m && sleep $time
