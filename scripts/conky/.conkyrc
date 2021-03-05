@@ -19,7 +19,8 @@ conky.config = {
 }
 
 conky.text = [[
-${color red}${exec command cat /etc/os-release | grep ^"NAME=" | cut -f2 -d "=" | tr -d '"'} ${exec command cat /etc/os-release | grep ^"VERSION=" | cut -f2 -d "=" | tr -d '"'}${color}
+${color red}${exec command cat /etc/os-release | grep ^"NAME=" | cut -f2 -d "=" | tr -d '"' | tr [a-z] [A-Z]} ${exec command cat /etc/os-release | grep ^"VERSION=" | cut -f2 -d "=" | tr -d '"'}${color}
+
 ${hr}
 ${color cyan}Hostname: ${color}${nodename}
 ${color cyan}Kernel:   ${color}${sysname} ${kernel} on ${machine}
