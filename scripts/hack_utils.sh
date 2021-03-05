@@ -717,6 +717,10 @@ do
 				## If selection is 0, exit this option
 				if [[ $selection == "exit" ]]; then break; fi
 
+				curl https://raw.githubusercontent.com/b4shnhawx/Hack-Utils/master/scripts/conky/.conkyrc > /etc/hackutils/conky/.conkyrc
+
+				waitFunction "5" "0.20"
+
 				rm ${directories_array[3]}Conky.desktop
 				rm ${directories_array[4]}.conkyrc
 				rm ${directories_array[5]}internet_test.sh
