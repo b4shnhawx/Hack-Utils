@@ -28,9 +28,7 @@ ${color cyan}Uptime:   ${color}${uptime}
 ${exec /usr/lib/update-notifier/apt-check --human-readable}
 ${hr}
 ${color cyan}CPU:${color} ${freq_g} GHz
-${color cyan}Core 1:${color} ${cpu cpu1}% ${cpubar cpu1}
-${color cyan}Core 2:${color} ${cpu cpu2}% ${cpubar cpu2}
-${color cyan}Core 3:${color} ${cpu cpu3}% ${cpubar cpu3}
+${color cyan}Core 1:${color} ${cpu cpu1}% ${cpubar cpu0}
 ${cpugraph}
 ${color cyan}Name              PID   CPU%   MEM%
 ${color lightgrey} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
