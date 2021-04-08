@@ -79,7 +79,7 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.7.2"
+version="0.7.1"
 last_version=`curl -s https://raw.githubusercontent.com/b4shnhawx/Hack-Utils/master/version.txt`
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
@@ -406,8 +406,6 @@ malware_score_checker()
 }
 
 #---------------- SCRIPT ----------------
-#trap 'break' INT
-
 while true;
 do
 	#Variables and arrays that must check every time
@@ -430,6 +428,9 @@ do
 
 	while [[ $invalidoption == false ]];
 	do
+		#Catch Ctrl+C to break the bucles and go back menu
+		trap 'invalidoption="ignore"; tput civis; echo -e "\n\n$UNDERGRAY$BLACK Exit signal. Press enter to go back. $END$HIDE"; break; tput cnorm;' INT
+
 		case $option in
 			chckdep)
 				show_programs
