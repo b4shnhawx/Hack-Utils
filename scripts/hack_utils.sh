@@ -79,7 +79,7 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.7.1"
+version="0.7.2"
 last_version=`curl -s https://raw.githubusercontent.com/b4shnhawx/Hack-Utils/master/version.txt`
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
@@ -95,7 +95,7 @@ read -a wlan_ifaces_array <<< $wlan_interfaces_extracted
 read -a ovpns_array <<< $ovpns_extracted
 
 
-programs_array=(ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky hostapd dnsmasq netcat)
+programs_array=(rlwrap ping nmcli traceroute telnet iftop iptraf-ng nethogs slurm tcptrack vnstat bwm-ng bmon ifstat speedometer openvpn nmap tshark sipcalc nload speedtest-cli lynx elinks macchanger nordvpn anonsurf torctl bc teamviewer jq htbExplorer aircrack-ng tmux conky hostapd dnsmasq netcat)
 bandwith_interface_programs_array=(slurm iftop speedometer tcptrack ifstat vnstat nload bwm-ng)
 web_terminals_array=(cat elinks lynx)
 
@@ -117,11 +117,11 @@ menu()
 	clear
 
 	printf "\n"$RED$BOLD
-	printf "            .                                                                     ╹┃\n"
-	printf "            #.  .                     ┏━       ╻ ╻┏━┓┏━╸╻┏    ╻ ╻╺┳╸╻╻  ┏━┓        ╻╹\n"
-	printf "           .#|##|.    .|              ╹        ┣━┫┣━┫┃  ┣┻┓   ┃ ┃ ┃ ┃┃  ┗━┓        ┃╹\n"
-	printf "          .#|#####||.###.             ┃╹       ╹ ╹╹ ╹┗━╸╹ ╹╺━╸┗━┛ ╹ ╹┗━╸┗━┛       ━┛  $GREEN v$version $RED\n"
-	printf "                                     ╹┃        by$PURPLE b4shnhawx $RED\n"
+	printf "            .                                                                     â•¹â”ƒ\n"
+	printf "            #.  .                     â”â”       â•» â•»â”â”â”“â”â”â•¸â•»â”    â•» â•»â•ºâ”³â•¸â•»â•»  â”â”â”“        â•»â•¹\n"
+	printf "           .#|##|.    .|              â•¹        â”£â”â”«â”£â”â”«â”ƒ  â”£â”»â”“   â”ƒ â”ƒ â”ƒ â”ƒâ”ƒ  â”—â”â”“        â”ƒâ•¹\n"
+	printf "          .#|#####||.###.             â”ƒâ•¹       â•¹ â•¹â•¹ â•¹â”—â”â•¸â•¹ â•¹â•ºâ”â•¸â”—â”â”› â•¹ â•¹â”—â”â•¸â”—â”â”›       â”â”›  $GREEN v$version $RED\n"
+	printf "                                     â•¹â”ƒ        by$PURPLE b4shnhawx $RED\n"
 	printf "\n"
 	printf "01111001 01101111 01110101 00100000 01100110 01101111 01110101 01101110 01100100 00100000 01101101 01111001 00100000\n"
 	printf "     01100101 01100001 01110011 01110100 01100101 01110010 00100000 01100101 01100111 01100111 00100000 00111011 00101001\n"
@@ -161,8 +161,26 @@ menu()
 	echo ""
 
 	echo "Type an option:"
-	echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
-	echo ""
+#	echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
+
+	if [[ $(which rlwrap) == "" ]];
+	then
+		echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
+
+	else
+		options=(chckdep up conf 0 conky if wc tv 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 advif sniff ovpn anon sshtun pping macman cliweb malware conv fkap dwa htb rev)
+
+		echo -ne $LIGHTYELLOW
+		option=$(rlwrap -D 0 -S ' > ' -i -f <(echo -ne "${options[@]}") -o cat)
+		echo -ne $END
+
+	fi
+#	option=$(rlwrap -S ' > ' -i -f list.txt)
+#	option=$(rlwrap -i -f <(echo -ne "$BLINK > ${ynm[@]}") -o cat)
+#	option=$(rlwrap -i -f <(cat ${ynm[@]})
+#	option=$(rlwrap -f <(echo "${ynm[@]}") -o cat)
+
+#	echo ""
 }
 
 #Function for wait 12 seconds
@@ -888,8 +906,8 @@ do
 					echo -e $CYAN$BOLD" > You have $hops hop(s) until reach your default gateway"$END
 					echo ""
 
-					## s --> sustitucion / nueva linea, pero con & se añade, no se sustituye. La g pra todas las coincidencias de " [0-9] "
-					## El segundo sed añade a partir del 4 caracter un espacio de mas, y lo hace para todas las lineas entre la 2 y la 9.
+					## s --> sustitucion / nueva linea, pero con & se aÃ±ade, no se sustituye. La g pra todas las coincidencias de " [0-9] "
+					## El segundo sed aÃ±ade a partir del 4 caracter un espacio de mas, y lo hace para todas las lineas entre la 2 y la 9.
 					echo $output | sed -e 's/ [0-9] / \n &/g' | sed -e '2,9 s/./& /4'
 				fi
 
@@ -1288,7 +1306,7 @@ do
 
 				waitFunction "5" "0.20"
 			
-				echo -e $output | sed 's/#/\n/g' | sed 's/Testing/\nTesting/g' | sed ''/Download/s//`printf "\033[31m↓Download\033[0m"`/'' | sed ''/Upload/s//`printf "\033[32m↑Upload\033[0m"`/'' | sed 's/↓Download/ ↓ Download/g' | sed 's/↑Upload/ ↑ Upload/g' 
+				echo -e $output | sed 's/#/\n/g' | sed 's/Testing/\nTesting/g' | sed ''/Download/s//`printf "\033[31mâ†“Download\033[0m"`/'' | sed ''/Upload/s//`printf "\033[32mâ†‘Upload\033[0m"`/'' | sed 's/â†“Download/ â†“ Download/g' | sed 's/â†‘Upload/ â†‘ Upload/g' 
 
 				;;
 
@@ -1743,16 +1761,16 @@ do
 				do
 					score=`cat ${directories_array[2]}triage_scores_raw.txt | sed -n $counter\p`
 
-					echo -e "┐ "
-					echo -ne "$ladder""┌────┴─╢ "
+					echo -e "â” "
+					echo -ne "$ladder""â”Œâ”€â”€â”€â”€â”´â”€â•¢ "
 					echo -e $CYAN$BOLD $line $END
-					echo -ne "$ladder""├─╢ Score: "
+					echo -ne "$ladder""â”œâ”€â•¢ Score: "
 
 					malware_score_checker $score
 
 
-					echo -e "$ladder""│"
-					echo -ne "$ladder""└───>──"
+					echo -e "$ladder""â”‚"
+					echo -ne "$ladder""â””â”€â”€â”€>â”€â”€"
 
 					$((counter++)) 2> /dev/null
 					ladder+="  "
