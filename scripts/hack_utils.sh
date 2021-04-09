@@ -160,7 +160,7 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"rev" 		")" "Listener for reverse shells connections"
 	echo ""
 
-	echo "Type an option:"
+	echo "Use Ctrl+C any time to go back to menu. Type an option:"
 #	echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
 
 	if [[ $(which rlwrap) == "" ]];
