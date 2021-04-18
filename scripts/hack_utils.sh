@@ -432,7 +432,7 @@ do
 		trap 'invalidoption="ignore"; tput civis; echo -e "\n\n$UNDERGRAY$BLACK Exit signal. Press enter to go back. $END$HIDE"; break; tput cnorm;' INT
 
 		case $option in
-			chckdep)
+			chckdep*)
 				show_programs
 				echo ""
 				echo ""
@@ -550,7 +550,7 @@ do
 
 			;;
 
-			if)
+			if*)
 				echo -e $LIGHTYELLOW"if"$END")" "Interfaces info (ifconfig)"
 				echo ""
 
@@ -560,7 +560,7 @@ do
 
 			;;
 
-			tv)
+			tv*)
 				echo -e $LIGHTYELLOW"tv"$END")" "Teamviewer"
 				echo ""
 				#Function		First part of the command	Second part of the command
@@ -645,7 +645,7 @@ do
 
 				;;
 
-			wc)
+			wc*)
 				echo -e $LIGHTYELLOW"wc"$END")" "Connect to Wifi (nmcli)"
 				echo ""
 
@@ -694,7 +694,7 @@ do
 
 				;;
 
-			up)
+			up*)
 				echo -e $LIGHTYELLOW"up"$END")" "Update Hack_Utils"
 				echo ""
 
@@ -720,7 +720,7 @@ do
 
 				;;
 
-			conky)
+			conky*)
 				echo -e $LIGHTYELLOW"conky"$END")" "Setup conky desktop"
 				echo ""
 
@@ -755,7 +755,7 @@ do
 
 			;;
 
-			conf)
+			conf*)
 				echo -e $LIGHTYELLOW"conf"$END")" "Modify Hack_utils config file"
 				echo ""
 
@@ -765,7 +765,7 @@ do
 
 			;;
 
-			1)
+			1*)
 				echo -e $LIGHTYELLOW"1"$END")" "Ping"
 				echo ""
 
@@ -798,7 +798,7 @@ do
 				break
 				;;
 
-			2)
+			2*)
 				echo -e $LIGHTYELLOW"2"$END")" "Try internet connection"
 				echo ""
 
@@ -814,7 +814,7 @@ do
 
 				;;
 
-			3)
+			3*)
 				echo -e $LIGHTYELLOW"3"$END")" "Traceroute"
 				echo ""
 
@@ -854,7 +854,7 @@ do
 
 				;;
 
-			4)
+			4*)
 				echo -e $LIGHTYELLOW"4"$END")" "Whois"
 				echo ""
 
@@ -878,7 +878,7 @@ do
 
 				;;
 
-			5)
+			5*)
 				echo -e $LIGHTYELLOW"5"$END")" "Hops to gateway"
 				echo ""
 
@@ -914,7 +914,7 @@ do
 
 				;;
 
-			6)
+			6*)
 				echo -e $LIGHTYELLOW"6"$END")" "ARP table"
 				echo ""
 
@@ -924,7 +924,7 @@ do
 
 				;;
 
-			7)
+			7*)
 				echo -e $LIGHTYELLOW"7"$END")" "Public IP"
 				echo ""
 
@@ -938,7 +938,7 @@ do
 
 				;;
 
-			8)
+			8*)
 				echo -e $LIGHTYELLOW"8"$END")" "Traffic monitoring (iptraf)"
 				echo ""
 
@@ -948,7 +948,7 @@ do
 
 				;;
 
-			9)
+			9*)
 				echo -e $LIGHTYELLOW"9"$END")" "Traffic by interface"
 				echo ""
 
@@ -1128,7 +1128,7 @@ do
 
 				;;
 
-			10)
+			10*)
 				echo -e $LIGHTYELLOW"10"$END")" "Check remote port status"
 				echo ""
 
@@ -1174,7 +1174,7 @@ do
 
 				;;
 
-			11)
+			11*)
 				echo -e $LIGHTYELLOW"11"$END")" "Ports in use"
 				echo ""
 
@@ -1192,7 +1192,7 @@ do
 
 				;;
 
-			12)
+			12*)
 				echo -e $LIGHTYELLOW"12"$END")" "Search port info (online)"
 				echo ""
 
@@ -1241,7 +1241,7 @@ do
 
 				;;
 
-			13)
+			13*)
 				echo -e $LIGHTYELLOW"13"$END")" "Firewall rules (iptables)"
 				echo ""
 				echo ""
@@ -1260,7 +1260,7 @@ do
 
 				;;
 
-			14)
+			14*)
 				echo -e $LIGHTYELLOW"14"$END")" "Route table"
 				echo ""
 				echo ""
@@ -1270,7 +1270,7 @@ do
 
 				;;
 
-			15)
+			15*)
 				echo -e $LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
 				echo ""
 
@@ -1294,7 +1294,7 @@ do
 
 				;;
 
-			16)
+			16*)
 				echo -e $LIGHTYELLOW"16"$END")" "Internet speed test"
 				echo ""
 
@@ -1311,7 +1311,7 @@ do
 
 				;;
 
-			advif)
+			advif*)
 				echo -e $LIGHTYELLOW"advif"$END")" "Advanced interface info (nmcli)"
 				echo ""
 
@@ -1321,7 +1321,7 @@ do
 
 				;;
 
-			sniff)
+			sniff*)
 				echo -e $LIGHTYELLOW"sniff"$END")" "Sniff packets"
 				echo ""
 
@@ -1387,7 +1387,7 @@ do
 
 				;;
 
-			pping)
+			pping*)
 				echo -e $LIGHTYELLOW"advping"$END")" "Ping (personalized)"
 				echo ""
 
@@ -1455,7 +1455,7 @@ do
 
 				;;
 
-			ovpn)
+			ovpn*)
 				echo -e $LIGHTYELLOW"ovpn"$END")" "Connect to a OVPN server"
 				echo ""
 
@@ -1512,7 +1512,7 @@ do
 
 			;;
 
-			cliweb)
+			cliweb*)
 				echo -e $LIGHTYELLOW"cliweb"$END")" "Web in CLI (elinks)"
 				echo ""
 
@@ -1525,7 +1525,7 @@ do
 
 			;;
 
-			macman)
+			macman*)
 				echo -e $LIGHTYELLOW"macman"$END")" "MAC manufacturer"
 				echo ""
 
@@ -1543,7 +1543,7 @@ do
 
 			;;
 
-			anon)
+			anon*)
 
 				echo -e $LIGHTYELLOW"anon"$END")" "Anonymizer"
 				echo ""
@@ -1687,7 +1687,7 @@ do
 				;;
 				
 
-			malware)
+			malware*)
 				echo -e $LIGHTYELLOW"malware"$END")" "Cyber threats search (Malware Bazaar API)"
 				echo ""
 
@@ -1799,7 +1799,7 @@ do
 
 				;;
 
-			conv)
+			conv*)
 				echo -e $LIGHTYELLOW"conv"$END")" "Hex / Base64 converter"
 				echo ""
 
@@ -1940,7 +1940,7 @@ do
 
 				;;
 
-			sshtun)
+			sshtun*)
 				echo -e $LIGHTYELLOW"sshtun"$END")" "SSH tunneling"
 				echo ""
 
@@ -1948,7 +1948,7 @@ do
 
 				;;
 
-			fkap)
+			fkap*)
 				echo -e $LIGHTYELLOW"fkap"$END")" "Fake Access Point: Evil twin"
 				echo ""
 
@@ -2038,7 +2038,7 @@ do
 						tmux send-keys "sudo bash /etc/hackutils/fkap.sh ${wlan_ifaces_array[$selection_interface]} $ip_address $ssid $passwd ${ifaces_array[$selection_interface_nat]} 2> /dev/null" C-m && sleep $time
 						#tmux list-sessions
 
-						echo -e $CYAN$BOLD" > The Evil Twin can be run in the background by pressing Ctrl + b --> d (detached)"$END
+						echo -e $CYAN$BOLD" > The Evil Twin can be run in the background by pressing "$LIGHTYELLOW"Ctrl + b --> d (detached)"$END
 						waitFunction "5" "0.40"
 						
 						tmux attach-session -t FKAP
@@ -2048,7 +2048,7 @@ do
 
 					2)
 						echo "Active tmux sessions:"
-						tmux list-sessions | grep FKAP
+						tmux list-sessions | grep "FKAP"
 						tmux attach-session -t FKAP
 
 						echo ""
@@ -2068,7 +2068,7 @@ do
 				esac
 			;;
 
-			dwa)
+			dwa*)
 				echo -e $LIGHTYELLOW"dwa"$END")" "Deauth Wireless Attack"
 				echo ""
 
@@ -2123,7 +2123,7 @@ do
 
 					2)
 						echo "Active tmux sessions:"
-						tmux list-sessions | grep DWA
+						tmux list-sessions | grep "DWA"
 						tmux attach-session -t DWA
 
 						echo ""
@@ -2163,7 +2163,7 @@ do
 				esac
 			;;
 
-			htb)
+			htb*)
 				echo -e $LIGHTYELLOW"htb"$END")" "Hack The Box"
 				echo ""
 
@@ -2288,7 +2288,7 @@ do
 
 			;;
 
-			rev)
+			rev*)
 				while true;
 				do
 					clear
@@ -2308,7 +2308,21 @@ do
 					if [[ $selection == "exit" ]]; then break; fi
 	
 					case $selection in
-						1)
+						1)		
+							echo -e "What interface you want to monitor in conky?"
+			
+							options_selector $number_of_interfaces "ifaces_array"
+			
+							echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
+							echo ""
+			
+							response_checker "$selection" "$number_of_interfaces"					
+			
+							ip_address=`ip addr | grep ${ifaces_array[$selection]} | egrep -o "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/[0-9]{2}" | cut -f1 -d"/"`
+
+							## If selection is 0, exit this option
+							if [[ $selection == "exit" ]]; then break; fi
+
 	
 							echo "Type the port you want to use for listen:"
 							echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
@@ -2322,17 +2336,27 @@ do
 								done
 			
 							time=0.1
+
+							echo -e $CYAN$BOLD" > Starting new listener in "$RED"$ip_address"":""$port"$END
+
+							waitFunction "3" "0.1"
+
+							ip_address=`echo $ip_address | tr '.' '-'`
+
+							session_name="REV-"$ip_address"_"$port
 			
-							tmux new-session -d -t REV-$port && sleep $time
+							tmux new-session -d -t $session_name && sleep $time
 							#tmux resize-pane -t 1 -L 12 && sleep $time
 							tmux select-pane -t 0 && sleep $time
 	
-							tmux send-keys "nc -nlvp $port " C-m && sleep $time
-							
+							ip_address=`echo $ip_address | tr '-' '.'`
+
+							tmux send-keys "nc -nlvp $port -s $ip_address" C-m && sleep $time
+						
 						;;
 	
 						2)
-							sessions_extracted=`tmux list-sessions | egrep -o "^REV-[0-9]{1,5}-[0-9]{1,2}" | tr '\n' " "`
+							sessions_extracted=`tmux list-sessions | egrep -o "^REV-(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\-){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])_[0-9]{1,5}-[0-9]{1,2}" | tr '\n' " "`
 	
 							read -a sessions_array <<< $sessions_extracted 
 							
@@ -2346,7 +2370,7 @@ do
 								echo -ne $BLINK" > "$END$LIGHTYELLOW ; read selection ; echo -ne "" $END
 								echo ""
 	
-								echo -e $CYAN$BOLD" > Remember that if you want to exit but keep the reverse shell in background you must press Ctrl + b --> d (detached)"$END
+								echo -e $CYAN$BOLD" > Remember that if you want to exit but keep the reverse shell in background you must press "$LIGHTYELLOW"Ctrl + b --> d (detached)"$END
 								waitFunction "5" "0.20"
 	
 								tmux attach-session -t ${sessions_array[$selection]}
@@ -2359,7 +2383,7 @@ do
 						;;
 	
 						3)
-							active_sessions=`tmux list-sessions | egrep "^REV-[0-9]{1,5}-[0-9]{1,2}" | cut -f1 -d":"`
+							active_sessions=`tmux list-sessions | egrep "^REV-(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\-){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])_[0-9]{1,5}-[0-9]{1,2}" | cut -f1 -d":"`
 			
 							for session in $active_sessions:
 							do
