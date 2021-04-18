@@ -79,7 +79,7 @@ done < /etc/hackutils/hack_utils.conf
 
 #---------------- VARIABLES -------------
 #Version
-version="0.7.3"
+version="0.7.2"
 last_version=`curl -s https://raw.githubusercontent.com/b4shnhawx/Hack-Utils/master/version.txt`
 #All interfaces in used in the system
 interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
@@ -765,7 +765,7 @@ do
 
 			;;
 
-			1*)
+			1)
 				echo -e $LIGHTYELLOW"1"$END")" "Ping"
 				echo ""
 
@@ -798,7 +798,7 @@ do
 				break
 				;;
 
-			2*)
+			2)
 				echo -e $LIGHTYELLOW"2"$END")" "Try internet connection"
 				echo ""
 
@@ -814,7 +814,7 @@ do
 
 				;;
 
-			3*)
+			3)
 				echo -e $LIGHTYELLOW"3"$END")" "Traceroute"
 				echo ""
 
@@ -854,7 +854,7 @@ do
 
 				;;
 
-			4*)
+			4)
 				echo -e $LIGHTYELLOW"4"$END")" "Whois"
 				echo ""
 
@@ -878,7 +878,7 @@ do
 
 				;;
 
-			5*)
+			5)
 				echo -e $LIGHTYELLOW"5"$END")" "Hops to gateway"
 				echo ""
 
@@ -914,7 +914,7 @@ do
 
 				;;
 
-			6*)
+			6)
 				echo -e $LIGHTYELLOW"6"$END")" "ARP table"
 				echo ""
 
@@ -924,7 +924,7 @@ do
 
 				;;
 
-			7*)
+			7)
 				echo -e $LIGHTYELLOW"7"$END")" "Public IP"
 				echo ""
 
@@ -938,7 +938,7 @@ do
 
 				;;
 
-			8*)
+			8)
 				echo -e $LIGHTYELLOW"8"$END")" "Traffic monitoring (iptraf)"
 				echo ""
 
@@ -948,7 +948,7 @@ do
 
 				;;
 
-			9*)
+			9)
 				echo -e $LIGHTYELLOW"9"$END")" "Traffic by interface"
 				echo ""
 
@@ -1128,7 +1128,7 @@ do
 
 				;;
 
-			10*)
+			10)
 				echo -e $LIGHTYELLOW"10"$END")" "Check remote port status"
 				echo ""
 
@@ -1174,7 +1174,7 @@ do
 
 				;;
 
-			11*)
+			11)
 				echo -e $LIGHTYELLOW"11"$END")" "Ports in use"
 				echo ""
 
@@ -1192,7 +1192,7 @@ do
 
 				;;
 
-			12*)
+			12)
 				echo -e $LIGHTYELLOW"12"$END")" "Search port info (online)"
 				echo ""
 
@@ -1241,7 +1241,7 @@ do
 
 				;;
 
-			13*)
+			13)
 				echo -e $LIGHTYELLOW"13"$END")" "Firewall rules (iptables)"
 				echo ""
 				echo ""
@@ -1260,7 +1260,7 @@ do
 
 				;;
 
-			14*)
+			14)
 				echo -e $LIGHTYELLOW"14"$END")" "Route table"
 				echo ""
 				echo ""
@@ -1270,7 +1270,7 @@ do
 
 				;;
 
-			15*)
+			15)
 				echo -e $LIGHTYELLOW"15"$END")" "Check IP blacklist / abuse"
 				echo ""
 
@@ -1294,7 +1294,7 @@ do
 
 				;;
 
-			16*)
+			16)
 				echo -e $LIGHTYELLOW"16"$END")" "Internet speed test"
 				echo ""
 
@@ -2328,12 +2328,12 @@ do
 							echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
 							echo ""
 			
-								while [[ $port -lt 1 || $port -gt 65535 || $port == *[a-zA-Z]* ]];
-								do
-									echo "Type a valid port number:"
-									echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
-									echo ""
-								done
+							while [[ $port -lt 1 || $port -gt 65535 || $port == *[a-zA-Z]* ]];
+							do
+								echo "Type a valid port number:"
+								echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+								echo ""
+							done
 			
 							time=0.1
 
@@ -2374,6 +2374,8 @@ do
 								waitFunction "5" "0.20"
 	
 								tmux attach-session -t ${sessions_array[$selection]}
+
+								if [[ $? == 1 ]]; then echo ""; echo ""; echo -e $LIGHTRED$BOLD"Selected invalid reverse shell"$END; sleep 2; fi
 	
 							else
 								echo -e $LIGHTRED$BOLD"No reverse shell available"$END
