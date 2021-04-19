@@ -9,6 +9,7 @@ TMP_DIR=/tmp/hackutils/
 CONKY_DIR=$HOME/.config/autostart/
 CONKYRC_DIR=$HOME/
 SCRIPTS_DIR=$HOME/Scripts/
+HTTP_DIR=/var/www/
 HTB_OVPN_NAME=YOUR_HTB_NAME.ovpn
 EOF
 sudo cp Hack-Utils/scripts/hack_utils.conf /etc/hackutils/
