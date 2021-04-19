@@ -48,6 +48,7 @@ TAB="\t"
 ##	${directories_array[3]}		CONKY_DIR
 ##	${directories_array[4]}		CONKYRC_DIR
 ##	${directories_array[5]}		SCRIPTS_DIR
+##	${directories_array[6]}		HTTP_DIR
 ##	${configurations_array[0]}	HTB_OVPN_NAME
 
 while IFS= read -r line
@@ -157,7 +158,8 @@ menu()
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 									"macman" 	")" "MAC manufacturer" 	   				   			"cliweb" 	")" "Web in CLI (elinks)"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 						       		"malware" 	")" "Cyber threats search (Malware Bazaar API)" 	"conv" 		")" "Hexadecimal / Base64 converter"
 	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  	"fkap" 		")" "Fake Access Point: Evil twin" 					"dwa" 		")" "Deauth Wireless Attack"
-	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  			"htb" 		")" "Hack The Box" 					 				"rev" 		")" "Listener for reverse shells connections"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  	"htb" 		")" "Hack The Box" 					 				"rev" 		")" "Listener for reverse shells connections"
+	printf "$LIGHTYELLOW %9s$END%-0s %-45s$END$LIGHTYELLOW%9s$END%-0s %-45s$END \n" 								  	"" 		"" "" 					 								"http" 		")" "Python simple HTTP server"
 	echo ""
 
 	echo "Use Ctrl+C any time to go back to menu. Type an option:"
@@ -168,7 +170,7 @@ menu()
 		echo -ne $BLINK" > "$END$LIGHTYELLOW ; read option ; echo -ne "" $END
 
 	else
-		options=(chckdep up conf 0 conky if wc tv 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 advif sniff ovpn anon sshtun pping macman cliweb malware conv fkap dwa htb rev)
+		options=(chckdep up conf 0 conky if wc tv 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 advif sniff ovpn anon sshtun pping macman cliweb malware conv fkap dwa htb rev http)
 
 		echo -ne $LIGHTYELLOW
 		option=$(rlwrap -D 0 -S ' > ' -i -f <(echo -ne "${options[@]}") -o cat)
@@ -295,6 +297,20 @@ ip_checker()
 		echo -ne $BLINK" >  "$END" IP: "$LIGHTYELLOW ; read ip_address ; echo -ne "" $END
 
 		ip_address_format=`echo $ip_address | egrep "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" `
+	done
+
+	exit_selection=false
+}
+
+port_checker()
+{
+	port=$1
+
+	while [[ $port -lt 1 || $port -gt 65535 || $port == *[a-zA-Z]* ]];
+	do
+		echo "Type a valid port number:"
+		echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
+		echo ""
 	done
 
 	exit_selection=false
@@ -2288,6 +2304,29 @@ do
 
 			;;
 
+			http*)
+				echo -e $LIGHTYELLOW"http"$END")" "Python simple HTTP server"
+				echo ""
+
+				echo -e "In which port you want to configure your HTTP server?"
+				echo -e "Press "$LIGHTYELLOW"ENTER"$END" to leave by default ("$CYAN$BOLD"8000"$END")."
+				echo -ne $BLINK" >  "$END" IP: "$LIGHTYELLOW ; read port ; echo -ne "" $END
+				echo ""
+
+				if [[ -z $port ]];
+				then
+					port="8000"
+				else
+					port_checker "$port"
+				fi
+
+				echo -e $CYAN$BOLD" > Serving "${directories_array[6]}" in "$port$END
+
+				pushd ${directories_array[6]}
+				python -m SimpleHTTPServer $port &> /dev/null &
+				popd
+			;;
+
 			rev*)
 				while true;
 				do
@@ -2328,12 +2367,7 @@ do
 							echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
 							echo ""
 			
-							while [[ $port -lt 1 || $port -gt 65535 || $port == *[a-zA-Z]* ]];
-							do
-								echo "Type a valid port number:"
-								echo -ne $BLINK" > "$END$LIGHTYELLOW ; read port ; echo -ne "" $END
-								echo ""
-							done
+							port_checker "$port"
 			
 							time=0.1
 
