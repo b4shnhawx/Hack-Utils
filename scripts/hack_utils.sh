@@ -2383,7 +2383,7 @@ do
 	
 							ip_address=`echo $ip_address | tr '-' '.'`
 
-							tmux send-keys "nc -nlvp $port -s $ip_address" C-m && sleep $time
+							tmux send-keys "stty raw -echo; (stty size; cat) | nc -nlvp $port -s $ip_address" C-m && sleep $time
 						
 						;;
 	
