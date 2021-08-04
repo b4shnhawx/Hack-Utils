@@ -2322,7 +2322,7 @@ do
 
 				echo -e $CYAN$BOLD" > Serving "${directories_array[6]}" in "$port$END
 
-				cd ${directories_array[6]}; python -m SimpleHTTPServer $port &> /dev/null &; cd
+				cd ${directories_array[6]} && python -m SimpleHTTPServer $port &> /dev/null & && cd
 			;;
 
 			rev*)
