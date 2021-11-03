@@ -28,7 +28,15 @@ ${color cyan}Uptime:   ${color}${uptime}
 ${exec /usr/lib/update-notifier/apt-check --human-readable}
 ${hr}
 ${color cyan}CPU:${color} ${freq_g} GHz
-${color cyan}Usage:${color} ${cpu cpu0}% ${cpubar cpu0}
+${color cyan}Total usage:${color} ${cpu cpu0}% ${cpubar cpu0}
+#${color cyan}Core 1:${color} ${cpu cpu1}% ${cpubar cpu1}
+#${color cyan}Core 2:${color} ${cpu cpu2}% ${cpubar cpu2}
+#${color cyan}Core 3:${color} ${cpu cpu3}% ${cpubar cpu3}
+#${color cyan}Core 3:${color} ${cpu cpu4}% ${cpubar cpu4}
+#${color cyan}Core 3:${color} ${cpu cpu5}% ${cpubar cpu5}
+#${color cyan}Core 3:${color} ${cpu cpu6}% ${cpubar cpu6}
+#${color cyan}Core 3:${color} ${cpu cpu7}% ${cpubar cpu7}
+#${color cyan}Core 3:${color} ${cpu cpu8}% ${cpubar cpu8}
 ${cpugraph}
 ${color cyan}Name              PID   CPU%   MEM%
 ${color lightgrey} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
@@ -48,11 +56,21 @@ ${memgraph}
 ${hr}
 ${color cyan}/ ${color}${fs_used /}/${fs_size /} ${fs_bar 6 /}
 ${hr}
-${color cyan}IP: ${color}${addr $interface}  ${color cyan}External: ${color red}${exec command curl icanhazip.com}${color}
-${color cyan}Up: 	${color lightgreen}${upspeed $interface}
+${if_existing /proc/net/route wlan0}
+${color cyan}IP: ${color}${addr wlan0}${color cyan}   External: ${color red}${exec command curl icanhazip.com}${color}
+${color cyan}Up:  ${color lightgreen}${upspeed wlan0}
 ${upspeedgraph}
-${color cyan}Down: ${color orange}${downspeed $interface}
+${color cyan}Down: ${color orange}${downspeed wlan0}
 ${downspeedgraph}${color}
-${color cyan}Internet ${color}${exec command bash $HOME/internet_test.sh}${color}
+${else}${if_existing /proc/net/route eth0}
+${color cyan}IP: ${color}${addr eth0}${color cyan}    External: ${color red}${exec command curl icanhazip.com}${color}
+${color cyan}Up:  ${color lightgreen}${upspeed eth0}
+${upspeedgraph}
+${color cyan}Down: ${color orange}${downspeed eth0}
+${downspeedgraph}${color}
+${else}
+Network disconnected
+${endif}${endif}
+${color cyan}Internet ${color}${exec command bash /home/b4shnhawx/Scripts/internet_test.sh}${color}
 ${hr}
 ]]
