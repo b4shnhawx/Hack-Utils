@@ -44,6 +44,7 @@ TAB="\t"
 ##---------------- VARIABLES -------------
 aircrackUpdate=1
 interface=$1
+wlan_interfaces_extracted=`iw dev | awk '$1=="Interface"{print $2}' | tr '\n' ' '`
 
 ##---------------- FUNCTIONS ----------------
 programTerminated()
@@ -174,7 +175,9 @@ initFunction()
 
 clear
 
-if [[ $interface != "wlan"* ]];
+#if [[ "$wlan_interfaces_extracted" =~ .*"$interface".* ]];
+#if grep -q "$interface" <<< "$wlan_interfaces_extracted";
+if [[ $wlan_interfaces_extracted != *"$interface"* ]];
 then
 	echo -e $RED"Not a valid wlan interface selected"$END
 
