@@ -83,9 +83,9 @@ done < /etc/hackutils/hack_utils.conf
 version="0.7.3"
 last_version=`curl -s https://raw.githubusercontent.com/b4shnhawx/Hack-Utils/master/version.txt`
 #All interfaces in used in the system
-interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | tr '\n' " "`
+interfaces_extracted=`ls -1 /sys/class/net`
 #All wlanX interfaces in used in the system
-wlan_interfaces_extracted=`ip addr | grep ^[0-9]: | cut -f 2 -d ":" | sed 's/ //g' | egrep -o "wlan[0-9]{1,2}" | tr '\n' " "`
+wlan_interfaces_extracted=`iw dev | awk '$1=="Interface"{print $2}' | tr '\n' ' '`
 #All OVPNS profiles used in the system in one column
 ovpns_extracted=`ls --width=1 ${directories_array[0]} | tr '\n' " "`
 
